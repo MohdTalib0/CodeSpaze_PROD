@@ -1,0 +1,136 @@
+name: Keep Render Service Awake (Advanced)
+
+on:
+  schedule:
+    # Run every 10 minutes to ensure service stays active
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allow manual trigger
+  push:
+    branches: [ main, master ] # Run on code pushes
+
+env:
+  RENDER_URL: https://codespaze.onrender.com
+  MAX_RETRIES: 3
+  TIMEOUT: 30
+
+jobs:
+  ping-service:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup environment
+        run: |
+          echo "🚀 Starting Render service keep-awake job..."
+          echo "🌐 Service URL: ${{ env.RENDER_URL }}"
+          echo "⏰ Timestamp: $(date)"
+          echo "🔄 Max retries: ${{ env.MAX_RETRIES }}"
+          echo "⏱️  Timeout: ${{ env.TIMEOUT }}s"
+          
+      - name: Ping with retry logic
+        id: ping-service
+        run: |
+          # Function to ping service with retry logic
+          ping_with_retry() {
+            local url="$1"
+            local max_retries="$2"
+            local timeout="$3"
+            local attempt=1
+            
+            while [ $attempt -le $max_retries ]; do
+              echo "🔄 Attempt $attempt of $max_retries..."
+              
+              # Try to ping the service
+              response=$(curl -s -w "HTTP_STATUS:%{http_code}|RESPONSE_TIME:%{time_total}|SIZE:%{size_download}" \
+                --max-time $timeout \
+                --retry 2 \
+                --retry-delay 1 \
+                -H "User-Agent: GitHub-Actions-KeepAwake/2.0" \
+                -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" \
+                -H "Accept-Language: en-US,en;q=0.5" \
+                -H "Accept-Encoding: gzip, deflate" \
+                -H "Connection: keep-alive" \
+                -H "Upgrade-Insecure-Requests: 1" \
+                -H "Cache-Control: no-cache" \
+                "$url" 2>/dev/null)
+              
+              if [ $? -eq 0 ] && [ -n "$response" ]; then
+                # Extract response details
+                http_status=$(echo "$response" | grep -o 'HTTP_STATUS:[0-9]*' | cut -d: -f2)
+                response_time=$(echo "$response" | grep -o 'RESPONSE_TIME:[0-9.]*' | cut -d: -f2)
+                size=$(echo "$response" | grep -o 'SIZE:[0-9]*' | cut -d: -f2)
+                
+                echo "✅ Success! HTTP Status: $http_status, Response Time: ${response_time}s, Size: ${size} bytes"
+                
+                # Set output variables for next steps
+                echo "http_status=$http_status" >> $GITHUB_OUTPUT
+                echo "response_time=$response_time" >> $GITHUB_OUTPUT
+                echo "size=$size" >> $GITHUB_OUTPUT
+                echo "success=true" >> $GITHUB_OUTPUT
+                
+                return 0
+              else
+                echo "❌ Attempt $attempt failed. Response: $response"
+                if [ $attempt -lt $max_retries ]; then
+                  echo "⏳ Waiting 2 seconds before retry..."
+                  sleep 2
+                fi
+                attempt=$((attempt + 1))
+              fi
+            done
+            
+            echo "❌ All $max_retries attempts failed"
+            echo "success=false" >> $GITHUB_OUTPUT
+            return 1
+          }
+          
+          # Execute ping with retry logic
+          ping_with_retry "${{ env.RENDER_URL }}" "${{ env.MAX_RETRIES }}" "${{ env.TIMEOUT }}"
+          
+      - name: Health check validation
+        if: steps.ping-service.outputs.success == 'true'
+        run: |
+          echo "🔍 Performing health check validation..."
+          
+          # Check if service is responding properly
+          health_response=$(curl -s -w "HTTP_STATUS:%{http_code}" \
+            --max-time 10 \
+            "${{ env.RENDER_URL }}/health" 2>/dev/null || echo "HTTP_STATUS:000")
+          
+          health_status=$(echo "$health_response" | grep -o 'HTTP_STATUS:[0-9]*' | cut -d: -f2)
+          
+          if [ "$health_status" = "200" ] || [ "$health_status" = "404" ]; then
+            echo "✅ Health check passed (Status: $health_status)"
+          else
+            echo "⚠️  Health check returned status: $health_status"
+          fi
+          
+      - name: Log success
+        if: steps.ping-service.outputs.success == 'true'
+        run: |
+          echo "🎉 Render service kept awake successfully!"
+          echo "📊 Response Details:"
+          echo "   HTTP Status: ${{ steps.ping-service.outputs.http_status }}"
+          echo "   Response Time: ${{ steps.ping-service.outputs.response_time }}s"
+          echo "   Response Size: ${{ steps.ping-service.outputs.size }} bytes"
+          echo "🕐 Completed at: $(date)"
+          
+      - name: Log failure
+        if: steps.ping-service.outputs.success == 'false'
+        run: |
+          echo "❌ Failed to keep Render service awake"
+          echo "🕐 Failed at: $(date)"
+          echo "🔍 Check your service status and configuration"
+          
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "🚨 Service ping failed! Check the logs above for details."
+          echo "💡 Possible issues:"
+          echo "   - Service is down or misconfigured"
+          echo "   - URL is incorrect"
+          echo "   - Network connectivity issues"
+          echo "   - Service has exceeded free tier limits"

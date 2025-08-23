@@ -1,0 +1,21 @@
+{
+  "name": "codespaze-platform",
+  "version": "1.0.0",
+  "description": "CodeSpaze – Global Tech Learning & Career Platform",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server:dev\" \"npm run client\"",
+    "start": "concurrently \"npm run server:start\" \"npm run client\"",
+    "server:dev": "cd server && npm run dev",
+    "server:start": "cd server && npm start",
+    "client": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install"
+  },
+  "keywords": ["tech-learning", "career-platform", "full-stack", "react", "node"],
+  "author": "CodeSpaze Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

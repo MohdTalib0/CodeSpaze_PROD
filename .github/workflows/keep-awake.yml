@@ -1,0 +1,55 @@
+name: Keep Render Services Awake
+
+on:
+  schedule:
+    # Run every 14 minutes to keep the services active
+    - cron: '*/14 * * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  ping-services:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Ping Backend API Service
+        run: |
+          echo "🔧 Pinging Backend API service to keep it awake..."
+          
+          BACKEND_URL="https://codespaze-api.onrender.com"
+          
+          # Send a GET request to keep the service awake
+          response=$(curl -s -w "HTTP Status: %{http_code}, Response Time: %{time_total}s\n" \
+            -H "User-Agent: GitHub-Actions-KeepAwake/1.0" \
+            -H "Accept: application/json" \
+            -H "Cache-Control: no-cache" \
+            "$BACKEND_URL/api/health" 2>/dev/null || echo "HTTP Status: 000, Response Time: 0s")
+          
+          echo "Backend Response: $response"
+          echo "Backend service pinged successfully at $(date)"
+          
+      - name: Ping Frontend Service
+        run: |
+          echo "🎨 Pinging Frontend service to keep it awake..."
+          
+          FRONTEND_URL="https://codespaze-frontend.onrender.com"
+          
+          # Send a GET request to keep the service awake
+          response=$(curl -s -w "HTTP Status: %{http_code}, Response Time: %{time_total}s\n" \
+            -H "User-Agent: GitHub-Actions-KeepAwake/1.0" \
+            -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" \
+            -H "Cache-Control: no-cache" \
+            "$FRONTEND_URL" 2>/dev/null || echo "HTTP Status: 000, Response Time: 0s")
+          
+          echo "Frontend Response: $response"
+          echo "Frontend service pinged successfully at $(date)"
+          
+      - name: Log Success
+        run: |
+          echo "✅ Both Render services kept awake successfully!"
+          echo "🕐 Timestamp: $(date)"
+          echo "🔧 Backend URL: https://codespaze-api.onrender.com"
+          echo "🎨 Frontend URL: https://codespaze-frontend.onrender.com"
+          echo "📊 Services are now active and ready to handle requests"

@@ -1,0 +1,182 @@
+services:
+  # Backend API Service
+  - type: web
+    name: codespaze-api
+    env: node
+    plan: starter
+    region: oregon # Choose closest region to your users
+    buildCommand: |
+      cd server && 
+      npm ci --only=production && 
+      npm run build
+    startCommand: cd server && npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: NEON_DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: NEON_AUTH_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        value: https://codespaze-frontend.onrender.com
+      - key: LOG_LEVEL
+        value: info
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 100
+      - key: SESSION_SECRET
+        sync: false
+      - key: COOKIE_SECURE
+        value: true
+      - key: COOKIE_HTTP_ONLY
+        value: true
+      - key: COOKIE_SAME_SITE
+        value: strict
+    buildFilter:
+      paths:
+        - server/**
+        - package.json
+        - package-lock.json
+    headers:
+      - path: /api/*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /api/*
+        name: X-Frame-Options
+        value: DENY
+      - path: /api/*
+        name: X-XSS-Protection
+        value: 1; mode=block
+      - path: /api/*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /api/*
+        name: Permissions-Policy
+        value: camera=(), microphone=(), geolocation=()
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: /api/*
+    scaling:
+      minInstances: 1
+      maxInstances: 3
+      targetConcurrency: 100
+      targetMemoryUtilizationPercent: 80
+      targetCPUUtilizationPercent: 70
+
+  # Frontend Client Service
+  - type: web
+    name: codespaze-frontend
+    env: static
+    region: oregon # Choose closest region to your users
+    buildCommand: |
+      cd client && 
+      npm ci --only=production && 
+      npm run build
+    staticPublishPath: ./client/build
+    autoDeploy: true
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://codespaze-api.onrender.com/api
+      - key: REACT_APP_NEON_AUTH_URL
+        sync: false
+      - key: REACT_APP_ENVIRONMENT
+        value: production
+      - key: REACT_APP_VERSION
+        value: 1.0.0
+    buildFilter:
+      paths:
+        - client/**
+        - package.json
+        - package-lock.json
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-XSS-Protection
+        value: 1; mode=block
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(), geolocation=()
+      - path: /static/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /static/js/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /static/css/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /static/media/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /favicon.ico
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /manifest.json
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /logo*.png
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    redirects:
+      - source: /home
+        destination: /
+        type: permanent
+      - source: /index.html
+        destination: /
+        type: permanent
+
+# Database Service (if using Render's managed PostgreSQL)
+# Uncomment if you want to use Render's managed database
+# databases:
+#   - name: codespaze-db
+#     databaseName: codespaze_production
+#     user: codespaze_user
+#     plan: starter
+#     region: oregon
+
+# Environment Groups for shared variables
+envGroups:
+  - name: production-secrets
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: info
+      - key: SENTRY_DSN
+        sync: false
+      - key: NEW_RELIC_LICENSE_KEY
+        sync: false
+      - key: DATADOG_API_KEY
+        sync: false
+
+# Global settings
+buildFilter:
+  paths:
+    - .github/**
+    - .gitignore
+    - README.md
+    - render.yaml
+    - package.json
+    - package-lock.json
+    - server/**
+    - client/**
