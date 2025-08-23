@@ -27,7 +27,10 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
     try {
       await login(data.email, data.password);
-      navigate('/dashboard');
+      // Small delay to ensure state is updated before navigation
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 100);
     } catch (error) {
       console.error('Login failed:', error);
     } finally {

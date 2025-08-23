@@ -3,7 +3,7 @@
 echo "🚀 Testing CodeSpaze deployment build process..."
 echo "🌐 Target Render Services:"
 echo "   Backend: https://codespaze-prod.onrender.com"
-echo "   Frontend: https://codespaze-frontend.onrender.com"
+echo "   Frontend: https://codespaze-prod-2.onrender.com"
 
 # Test root dependencies
 echo "📦 Installing root dependencies..."
@@ -45,6 +45,6 @@ echo "Next steps:"
 echo "1. Commit and push these changes"
 echo "2. Render will automatically redeploy:"
 echo "   - Backend: https://codespaze-prod.onrender.com"
-echo "   - Frontend: https://codespaze-frontend.onrender.com"
+echo "   - Frontend: https://codespaze-prod-2.onrender.com"
 echo "3. Check the build logs for any remaining issues"
 echo "4. GitHub Actions will keep the services awake every 10-14 minutes"
