@@ -1,5 +1,3 @@
-import { Request } from 'express';
-
 // Simple type definitions to avoid compilation issues
 export interface User {
   id: number;
@@ -14,8 +12,9 @@ export interface User {
 }
 
 // Extended Request interface for authentication
-export interface AuthRequest extends Request {
+export interface AuthRequest {
   user?: User;
+  [key: string]: any; // Allow any additional properties
 }
 
 // Database result types
