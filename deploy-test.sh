@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "🚀 Testing CodeSpaze deployment build process..."
-echo "🌐 Target Render Service: https://codespaze-prod.onrender.com"
+echo "🌐 Target Render Service: https://codespaze-prod-1.onrender.com"
 
 # Test root dependencies
 echo "📦 Installing root dependencies..."
@@ -41,6 +41,6 @@ echo "🎉 All builds successful! Ready for deployment."
 echo ""
 echo "Next steps:"
 echo "1. Commit and push these changes"
-echo "2. Render will automatically redeploy to https://codespaze-prod.onrender.com"
+echo "2. Render will automatically redeploy to https://codespaze-prod-1.onrender.com"
 echo "3. Check the build logs for any remaining issues"
 echo "4. GitHub Actions will keep the service awake every 10-14 minutes"
