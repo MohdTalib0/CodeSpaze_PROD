@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 // Simple type definitions to avoid compilation issues
 export interface User {
   id: number;
@@ -12,40 +14,8 @@ export interface User {
 }
 
 // Extended Request interface for authentication
-export interface AuthRequest {
+export interface AuthRequest extends Request {
   user?: User;
-  body: any;
-  params: any;
-  query: any;
-  headers: any;
-  method: string;
-  url: string;
-  originalUrl: string;
-  path: string;
-  ip: string;
-  cookies: any;
-  signedCookies: any;
-  secret: string | string[];
-  accepts: any;
-  acceptsCharsets: any;
-  acceptsEncodings: any;
-  acceptsLanguages: any;
-  range: any;
-  param: (name: string, defaultValue?: any) => string;
-  is: any;
-  protocol: string;
-  secure: boolean;
-  subdomains: string[];
-  stale: boolean;
-  fresh: boolean;
-  xhr: boolean;
-  hostname: string;
-  host: string;
-  baseUrl: string;
-  route: any;
-  app: any;
-  res: any;
-  next: any;
 }
 
 // Database result types
