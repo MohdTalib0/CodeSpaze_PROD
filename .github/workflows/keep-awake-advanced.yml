@@ -9,7 +9,7 @@ on:
     branches: [ main, master ] # Run on code pushes
 
 env:
-  RENDER_URL: https://codespaze.onrender.com
+  RENDER_URL: https://codespaze-prod.onrender.com
   MAX_RETRIES: 3
   TIMEOUT: 30
 

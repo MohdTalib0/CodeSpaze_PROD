@@ -18,7 +18,7 @@ jobs:
         run: |
           echo "🔧 Pinging Backend API service to keep it awake..."
           
-          BACKEND_URL="https://codespaze-api.onrender.com"
+          BACKEND_URL="https://codespaze-prod.onrender.com"
           
           # Send a GET request to keep the service awake
           response=$(curl -s -w "HTTP Status: %{http_code}, Response Time: %{time_total}s\n" \
@@ -34,7 +34,7 @@ jobs:
         run: |
           echo "🎨 Pinging Frontend service to keep it awake..."
           
-          FRONTEND_URL="https://codespaze-frontend.onrender.com"
+          FRONTEND_URL="https://codespaze-prod.onrender.com"
           
           # Send a GET request to keep the service awake
           response=$(curl -s -w "HTTP Status: %{http_code}, Response Time: %{time_total}s\n" \
@@ -50,6 +50,6 @@ jobs:
         run: |
           echo "✅ Both Render services kept awake successfully!"
           echo "🕐 Timestamp: $(date)"
-          echo "🔧 Backend URL: https://codespaze-api.onrender.com"
-          echo "🎨 Frontend URL: https://codespaze-frontend.onrender.com"
+          echo "🔧 Backend URL: https://codespaze-prod.onrender.com"
+          echo "🎨 Frontend URL: https://codespaze-prod.onrender.com"
           echo "📊 Services are now active and ready to handle requests"

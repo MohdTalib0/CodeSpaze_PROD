@@ -1,14 +1,19 @@
 services:
   # Backend API Service
   - type: web
-    name: codespaze-api
+    name: codespaze-prod
     env: node
     plan: starter
     region: oregon # Choose closest region to your users
     buildCommand: |
-      cd server && 
-      npm ci --only=production && 
+      set -e
+      echo "Installing root dependencies..."
+      npm ci --only=production
+      echo "Installing server dependencies..."
+      cd server && npm ci --only=production
+      echo "Building server..."
       npm run build
+      echo "Build completed successfully"
     startCommand: cd server && npm start
     healthCheckPath: /api/health
     autoDeploy: true
@@ -21,10 +26,14 @@ services:
         sync: false
       - key: JWT_SECRET
         sync: false
+      - key: JWT_EXPIRES_IN
+        value: 7d
       - key: NEON_AUTH_SECRET
         sync: false
+      - key: NEON_AUTH_URL
+        sync: false
       - key: CORS_ORIGIN
-        value: https://codespaze-frontend.onrender.com
+        value: https://codespaze-prod.onrender.com
       - key: LOG_LEVEL
         value: info
       - key: RATE_LIMIT_WINDOW_MS
@@ -39,6 +48,10 @@ services:
         value: true
       - key: COOKIE_SAME_SITE
         value: strict
+      - key: MAX_FILE_SIZE
+        value: 5242880
+      - key: UPLOAD_PATH
+        value: ./uploads
     buildFilter:
       paths:
         - server/**
@@ -71,20 +84,25 @@ services:
       targetMemoryUtilizationPercent: 80
       targetCPUUtilizationPercent: 70
 
-  # Frontend Client Service
+  # Frontend Client Service (same service, different route)
   - type: web
     name: codespaze-frontend
     env: static
     region: oregon # Choose closest region to your users
     buildCommand: |
-      cd client && 
-      npm ci --only=production && 
+      set -e
+      echo "Installing root dependencies..."
+      npm ci --only=production
+      echo "Installing client dependencies..."
+      cd client && npm ci --only=production
+      echo "Building client..."
       npm run build
+      echo "Client build completed successfully"
     staticPublishPath: ./client/build
     autoDeploy: true
     envVars:
       - key: REACT_APP_API_URL
-        value: https://codespaze-api.onrender.com/api
+        value: https://codespaze-prod.onrender.com/api
       - key: REACT_APP_NEON_AUTH_URL
         sync: false
       - key: REACT_APP_ENVIRONMENT
