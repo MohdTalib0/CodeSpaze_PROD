@@ -13,13 +13,13 @@ services:
       ls -la
       
       echo "📦 Installing root dependencies..."
-      npm ci --only=production
+      npm ci
       
-      echo "📁 After root install - Directory contents:"
+      echo " After root install - Directory contents:"
       ls -la
       
       echo "🔧 Installing server dependencies..."
-      cd server && npm ci --only=production
+      cd server && npm ci
       
       echo "📁 Server directory contents:"
       ls -la

@@ -1,4 +1,3 @@
-import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { sql } from '../config/database';
 import { AuthRequest, DatabaseUser, JWTPayload } from '../types';
@@ -7,8 +6,8 @@ export { AuthRequest };
 
 export const protect = async (
   req: AuthRequest,
-  res: Response,
-  next: NextFunction
+  res: any,
+  next: any
 ): Promise<void> => {
   let token: string | undefined;
 
@@ -66,7 +65,7 @@ export const protect = async (
 };
 
 export const authorize = (...roles: string[]) => {
-  return (req: AuthRequest, res: Response, next: NextFunction): void => {
+  return (req: AuthRequest, res: any, next: any): void => {
     if (!req.user) {
       res.status(401).json({
         success: false,
