@@ -46,7 +46,8 @@ class ApiService {
             case 401:
               // Unauthorized - clear token and redirect to login
               localStorage.removeItem('token');
-              window.location.href = '/login';
+              // Dispatch custom event for React Router navigation
+              window.dispatchEvent(new CustomEvent('auth:logout', { detail: { redirectTo: '/login' } }));
               toast.error('Session expired. Please login again.');
               break;
             case 403:

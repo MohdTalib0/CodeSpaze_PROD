@@ -41,8 +41,9 @@ import EnrollmentForm from './components/EnrollmentForm';
 import ContactPage from './pages/ContactPage';
 
 function App() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Smooth scroll to top when route changes
@@ -52,6 +53,22 @@ function App() {
       behavior: 'smooth'
     });
   }, [location.pathname]);
+
+  // Listen for auth logout events from API service
+  useEffect(() => {
+    const handleAuthLogout = (event: CustomEvent) => {
+      const { redirectTo } = event.detail;
+      // Clear auth state and navigate using React Router
+      logout();
+      navigate(redirectTo);
+    };
+
+    window.addEventListener('auth:logout', handleAuthLogout as EventListener);
+    
+    return () => {
+      window.removeEventListener('auth:logout', handleAuthLogout as EventListener);
+    };
+  }, [logout, navigate]);
 
   return (
     <>

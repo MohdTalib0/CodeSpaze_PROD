@@ -40,9 +40,12 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [state, setState] = useState<AuthState>(initialState);
+  const [hasCheckedAuth, setHasCheckedAuth] = useState(false);
 
-  // Check if user is authenticated on app load
+  // Check if user is authenticated on app load (only once)
   useEffect(() => {
+    if (hasCheckedAuth) return;
+    
     const checkAuth = async () => {
       const token = localStorage.getItem('token');
       if (token) {
@@ -73,16 +76,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
           loading: false,
         });
       }
+      setHasCheckedAuth(true);
     };
 
     checkAuth();
-  }, []);
+  }, [hasCheckedAuth]);
 
   const login = async (email: string, password: string) => {
     try {
+      console.log('🔐 Starting login process...');
       setState(prev => ({ ...prev, loading: true }));
       const response: AuthResponse = await authService.login(email, password);
       
+      console.log('✅ Login successful, setting token and state...');
       localStorage.setItem('token', response.data.token);
       setState({
         user: response.data.user,
@@ -91,8 +97,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
         loading: false,
       });
       
+      console.log('🎉 Login complete, user authenticated:', response.data.user.email);
       toast.success('Welcome back!');
     } catch (error: any) {
+      console.error('❌ Login failed:', error);
       const message = error.response?.data?.error || 'Login failed';
       setState({
         user: null,
