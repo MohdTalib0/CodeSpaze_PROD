@@ -51,17 +51,7 @@ services:
       fi
       
       echo "✅ Build completed successfully"
-    startCommand: |
-      echo "🚀 Starting server..."
-      echo "📁 Current directory: $(pwd)"
-      echo "📁 Directory contents:"
-      ls -la
-      echo "📁 Server directory contents:"
-      ls -la server/
-      echo "📁 Server/dist directory contents:"
-      ls -la server/dist/
-      echo "🔧 Starting server from server/dist/index.js..."
-      node server/dist/index.js
+    startCommand: node server/dist/index.js
     healthCheckPath: /api/health
     autoDeploy: true
     envVars:
