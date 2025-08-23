@@ -7,14 +7,61 @@ services:
     region: oregon # Choose closest region to your users
     buildCommand: |
       set -e
-      echo "Installing root dependencies..."
+      echo "🚀 Starting build process..."
+      echo "📁 Current directory: $(pwd)"
+      echo "📁 Directory contents:"
+      ls -la
+      
+      echo "📦 Installing root dependencies..."
       npm ci --only=production
-      echo "Installing server dependencies..."
+      
+      echo "📁 After root install - Directory contents:"
+      ls -la
+      
+      echo "🔧 Installing server dependencies..."
       cd server && npm ci --only=production
-      echo "Building server..."
+      
+      echo "📁 Server directory contents:"
+      ls -la
+      
+      echo "🔨 Building server..."
       npm run build
-      echo "Build completed successfully"
-    startCommand: cd server && node dist/index.js
+      
+      # Fallback: try direct TypeScript compilation if npm build fails
+      if [ ! -f "dist/index.js" ]; then
+        echo "⚠️  npm build failed, trying direct TypeScript compilation..."
+        npx tsc
+      fi
+      
+      echo "📁 After build - Server directory contents:"
+      ls -la
+      
+      echo "📁 Dist directory contents:"
+      ls -la dist/
+      
+      echo "🔍 Verifying dist/index.js exists..."
+      if [ -f "dist/index.js" ]; then
+        echo "✅ dist/index.js found successfully"
+        echo "📏 File size: $(ls -lh dist/index.js)"
+      else
+        echo "❌ dist/index.js not found!"
+        echo "📁 Dist directory contents:"
+        ls -la dist/
+        exit 1
+      fi
+      
+      echo "✅ Build completed successfully"
+    startCommand: |
+      echo "🚀 Starting server..."
+      echo "📁 Current directory: $(pwd)"
+      echo "📁 Directory contents:"
+      ls -la
+      echo "📁 Server directory contents:"
+      ls -la server/
+      echo "📁 Server/dist directory contents:"
+      ls -la server/dist/
+      echo "🔧 Starting server from server/dist/index.js..."
+      cd server && node dist/index.js
     healthCheckPath: /api/health
     autoDeploy: true
     envVars:
