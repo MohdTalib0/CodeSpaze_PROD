@@ -1,0 +1,31 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://codespaze.org/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /uploads/
+
+# Allow important pages
+Allow: /programs/
+Allow: /products/
+Allow: /services/
+Allow: /contact/
+Allow: /enroll/
+Allow: /login
+Allow: /register
+
+# Allow static assets
+Allow: /css/
+Allow: /js/
+Allow: /images/
+Allow: /fonts/
+Allow: /favicon.ico
+Allow: /manifest.json
