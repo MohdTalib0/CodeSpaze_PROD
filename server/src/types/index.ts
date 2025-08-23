@@ -63,17 +63,6 @@ export interface DatabaseUser {
   updated_at?: string;
 }
 
-// API Response Types
-export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-  errors?: Array<{
-    field: string;
-    message: string;
-  }>;
-}
-
 // JWT Payload
 export interface JWTPayload {
   id: number;

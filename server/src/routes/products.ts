@@ -1,14 +1,13 @@
-import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import { sql } from '../config/database';
 import { protect, authorize, AuthRequest } from '../middleware/auth';
 
-const router = express.Router();
+const router = require('express').Router();
 
 // @desc    Get all products
 // @route   GET /api/products
 // @access  Public
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', async (req: AuthRequest, res: any) => {
   try {
     const products = await sql`
       SELECT * FROM products WHERE is_active = true ORDER BY created_at DESC
@@ -30,7 +29,7 @@ router.get('/', async (req: Request, res: Response) => {
 // @desc    Get single product
 // @route   GET /api/products/:id
 // @access  Public
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:id', async (req: AuthRequest, res: any) => {
   try {
     const products = await sql`
       SELECT * FROM products WHERE id = ${req.params.id} AND is_active = true
@@ -67,7 +66,7 @@ router.post(
     body('name').notEmpty().withMessage('Name is required'),
     body('description').notEmpty().withMessage('Description is required'),
   ],
-  async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: any) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -106,7 +105,7 @@ router.put(
   '/:id',
   protect,
   authorize('admin'),
-  async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: any) => {
     try {
       const products = await sql`
         SELECT * FROM products WHERE id = ${req.params.id}
@@ -147,7 +146,7 @@ router.put(
 // @desc    Delete product
 // @route   DELETE /api/products/:id
 // @access  Private/Admin
-router.delete('/:id', protect, authorize('admin'), async (req: AuthRequest, res: Response) => {
+router.delete('/:id', protect, authorize('admin'), async (req: AuthRequest, res: any) => {
   try {
     const products = await sql`
       SELECT * FROM products WHERE id = ${req.params.id}
