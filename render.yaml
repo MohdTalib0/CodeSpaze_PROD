@@ -14,7 +14,7 @@ services:
       echo "Building server..."
       npm run build
       echo "Build completed successfully"
-    startCommand: cd server && npm start
+    startCommand: cd server && node dist/index.js
     healthCheckPath: /api/health
     autoDeploy: true
     envVars:
@@ -33,7 +33,7 @@ services:
       - key: NEON_AUTH_URL
         sync: false
       - key: CORS_ORIGIN
-        value: https://codespaze-prod-1.onrender.com
+        value: https://codespaze-frontend.onrender.com
       - key: LOG_LEVEL
         value: info
       - key: RATE_LIMIT_WINDOW_MS
@@ -102,7 +102,7 @@ services:
     autoDeploy: true
     envVars:
       - key: REACT_APP_API_URL
-        value: https://codespaze-prod-1.onrender.com/api
+        value: https://codespaze-prod.onrender.com/api
       - key: REACT_APP_NEON_AUTH_URL
         sync: false
       - key: REACT_APP_ENVIRONMENT
