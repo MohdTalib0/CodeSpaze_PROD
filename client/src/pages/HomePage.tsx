@@ -181,7 +181,7 @@ const HomePage: React.FC = () => {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="inline-flex items-center px-4 py-2 glass-card rounded-full text-sm font-medium text-primary-500"
+              className="inline-flex items-center px-4 py-2 glass-card rounded-full text-sm font-medium text-primary-500 hover:scale-105 transition-all duration-300"
             >
               <Zap className="w-4 h-4 mr-2" />
               Transform Your Tech Career
@@ -251,7 +251,7 @@ const HomePage: React.FC = () => {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 1.2 + index * 0.1, duration: 0.6 }}
-                  className="text-center"
+                  className="text-center hover:scale-110 transition-transform duration-300 cursor-pointer"
                 >
                   <div className="text-3xl md:text-4xl font-bold gradient-text">
                     {stat.number}
@@ -564,7 +564,7 @@ const HomePage: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="glass-card p-12 rounded-2xl border border-[#19c973]/30"
+            className="glass-card p-12 rounded-2xl card-hover border border-[#19c973]/30"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Ready to Build Your Future in Tech?

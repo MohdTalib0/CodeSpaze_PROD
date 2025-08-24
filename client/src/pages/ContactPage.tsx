@@ -98,7 +98,7 @@ const ContactPage: React.FC = () => {
     {
       icon: Mail,
       title: 'Email Us',
-      details: ['hello@codespaze.com', 'support@codespaze.com'],
+      details: ['email-support@codespaze.org', 'contact@codespaze.org'],
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/10',
       borderColor: 'border-blue-500/20'
@@ -114,7 +114,7 @@ const ContactPage: React.FC = () => {
     {
       icon: MapPin,
       title: 'Visit Us',
-      details: ['Mumbai, Maharashtra, India', 'New York, NY, USA'],
+      details: ['Lucknow, Uttar Pradesh, India'],
       color: 'text-purple-400',
       bgColor: 'bg-purple-500/10',
       borderColor: 'border-purple-500/20'
@@ -158,6 +158,15 @@ const ContactPage: React.FC = () => {
             Have questions about our programs? Want to discuss collaboration opportunities? 
             We'd love to hear from you. Reach out and let's start a conversation.
           </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-6 inline-flex items-center px-4 py-2 bg-[#19c973]/10 border border-[#19c973]/30 rounded-full text-sm text-[#19c973]"
+          >
+            <MapPin className="w-4 h-4 mr-2" />
+            Based in Lucknow, Uttar Pradesh, India
+          </motion.div>
         </div>
 
         {/* Contact Information Grid */}
@@ -187,6 +196,47 @@ const ContactPage: React.FC = () => {
             </motion.div>
           ))}
         </motion.div>
+
+        {/* Visit Us Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="mb-16"
+        >
+          <div className="glass-card p-8 rounded-2xl border border-[#19c973]/30 text-center">
+            <div className="w-16 h-16 bg-gradient-to-r from-[#19c973] to-[#16a362] rounded-full flex items-center justify-center mx-auto mb-6">
+              <MapPin className="w-8 h-8 text-white" />
+            </div>
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Visit Our <span className="gradient-text">Office</span>
+            </h2>
+            <p className="text-lg text-gray-300 mb-6">
+              Experience the CodeSpaze learning environment firsthand
+            </p>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+              <h3 className="text-xl font-semibold text-white mb-3">CodeSpaze Headquarters</h3>
+              <p className="text-gray-300 mb-2">Lucknow, Uttar Pradesh, India</p>
+              <p className="text-gray-400 text-sm mb-4">The heart of tech innovation in North India</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div className="text-center">
+                  <div className="text-[#19c973] font-semibold">Prime Location</div>
+                  <div className="text-gray-400">Central Lucknow</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-[#19c973] font-semibold">Easy Access</div>
+                  <div className="text-gray-400">Near Metro & Bus Routes</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-[#19c973] font-semibold">Modern Facility</div>
+                  <div className="text-gray-400">State-of-the-art Labs</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+      
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -339,6 +389,28 @@ const ContactPage: React.FC = () => {
                     <social.icon className="w-5 h-5" />
                   </a>
                 ))}
+              </div>
+            </div>
+
+            {/* Contact Methods */}
+            <div className="glass-card p-6 rounded-xl border border-[#19c973]/30">
+              <h3 className="text-xl font-semibold text-white mb-4 flex items-center">
+                <Mail className="w-5 h-5 mr-2 text-[#19c973]" />
+                Contact Methods
+              </h3>
+              <div className="space-y-4">
+                <div className="p-3 bg-gray-800/50 rounded-lg border border-gray-700">
+                  <div className="text-[#19c973] font-semibold text-sm mb-1">General Inquiries</div>
+                  <div className="text-gray-300 text-sm">contact@codespaze.org</div>
+                </div>
+                <div className="p-3 bg-gray-800/50 rounded-lg border border-gray-700">
+                  <div className="text-[#19c973] font-semibold text-sm mb-1">Technical Support</div>
+                  <div className="text-gray-300 text-sm">email-support@codespaze.org</div>
+                </div>
+                <div className="p-3 bg-gray-800/50 rounded-lg border border-gray-700">
+                  <div className="text-[#19c973] font-semibold text-sm mb-1">Office Location</div>
+                  <div className="text-gray-300 text-sm">Lucknow, Uttar Pradesh, India</div>
+                </div>
               </div>
             </div>
 

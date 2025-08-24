@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle, Star, Users, Award, Zap, Globe, Target, Code, Smartphone, Brain, TrendingUp } from 'lucide-react';
+import { ArrowRight, CheckCircle, Star, Users, Award, Zap, Globe, Target, Code, Smartphone, Brain, TrendingUp, Clock, DollarSign, Shield, BookOpen, MessageCircle, Phone, Mail, MapPin } from 'lucide-react';
 import Button from '../components/UI/Button';
 import SEOComponent from '../components/SEO/SEOComponent';
 
@@ -10,22 +10,26 @@ const ServicesPage: React.FC = () => {
     {
       title: 'Internships-as-a-Service for Universities',
       description: 'Comprehensive internship programs tailored for university students with industry partnerships.',
-      icon: Users
+      icon: Users,
+      features: ['Industry partnerships', 'Real-world projects', 'Mentorship', 'Portfolio building']
     },
     {
       title: 'Career Services (CV, LinkedIn, Portfolio)',
       description: 'Professional development services to enhance your career prospects and online presence.',
-      icon: Award
+      icon: Award,
+      features: ['CV optimization', 'LinkedIn profile', 'Portfolio website', 'Interview prep']
     },
     {
       title: 'Certification & Digital Badging',
       description: 'Industry-recognized certifications and digital badges to validate your skills.',
-      icon: Zap
+      icon: Zap,
+      features: ['Industry recognition', 'Digital badges', 'Skill validation', 'Career advancement']
     },
     {
       title: 'Project Mentorship & Evaluation',
       description: 'Expert mentorship and evaluation for real-world projects and portfolio building.',
-      icon: Target
+      icon: Target,
+      features: ['Expert guidance', 'Code review', 'Best practices', 'Performance feedback']
     }
   ];
 
@@ -33,17 +37,26 @@ const ServicesPage: React.FC = () => {
     {
       title: 'Web Development',
       description: 'Full-stack web development services using modern technologies and best practices.',
-      icon: Code
+      icon: Code,
+      technologies: ['React', 'Node.js', 'Python', 'MongoDB', 'AWS'],
+      features: ['Responsive design', 'SEO optimization', 'Performance tuning', 'Security implementation'],
+      timeline: '4-12 weeks'
     },
     {
       title: 'App Development',
       description: 'Mobile and web application development for iOS, Android, and cross-platform solutions.',
-      icon: Smartphone
+      icon: Smartphone,
+      technologies: ['React Native', 'Flutter', 'iOS', 'Android', 'Firebase'],
+      features: ['Cross-platform', 'Native performance', 'App store optimization', 'Push notifications'],
+      timeline: '6-16 weeks'
     },
     {
       title: 'AI/ML Solutions',
       description: 'Artificial Intelligence and Machine Learning solutions for business automation and insights.',
-      icon: Brain
+      icon: Brain,
+      technologies: ['Python', 'TensorFlow', 'PyTorch', 'OpenAI', 'Custom APIs'],
+      features: ['Predictive analytics', 'Process automation', 'Data insights', 'Model deployment'],
+      timeline: '8-20 weeks'
     }
   ];
 
@@ -177,7 +190,7 @@ const ServicesPage: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="glass-card p-8 hover:scale-105 transition-transform duration-300 border border-[#19c973]/30"
+                  className="glass-card p-8 hover:scale-105 transition-transform duration-300 border border-[#19c973]/30 rounded-2xl"
                 >
                   <div className="w-16 h-16 bg-gradient-to-r from-[#19c973] to-[#16a362] rounded-xl flex items-center justify-center mb-6">
                     <service.icon className="w-8 h-8 text-white" />
@@ -185,6 +198,21 @@ const ServicesPage: React.FC = () => {
                   
                   <h3 className="text-2xl font-bold mb-4">{service.title}</h3>
                   <p className="text-gray-300 mb-6">{service.description}</p>
+                  
+                  {/* Features */}
+                  <div className="mb-6">
+                    <h4 className="text-sm font-semibold text-[#19c973] mb-3">Key Features:</h4>
+                    <div className="grid grid-cols-2 gap-2">
+                      {service.features.map((feature, idx) => (
+                        <div key={idx} className="flex items-center text-sm text-gray-300">
+                          <CheckCircle className="w-4 h-4 text-[#19c973] mr-2 flex-shrink-0" />
+                          {feature}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+
                   
                   <Button variant="primary" className="w-full">
                     Learn More <ArrowRight className="w-4 h-4 ml-2" />
@@ -219,7 +247,7 @@ const ServicesPage: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="glass-card p-8 text-center hover:scale-105 transition-transform duration-300 border border-[#19c973]/30"
+                  className="glass-card p-8 text-center hover:scale-105 transition-transform duration-300 border border-[#19c973]/30 rounded-2xl"
                 >
                   <div className="w-20 h-20 bg-gradient-to-r from-[#19c973] to-[#16a362] rounded-full flex items-center justify-center mx-auto mb-6">
                     <service.icon className="w-10 h-10 text-white" />
@@ -227,6 +255,39 @@ const ServicesPage: React.FC = () => {
                   
                   <h3 className="text-2xl font-bold mb-4">{service.title}</h3>
                   <p className="text-gray-300 mb-6">{service.description}</p>
+                  
+                  {/* Technologies */}
+                  <div className="mb-6">
+                    <h4 className="text-sm font-semibold text-[#19c973] mb-3">Technologies:</h4>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {service.technologies.map((tech, idx) => (
+                        <span key={idx} className="px-3 py-1 bg-[#19c973]/10 text-[#19c973] text-xs rounded-full border border-[#19c973]/30">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Features */}
+                  <div className="mb-6">
+                    <h4 className="text-sm font-semibold text-[#19c973] mb-3">Features:</h4>
+                    <div className="space-y-2">
+                      {service.features.map((feature, idx) => (
+                        <div key={idx} className="flex items-center text-sm text-gray-300">
+                          <CheckCircle className="w-4 h-4 text-[#19c973] mr-2 flex-shrink-0" />
+                          {feature}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Timeline */}
+                  <div className="flex items-center mb-6 text-sm">
+                    <div className="flex items-center text-gray-400">
+                      <Clock className="w-4 h-4 mr-2" />
+                      {service.timeline}
+                    </div>
+                  </div>
                   
                   <Button variant="outline" className="w-full">
                     Explore {service.title} <ArrowRight className="w-4 h-4 ml-2" />
@@ -304,7 +365,7 @@ const ServicesPage: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="glass-card p-6 text-center hover:scale-105 transition-transform duration-300 border border-[#19c973]/30"
+                  className="glass-card p-6 text-center hover:scale-105 transition-transform duration-300 border border-[#19c973]/30 rounded-2xl"
                 >
                   <div className={`w-16 h-16 bg-gradient-to-r ${product.color} rounded-xl flex items-center justify-center mx-auto mb-6`}>
                     <product.icon className="w-8 h-8 text-white" />
@@ -349,7 +410,7 @@ const ServicesPage: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="glass-card p-6 text-center border border-[#19c973]/30"
+                  className="glass-card p-6 text-center border border-[#19c973]/30 rounded-2xl"
                 >
                   <div className="flex justify-center mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
@@ -363,6 +424,194 @@ const ServicesPage: React.FC = () => {
                     <h4 className="font-semibold text-[#19c973]">{testimonial.name}</h4>
                     <p className="text-sm text-gray-400">{testimonial.role}</p>
                   </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Service Benefits */}
+        <section className="py-20 px-4 bg-dark-950">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl font-bold mb-4">Why Choose <span className="gradient-text">CodeSpaze</span> Services?</h2>
+              <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                We deliver excellence through proven processes and dedicated support
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[
+                {
+                  icon: Shield,
+                  title: 'Quality Assurance',
+                  description: 'Rigorous testing and quality checks ensure your project meets industry standards.'
+                },
+                {
+                  icon: Clock,
+                  title: 'Timely Delivery',
+                  description: 'We commit to delivering your project on time with regular progress updates.'
+                },
+                {
+                  icon: DollarSign,
+                  title: 'Competitive Pricing',
+                  description: 'Transparent pricing with no hidden costs and flexible payment options.'
+                },
+                {
+                  icon: MessageCircle,
+                  title: '24/7 Support',
+                  description: 'Round-the-clock support and maintenance for all our services and products.'
+                }
+              ].map((benefit, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="glass-card p-6 text-center hover:scale-105 transition-transform duration-300 border border-[#19c973]/30 rounded-2xl"
+                >
+                  <div className="w-16 h-16 bg-gradient-to-r from-[#19c973] to-[#16a362] rounded-full flex items-center justify-center mx-auto mb-4">
+                    <benefit.icon className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3">{benefit.title}</h3>
+                  <p className="text-gray-300 text-sm">{benefit.description}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Contact Information */}
+        <section className="py-20 px-4">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl font-bold mb-4">Get in <span className="gradient-text">Touch</span></h2>
+              <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                Ready to start your project? Contact us for a free consultation and quote
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-3 gap-8 mb-12">
+              {[
+                {
+                  icon: Mail,
+                  title: 'Email Support',
+                  details: ['email-support@codespaze.org', 'contact@codespaze.org'],
+                  color: 'text-blue-400'
+                },
+                {
+                  icon: Phone,
+                  title: 'Call Us',
+                  details: ['+91 98765 43210'],
+                  color: 'text-green-400'
+                },
+                {
+                  icon: MapPin,
+                  title: 'Visit Us',
+                  details: ['Lucknow, Uttar Pradesh, India'],
+                  color: 'text-purple-400'
+                }
+              ].map((contact, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="glass-card p-6 text-center border border-[#19c973]/30 rounded-2xl"
+                >
+                  <div className={`w-16 h-16 bg-gradient-to-r from-[#19c973] to-[#16a362] rounded-full flex items-center justify-center mx-auto mb-4`}>
+                    <contact.icon className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-3">{contact.title}</h3>
+                  <div className="space-y-2">
+                    {contact.details.map((detail, idx) => (
+                      <p key={idx} className={`text-sm ${contact.color}`}>{detail}</p>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <Link to="/contact">
+                <Button variant="primary" size="lg">
+                  Schedule Free Consultation
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="py-20 px-4 bg-dark-950">
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl font-bold mb-4">Frequently Asked <span className="gradient-text">Questions</span></h2>
+              <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                Get answers to common questions about our services and processes
+              </p>
+            </motion.div>
+
+            <div className="space-y-6">
+              {[
+                {
+                  question: "What is the typical timeline for web development projects?",
+                  answer: "Web development projects typically take 4-12 weeks depending on complexity. We provide detailed project timelines and regular progress updates throughout the development process."
+                },
+                {
+                  question: "Do you offer ongoing support after project completion?",
+                  answer: "Yes, we provide 24/7 support and maintenance for all our services. We offer various support packages to ensure your project continues to perform optimally."
+                },
+                {
+                  question: "Can you work with existing codebases or systems?",
+                  answer: "Absolutely! We can work with your existing systems, integrate new features, or completely rebuild if needed. We'll assess your current setup and recommend the best approach."
+                },
+                {
+                  question: "What payment terms do you offer?",
+                  answer: "We offer flexible payment terms including milestone-based payments, upfront payments with discounts, and ongoing service subscriptions. We'll work with you to find the best option."
+                },
+                {
+                  question: "Do you provide training for the solutions you build?",
+                  answer: "Yes, we provide comprehensive training for all our solutions. This includes user training, technical documentation, and ongoing support to ensure your team can effectively use the system."
+                }
+              ].map((faq, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="glass-card p-6 border border-[#19c973]/30 rounded-2xl"
+                >
+                  <h3 className="text-lg font-semibold text-white mb-3">{faq.question}</h3>
+                  <p className="text-gray-300">{faq.answer}</p>
                 </motion.div>
               ))}
             </div>
