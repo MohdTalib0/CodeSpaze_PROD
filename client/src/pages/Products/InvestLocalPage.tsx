@@ -13,6 +13,7 @@ import {
   Zap,
   Target
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Button from '../../components/UI/Button';
 
 const InvestLocalPage: React.FC = () => {
@@ -132,10 +133,12 @@ const InvestLocalPage: React.FC = () => {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button variant="primary" size="lg" className="px-8 py-3">
-                  Start Investing <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-                  <Button variant="outline" size="lg" className="px-8 py-3">
+                <Link to="https://investlocal.collabxnation.com" target="_blank" rel="noopener noreferrer">
+                  <Button variant="primary" size="lg" className="px-8 py-3 flex items-center">
+                    Start Investing <ArrowRight className="w-5 h-5 ml-2" />
+                  </Button>
+                </Link>
+                <Button variant="outline" size="lg" className="px-8 py-3">
                   List Your Business
                 </Button>
               </div>

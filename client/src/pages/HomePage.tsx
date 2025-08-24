@@ -12,7 +12,9 @@ import {
   Shield,
   CheckCircle,
   Star,
-  Target
+  Target,
+  Brain,
+  Briefcase
 } from 'lucide-react';
 import Button from '../components/UI/Button';
 import SEOComponent from '../components/SEO/SEOComponent';
@@ -53,41 +55,41 @@ const HomePage: React.FC = () => {
 
   const programs = [
     {
-      title: 'AI/ML Internship',
-      duration: '6 months',
+      title: 'Internship Program',
+      duration: '3-4 months',
       category: 'Internship',
-      description: 'Master AI/ML with real-world projects and mentorship',
+      description: 'Mentored, project-based learning with real-world deliverables',
     },
     {
-      title: 'Full-Stack Fellowship',
-      duration: '8 months',
+      title: 'Fellowship Program',
+      duration: '10-12 weeks',
       category: 'Fellowship',
-      description: 'Build complete web applications from frontend to backend',
+      description: 'Client projects, evaluations, and mentor reviews',
     },
     {
-      title: 'Summer Accelerator',
-      duration: '3 months',
+      title: 'Summer Tech Accelerator',
+      duration: '4-6 weeks',
       category: 'Accelerator',
-      description: 'Intensive program for rapid skill development',
+      description: 'Fast-paced, project-based summer learning program',
     },
   ];
 
   const services = [
     {
       title: 'Internships-as-a-Service',
-      description: 'Comprehensive internship programs for universities and students',
+      description: 'Comprehensive internship programs tailored for university students with industry partnerships',
       icon: BookOpen,
       link: '/services'
     },
     {
       title: 'Career Services',
-      description: 'CV building, LinkedIn optimization, and portfolio development',
+      description: 'Professional development services to enhance your career prospects and online presence',
       icon: Users,
       link: '/services'
     },
     {
-      title: 'AI & Development',
-      description: 'Custom AI solutions, web apps, and mobile applications',
+      title: 'Web Development',
+      description: 'Full-stack web development services using modern technologies and best practices',
       icon: Code,
       link: '/services'
     }
@@ -374,6 +376,22 @@ const HomePage: React.FC = () => {
               </motion.div>
             ))}
           </div>
+          
+          {/* View All Services Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <Link to="/services">
+              <Button variant="primary" size="lg" className="group">
+                View All Services
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+          </motion.div>
         </div>
       </section>
 
@@ -470,42 +488,42 @@ const HomePage: React.FC = () => {
               {
                 title: "Fundalytics AI",
                 description: "AI-powered funding recommendations for startups with personalized matching",
-                icon: "🧠",
+                icon: Brain,
                 link: "/products/fundalytics",
                 color: "from-[#19c973] to-[#16a362]"
               },
               {
                 title: "InvestLocal",
                 description: "Local investment platform connecting investors with entrepreneurs",
-                icon: "🤝",
+                icon: Users,
                 link: "/products/investlocal",
                 color: "from-[#16a362] to-[#19c973]"
               },
               {
                 title: "AI Assistant Builder",
                 description: "No-code platform to build custom AI agents for business automation",
-                icon: "⚡",
+                icon: Brain,
                 link: "/products/ai-builder",
                 color: "from-[#19c973] to-[#1edb7f]"
               },
               {
                 title: "StackSage",
                 description: "AI-powered DeveloperOps Assistant for CI/CD monitoring and optimization",
-                icon: "🔧",
+                icon: Briefcase,
                 link: "/products/stacksage",
                 color: "from-[#1edb7f] to-[#19c973]"
               },
               {
                 title: "CollabXNation",
                 description: "Collaborative project platform for developers and aspiring founders",
-                icon: "🌐",
+                icon: Users,
                 link: "/products/collabxnation",
                 color: "from-[#19c973] to-[#16a362]"
               },
               {
                 title: "AutoServeHub",
                 description: "Automation platform using Make or n8n workflows for business processes",
-                icon: "🚀",
+                icon: Zap,
                 link: "/products/autoservehub",
                 color: "from-[#16a362] to-[#19c973]"
               }
@@ -518,8 +536,8 @@ const HomePage: React.FC = () => {
                 viewport={{ once: true }}
                 className="glass-card p-6 rounded-xl card-hover border border-[#19c973]/30"
               >
-                <div className={`w-12 h-12 bg-gradient-to-r ${product.color} rounded-lg flex items-center justify-center mb-4`}>
-                  <span className="text-2xl">{product.icon}</span>
+                <div className={`w-16 h-16 bg-gradient-to-r ${product.color} rounded-xl flex items-center justify-center mx-auto mb-6`}>
+                  <product.icon className="w-8 h-8 text-white" />
                 </div>
                 
                 <h3 className="text-xl font-semibold text-white mb-2">

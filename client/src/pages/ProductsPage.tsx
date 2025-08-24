@@ -12,7 +12,7 @@ const ProductsPage: React.FC = () => {
       description: 'AI-powered startup funding assistant that analyzes startup stage, domain, and location to recommend grants, VCs, accelerators, or loans.',
       features: ['Startup stage analysis', 'Domain-specific insights', 'Location-based recommendations', 'Personalized funding feed'],
       icon: Brain,
-      link: '/products/fundalytics-ai',
+      link: '/products/fundalytics',
       color: 'from-[#19c973] to-[#16a362]'
     },
     {
@@ -20,7 +20,7 @@ const ProductsPage: React.FC = () => {
       description: 'Mobile platform connecting small local investors with city-based entrepreneurs. Like OLX for investments.',
       features: ['Local investment matching', 'Trust verification', 'In-person meetings', 'Transparent discovery'],
       icon: Globe,
-      link: '/products/invest-local',
+      link: '/products/investlocal',
       color: 'from-[#16a362] to-[#19c973]'
     },
     {
@@ -28,7 +28,7 @@ const ProductsPage: React.FC = () => {
       description: 'No-code/low-code platform to build GPT-like agents that automate specific business needs.',
       features: ['No-code AI building', 'Business automation', 'Custom AI agents', 'Vertical-specific solutions'],
       icon: Zap,
-      link: '/products/ai-assistant-builder',
+      link: '/products/ai-builder',
       color: 'from-[#19c973] to-[#1edb7f]'
     },
     {
@@ -36,7 +36,7 @@ const ProductsPage: React.FC = () => {
       description: 'AI-powered DeveloperOps Assistant that plugs into services like Netlify, Supabase, GitHub, and Slack.',
       features: ['CI/CD monitoring', 'Performance tracking', 'Security auditing', 'Slack integration'],
       icon: TrendingUp,
-      link: '/products/stack-sage',
+      link: '/products/stacksage',
       color: 'from-[#1edb7f] to-[#19c973]'
     },
     {
@@ -44,7 +44,7 @@ const ProductsPage: React.FC = () => {
       description: 'Collaborative project platform empowering developers and aspiring founders with real-world project experience.',
       features: ['Project collaboration', 'Skill validation', 'Networking opportunities', 'Portfolio building'],
       icon: Users,
-      link: '/products/collab-x-nation',
+      link: '/products/collabxnation',
       color: 'from-[#19c973] to-[#16a362]'
     },
     {
@@ -52,7 +52,7 @@ const ProductsPage: React.FC = () => {
       description: 'Automation platform using Make or n8n workflows for business process automation.',
       features: ['Workflow automation', 'Business process optimization', 'Integration support', 'Custom automation'],
       icon: Target,
-      link: '/products/auto-serve-hub',
+      link: '/products/autoservehub',
       color: 'from-[#16a362] to-[#19c973]'
     }
   ];

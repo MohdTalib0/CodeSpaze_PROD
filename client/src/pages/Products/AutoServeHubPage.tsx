@@ -16,6 +16,7 @@ import {
   Clock,
   Database
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Button from '../../components/UI/Button';
 
 const AutoServeHubPage: React.FC = () => {
@@ -171,9 +172,11 @@ const AutoServeHubPage: React.FC = () => {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button variant="primary" size="lg" className="px-8 py-3">
-                  Start Automating <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
+                <Link to="https://autoservehub.codespaze.org/" target="_blank" rel="noopener noreferrer">
+                  <Button variant="primary" size="lg" className="px-8 py-3 flex items-center">
+                    Start Automating <ArrowRight className="w-5 h-5 ml-2" />
+                  </Button>
+                </Link>
                 <Button variant="outline" size="lg" className="px-8 py-3">
                   View Templates
                 </Button>

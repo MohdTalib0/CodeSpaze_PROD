@@ -108,6 +108,7 @@ const Header: React.FC = () => {
     { 
       name: 'CollabXNation', 
       href: '/products/collabxnation', 
+      icon: Users,
       description: 'Collaborative project platform for developers & founders'
     },
     { 

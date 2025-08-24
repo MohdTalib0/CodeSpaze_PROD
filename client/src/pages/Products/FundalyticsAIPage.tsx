@@ -92,9 +92,11 @@ const FundalyticsAIPage: React.FC = () => {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button variant="primary" size="lg" className="px-8 py-3">
-                  Start Free Trial <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
+                <Link to="https://fundalytics.netlify.app" target="_blank" rel="noopener noreferrer">
+                  <Button variant="primary" size="lg" className="px-8 py-3">
+                    Start Free Trial <ArrowRight className="w-5 h-5 ml-2" />
+                  </Button>
+                </Link>
                 <Button variant="outline" size="lg" className="px-8 py-3">
                   Watch Demo
                 </Button>
