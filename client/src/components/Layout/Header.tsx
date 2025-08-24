@@ -25,13 +25,14 @@ const Header: React.FC = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isProgramsDropdownOpen, setIsProgramsDropdownOpen] = useState(false);
   const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
+  const [isMobileProgramsOpen, setIsMobileProgramsOpen] = useState(false);
+  const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const location = useLocation();
 
   const navigation = [
     { name: 'Home', href: '/' },
     { name: 'Services', href: '/services' },
-    { name: 'Contact', href: '/contact' },
   ];
 
   const programsDropdownItems = [
@@ -384,6 +385,18 @@ const Header: React.FC = () => {
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Contact Link */}
+            <Link
+              to="/contact"
+              className={`text-sm font-medium transition-colors duration-200 ${
+                location.pathname === '/contact'
+                  ? 'text-[#19c973]'
+                  : 'text-gray-300 hover:text-[#19c973]'
+              }`}
+            >
+              Contact
+            </Link>
           </nav>
 
           {/* Desktop Auth Buttons */}
@@ -488,52 +501,97 @@ const Header: React.FC = () => {
               
               {/* Programs Section */}
               <div className="border-t border-[#19c973]/20 pt-4">
-                <div className="text-xs font-semibold text-[#19c973] uppercase tracking-wider mb-3">
-                  Programs
-                </div>
-                {programsDropdownItems.map((item, index) => (
-                  <Link
-                    key={index}
-                    to={item.href}
-                    className="flex items-center space-x-3 py-2 text-sm text-gray-300 hover:text-[#19c973] transition-colors duration-200"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.icon && (
-                      <div className="w-6 h-6 bg-gradient-to-r from-[#19c973] to-[#16a362] rounded-lg flex items-center justify-center flex-shrink-0">
-                        <item.icon className="w-3 h-3 text-white" />
-                      </div>
-                    )}
-                    <div>
-                      <div className="font-medium">{item.name}</div>
-                      <div className="text-xs text-gray-500">{item.description}</div>
-                    </div>
-                  </Link>
-                ))}
+                <button
+                  onClick={() => setIsMobileProgramsOpen(!isMobileProgramsOpen)}
+                  className="flex items-center justify-between w-full text-xs font-semibold text-[#19c973] uppercase tracking-wider mb-3 hover:text-[#1edb7f] transition-colors duration-200"
+                >
+                  <span>Programs</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${
+                    isMobileProgramsOpen ? 'rotate-180' : ''
+                  }`} />
+                </button>
+                <AnimatePresence>
+                  {isMobileProgramsOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="space-y-2 overflow-hidden"
+                    >
+                      {programsDropdownItems.map((item, index) => (
+                        <Link
+                          key={index}
+                          to={item.href}
+                          className="flex items-center space-x-3 py-2 text-sm text-gray-300 hover:text-[#19c973] transition-colors duration-200 pl-4"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {item.icon && (
+                            <div className="w-6 h-6 bg-gradient-to-r from-[#19c973] to-[#16a362] rounded-lg flex items-center justify-center flex-shrink-0">
+                              <item.icon className="w-3 h-3 text-white" />
+                            </div>
+                          )}
+                          <div>
+                            <div className="font-medium">{item.name}</div>
+                            <div className="text-xs text-gray-500">{item.description}</div>
+                          </div>
+                        </Link>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Products Section */}
               <div className="border-t border-[#19c973]/20 pt-4">
-                <div className="text-xs font-semibold text-[#19c973] uppercase tracking-wider mb-3">
-                  Products
-                </div>
-                {productsDropdownItems.map((item, index) => (
-                  <Link
-                    key={index}
-                    to={item.href}
-                    className="flex items-center space-x-3 py-2 text-sm text-gray-300 hover:text-[#19c973] transition-colors duration-200"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.icon && (
-                      <div className="w-6 h-6 bg-gradient-to-r from-[#19c973] to-[#16a362] rounded-lg flex items-center justify-center flex-shrink-0">
-                        <item.icon className="w-3 h-3 text-white" />
-                      </div>
-                    )}
-                    <div>
-                      <div className="font-medium">{item.name}</div>
-                      <div className="text-xs text-gray-500">{item.description}</div>
-                    </div>
-                  </Link>
-                ))}
+                <button
+                  onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
+                  className="flex items-center justify-between w-full text-xs font-semibold text-[#19c973] uppercase tracking-wider mb-3 hover:text-[#1edb7f] transition-colors duration-200"
+                >
+                  <span>Products</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${
+                    isMobileProductsOpen ? 'rotate-180' : ''
+                  }`} />
+                </button>
+                <AnimatePresence>
+                  {isMobileProductsOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="space-y-2 overflow-hidden"
+                    >
+                      {productsDropdownItems.map((item, index) => (
+                        <Link
+                          key={index}
+                          to={item.href}
+                          className="flex items-center space-x-3 py-2 text-sm text-gray-300 hover:text-[#19c973] transition-colors duration-200 pl-4"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {item.icon && (
+                            <div className="w-6 h-6 bg-gradient-to-r from-[#19c973] to-[#16a362] rounded-lg flex items-center justify-center flex-shrink-0">
+                              <item.icon className="w-3 h-3 text-white" />
+                            </div>
+                          )}
+                          <div>
+                            <div className="font-medium">{item.name}</div>
+                            <div className="text-xs text-gray-500">{item.description}</div>
+                          </div>
+                        </Link>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Contact Section */}
+              <div className="border-t border-[#19c973]/20 pt-4">
+                <Link
+                  to="/contact"
+                  className="block text-sm font-medium text-gray-300 hover:text-[#19c973] transition-colors duration-200"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Contact
+                </Link>
               </div>
               
               {isAuthenticated ? (
@@ -566,14 +624,14 @@ const Header: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <div className="pt-4 border-t border-[#19c973]/20 space-y-2">
+                <div className="pt-4 border-t border-[#19c973]/20 space-y-4">
                   <Link to="/login" onClick={() => setIsMenuOpen(false)}>
                     <Button variant="outline" size="sm" className="w-full">
                       Login
                     </Button>
                   </Link>
                   <Link to="/enroll" onClick={() => setIsMenuOpen(false)}>
-                    <Button variant="primary" size="sm" className="w-full">
+                    <Button variant="primary" size="sm" className="w-full mt-4">
                       Join Now
                     </Button>
                   </Link>

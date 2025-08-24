@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
+import { ScrollToTop } from '../UI';
 import { useAuth } from '../../context/AuthContext';
 
 interface LayoutProps {
@@ -23,6 +24,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       
       {/* Footer */}
       <Footer />
+      
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
     </div>
   );
 };
