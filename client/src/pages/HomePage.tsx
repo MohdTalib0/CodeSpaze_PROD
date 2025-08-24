@@ -181,7 +181,7 @@ const HomePage: React.FC = () => {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="inline-flex items-center px-4 py-2 glass-card rounded-full text-sm font-medium text-primary-500 hover:scale-105 transition-all duration-300"
+              className="inline-flex items-center px-4 py-2 glass-card rounded-full text-sm font-medium text-primary-500 hover:scale-105 transition-all duration-300 mt-8 md:mt-0"
             >
               <Zap className="w-4 h-4 mr-2" />
               Transform Your Tech Career
