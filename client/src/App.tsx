@@ -54,6 +54,72 @@ function App() {
     });
   }, [location.pathname]);
 
+  // Handle visibility change to prevent routing issues when minimizing/restoring
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && location.pathname !== '/') {
+        // When tab becomes visible again, ensure we're on the correct route
+        // This prevents the "not found" issue when returning to minimized tabs
+        const currentPath = window.location.pathname;
+        if (currentPath !== location.pathname) {
+          // If there's a mismatch, navigate to the correct route
+          navigate(currentPath, { replace: true });
+        }
+      }
+    };
+
+    // Handle page focus events
+    const handleFocus = () => {
+      if (location.pathname !== '/') {
+        const currentPath = window.location.pathname;
+        if (currentPath !== location.pathname) {
+          navigate(currentPath, { replace: true });
+        }
+      }
+    };
+
+    // Handle beforeunload to save current state
+    const handleBeforeUnload = () => {
+      localStorage.setItem('codespaze_current_route', location.pathname);
+      localStorage.setItem('codespaze_timestamp', Date.now().toString());
+    };
+
+    // Add event listeners
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [location.pathname, navigate]);
+
+  // Persist current route to localStorage and restore on app initialization
+  useEffect(() => {
+    // Save current route to localStorage
+    localStorage.setItem('codespaze_current_route', location.pathname);
+    
+    // Restore route on app initialization if there's a mismatch
+    const savedRoute = localStorage.getItem('codespaze_current_route');
+    const timestamp = localStorage.getItem('codespaze_timestamp');
+    
+    if (savedRoute && savedRoute !== location.pathname && savedRoute !== '/') {
+      // Check if the saved route is recent (within last 5 minutes)
+      const isRecent = timestamp && (Date.now() - parseInt(timestamp)) < 5 * 60 * 1000;
+      
+      if (isRecent) {
+        // Only restore if it's a valid route and recent
+        navigate(savedRoute, { replace: true });
+      } else {
+        // Clear old route data
+        localStorage.removeItem('codespaze_current_route');
+        localStorage.removeItem('codespaze_timestamp');
+      }
+    }
+  }, [location.pathname, navigate]);
+
   // Listen for auth logout events from API service
   useEffect(() => {
     const handleAuthLogout = (event: CustomEvent) => {

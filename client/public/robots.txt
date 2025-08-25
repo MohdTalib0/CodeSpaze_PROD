@@ -1,31 +1,114 @@
+# robots.txt for codespaze.org
+# Allow all search engines to crawl the site
+
 User-agent: *
 Allow: /
 
-# Sitemap
+# Sitemap location
 Sitemap: https://codespaze.org/sitemap.xml
 
-# Crawl-delay
+# Crawl delay (optional - helps with server load)
 Crawl-delay: 1
 
-# Disallow admin and private areas
+# Disallow only truly sensitive/private areas
 Disallow: /admin/
 Disallow: /dashboard/
 Disallow: /api/
 Disallow: /uploads/
+Disallow: /_next/
+Disallow: /static/
+Disallow: /private/
+Disallow: /internal/
+Disallow: /temp/
+Disallow: /cache/
+Disallow: /logs/
+Disallow: /config/
+Disallow: /.env
+Disallow: /package.json
+Disallow: /package-lock.json
+Disallow: /node_modules/
+Disallow: /.git/
+Disallow: /.github/
 
-# Allow important pages
+# Explicitly allow important public content
 Allow: /programs/
 Allow: /products/
 Allow: /services/
 Allow: /contact/
 Allow: /enroll/
+Allow: /about
+Allow: /team
+Allow: /careers
+Allow: /blog
+Allow: /news
+Allow: /events
+Allow: /testimonials
+Allow: /faq
+Allow: /support
+Allow: /help
+Allow: /privacy
+Allow: /terms
+Allow: /cookies
+
+# Allow authentication pages (they're public)
 Allow: /login
 Allow: /register
+Allow: /forgot-password
+Allow: /reset-password
 
-# Allow static assets
+# Allow all program detail pages
+Allow: /programs/internship
+Allow: /programs/fellowship
+Allow: /programs/summer
+Allow: /programs/winter
+Allow: /programs/international
+
+# Allow all product detail pages
+Allow: /products/fundalytics
+Allow: /products/investlocal
+Allow: /products/ai-builder
+Allow: /products/stacksage
+Allow: /products/collabxnation
+Allow: /products/autoservehub
+
+# Allow static assets and media
 Allow: /css/
 Allow: /js/
 Allow: /images/
 Allow: /fonts/
+Allow: /assets/
+Allow: /media/
+Allow: /icons/
+Allow: /logos/
 Allow: /favicon.ico
 Allow: /manifest.json
+Allow: /logo.png
+Allow: /logo192.png
+Allow: /logo512.png
+Allow: /apple-touch-icon.png
+Allow: /browserconfig.xml
+
+# Allow common file types
+Allow: /*.html
+Allow: /*.css
+Allow: /*.js
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.gif
+Allow: /*.svg
+Allow: /*.ico
+Allow: /*.xml
+Allow: /*.txt
+Allow: /*.pdf
+
+# Block common unwanted files
+Disallow: /*.json$
+Disallow: /*.log$
+Disallow: /*.tmp$
+Disallow: /*.bak$
+Disallow: /*.old$
+Disallow: /*.swp$
+Disallow: /*.swo$
+Disallow: /Thumbs.db
+Disallow: /desktop.ini

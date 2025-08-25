@@ -6,6 +6,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from 'react-hot-toast';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
+import ErrorBoundary from './components/UI/ErrorBoundary';
 import './index.css';
 
 const queryClient = new QueryClient({
@@ -26,20 +27,22 @@ root.render(
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <AuthProvider>
-            <App />
-            <Toaster
-              position="top-right"
-              toastOptions={{
-                duration: 4000,
-                style: {
-                  background: '#1a1a1a',
-                  color: '#c1ff72',
-                  border: '1px solid #c1ff72',
-                },
-              }}
-            />
-          </AuthProvider>
+          <ErrorBoundary>
+            <AuthProvider>
+              <App />
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  duration: 4000,
+                  style: {
+                    background: '#1a1a1a',
+                    color: '#c1ff72',
+                    border: '1px solid #c1ff72',
+                  },
+                }}
+              />
+            </AuthProvider>
+          </ErrorBoundary>
         </BrowserRouter>
       </QueryClientProvider>
     </HelmetProvider>
