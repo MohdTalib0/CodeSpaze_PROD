@@ -54,6 +54,20 @@ function App() {
   const { isAuthenticated, user, logout } = useAuth();
   const location = useLocation();
 
+  // Handle domain redirects (www to non-www)
+  React.useEffect(() => {
+    const currentHost = window.location.hostname;
+    const currentPath = window.location.pathname;
+    
+    // If accessing www subdomain, redirect to main domain
+    if (currentHost === 'www.codespaze.org') {
+      const newUrl = `https://codespaze.org${currentPath}`;
+      console.log('Redirecting from www to main domain:', newUrl);
+      window.location.href = newUrl;
+      return;
+    }
+  }, []);
+
   // Simple route saving - just save the current route
   React.useEffect(() => {
     localStorage.setItem('codespaze_current_route', location.pathname);
