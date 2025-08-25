@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from './context/AuthContext';
@@ -40,70 +40,33 @@ import EnrollmentForm from './components/EnrollmentForm';
 // Contact Page
 import ContactPage from './pages/ContactPage';
 
+// Loading component
+const LoadingSpinner = () => (
+  <div className="min-h-screen bg-dark-950 flex items-center justify-center">
+    <div className="text-center">
+      <div className="w-16 h-16 border-4 border-[#19c973] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <p className="text-white text-lg">Loading...</p>
+    </div>
+  </div>
+);
+
 function App() {
   const { isAuthenticated, user, logout } = useAuth();
   const location = useLocation();
-  const [isInitialized, setIsInitialized] = useState(false);
-
-  // Initialize the app
-  useEffect(() => {
-    // Small delay to ensure React Router is fully initialized
-    const timer = setTimeout(() => {
-      setIsInitialized(true);
-    }, 100);
-    
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Simple route validation to prevent "not found" issues
-  useEffect(() => {
-    if (isInitialized) {
-      const currentPath = window.location.pathname;
-      const savedRoute = localStorage.getItem('codespaze_current_route');
-      
-      // If we're on a path that doesn't match our saved route, and we have a valid saved route
-      if (savedRoute && savedRoute !== currentPath && savedRoute !== '/') {
-        // Check if current path is valid by looking at our route structure
-        const validPaths = [
-          '/', '/programs', '/products', '/services', '/contact', '/enroll', '/login', '/register',
-          '/programs/internship', '/programs/fellowship', '/programs/summer', '/programs/winter', '/programs/international',
-          '/products/fundalytics', '/products/investlocal', '/products/ai-builder', '/products/stacksage', '/products/collabxnation', '/products/autoservehub'
-        ];
-        
-        // If current path is not valid, but saved route is, restore the saved route
-        if (!validPaths.includes(currentPath) && validPaths.includes(savedRoute)) {
-          // Use window.location to navigate to the saved route
-          window.location.href = savedRoute;
-        }
-      }
-    }
-  }, [isInitialized]);
-
-  useEffect(() => {
-    // Smooth scroll to top when route changes
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth'
-    });
-  }, [location.pathname]);
 
   // Simple route saving - just save the current route
-  useEffect(() => {
+  React.useEffect(() => {
     localStorage.setItem('codespaze_current_route', location.pathname);
     localStorage.setItem('codespaze_timestamp', Date.now().toString());
   }, [location.pathname]);
 
   // Listen for auth logout events from API service
-  useEffect(() => {
+  React.useEffect(() => {
     const handleAuthLogout = (event: CustomEvent) => {
       const { redirectTo } = event.detail;
       // Clear auth state and navigate using React Router
       logout();
-      // The original code had `navigate(redirectTo);` here, but `navigate` is removed.
-      // Assuming the intent was to redirect to the login page or a generic error page
-      // if the user is not authenticated and tries to access a protected route.
-      // For now, we'll just clear the route and timestamp.
+      // Clear route data
       localStorage.removeItem('codespaze_current_route');
       localStorage.removeItem('codespaze_timestamp');
     };
@@ -217,15 +180,7 @@ function App() {
         </script>
       </Helmet>
 
-      {/* Show loading while initializing */}
-      {!isInitialized ? (
-        <div className="min-h-screen bg-dark-950 flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-[#19c973] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-white text-lg">Loading...</p>
-          </div>
-        </div>
-      ) : (
+      <Suspense fallback={<LoadingSpinner />}>
         <div className="min-h-screen bg-dark-950 relative overflow-hidden">
           {/* Main Content */}
           <div className="relative z-10">
@@ -375,7 +330,7 @@ function App() {
             </Routes>
           </div>
         </div>
-      )}
+      </Suspense>
     </>
   );
 }
