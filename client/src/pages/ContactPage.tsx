@@ -11,7 +11,6 @@ import {
   Globe,
   Instagram,
   Linkedin,
-  Github,
   Twitter
 } from 'lucide-react';
 import Button from '../components/UI/Button';
@@ -132,7 +131,7 @@ const ContactPage: React.FC = () => {
   const socialLinks = [
     { icon: Instagram, href: 'https://instagram.com/codespaze', label: 'Instagram', color: 'hover:text-pink-400' },
     { icon: Linkedin, href: 'https://linkedin.com/company/codespaze', label: 'LinkedIn', color: 'hover:text-blue-400' },
-    { icon: Github, href: 'https://github.com/codespaze', label: 'GitHub', color: 'hover:text-gray-400' },
+    { icon: MessageCircle, href: 'https://t.me/codespaze_community', label: 'Telegram', color: 'hover:text-blue-400' },
     { icon: Twitter, href: 'https://twitter.com/codespaze', label: 'Twitter', color: 'hover:text-blue-400' }
   ];
 

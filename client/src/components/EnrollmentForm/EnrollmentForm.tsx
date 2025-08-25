@@ -70,13 +70,15 @@ const EnrollmentForm: React.FC = () => {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const programs = [
     'Internship Program',
     'Fellowship Program', 
-    'Summer Tech Accelerator',
-    'Winter Tech Accelerator',
-    'International Programs'
+    'Global - International Internships (Remote, Cross-Border)',
+    'Global - Remote Apprenticeship Residency',
+    'Global - Global Career Accelerator',
+    'Global - International Hackathon Series'
   ];
 
   const technologyOptions = [
@@ -213,9 +215,79 @@ const EnrollmentForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted:', formData);
-    // You can add API call here
+    
+    if (!validateStep(3)) {
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      // Create FormData for file upload
+      const formDataToSend = new FormData();
+      
+      // Add all form fields
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === 'resume' && value instanceof File) {
+          formDataToSend.append('resume', value);
+        } else if (key === 'technologies') {
+          formDataToSend.append('technologies', JSON.stringify(value));
+        } else if (typeof value === 'boolean') {
+          formDataToSend.append(key, value.toString());
+        } else if (value !== null && value !== undefined) {
+          formDataToSend.append(key, value.toString());
+        }
+      });
+      
+      // Make API call to submit enrollment
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/enrollment/submit`, {
+        method: 'POST',
+        body: formDataToSend,
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit enrollment');
+      }
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        setSubmitSuccess(true);
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          address: '',
+          city: '',
+          state: '',
+          country: '',
+          linkedin: '',
+          github: '',
+          resume: null,
+          school: '',
+          degree: '',
+          fieldOfStudy: '',
+          graduationYear: '',
+          currentYear: '',
+          technologies: [],
+          selectedProgram: '',
+          telegramUsername: '',
+          instagramUsername: '',
+          agreeToTerms: false
+        });
+        
+        // Reset success message after 5 seconds
+        setTimeout(() => setSubmitSuccess(false), 5000);
+      }
+      
+    } catch (error) {
+      console.error('Submission error:', error);
+      setErrors({ submit: error instanceof Error ? error.message : 'Failed to send enrollment. Please try again.' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const renderStepIndicator = () => (
@@ -271,7 +343,7 @@ const EnrollmentForm: React.FC = () => {
             type="text"
             value={formData.lastName}
             onChange={(e) => handleInputChange('lastName', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none"
+            className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#19c973] focus:outline-none"
             placeholder="Enter your last name"
           />
           {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
@@ -614,6 +686,15 @@ const EnrollmentForm: React.FC = () => {
         <label className="block text-sm font-medium text-gray-300 mb-2">
           Select Program to Apply For *
         </label>
+        
+        {/* Program Availability Note */}
+        <div className="mb-3 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+          <p className="text-blue-400 text-sm">
+            <strong>Note:</strong> Summer and Winter Tech Accelerator programs are currently not accepting new enrollments. 
+            Please select from our available programs below.
+          </p>
+        </div>
+        
         <select
           value={formData.selectedProgram}
           onChange={(e) => handleInputChange('selectedProgram', e.target.value)}
@@ -636,37 +717,32 @@ const EnrollmentForm: React.FC = () => {
           Connect with fellow learners and stay updated with the latest opportunities! Follow our social media accounts to get updates about programs, events, and opportunities.
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              <MessageCircle className="w-4 h-4 inline mr-2 text-blue-400" />
-              Telegram Username
-            </label>
-            <input
-              type="text"
-              value={formData.telegramUsername}
-              onChange={(e) => handleInputChange('telegramUsername', e.target.value)}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#19c973] focus:outline-none"
-              placeholder="@username or username"
-            />
-            <p className="text-xs text-gray-400 mt-1">Join our Telegram group for updates</p>
-          </div>
+        {/* Social Media Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4">
+          <a
+            href="https://t.me/codespaze_community"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200 hover:scale-105"
+          >
+            <MessageCircle className="w-5 h-5 mr-2" />
+            Join Our Telegram Group
+          </a>
           
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              <Instagram className="w-4 h-4 inline mr-2 text-pink-400" />
-              Instagram Username
-            </label>
-            <input
-              type="text"
-              value={formData.instagramUsername}
-              onChange={(e) => handleInputChange('instagramUsername', e.target.value)}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#19c973] focus:outline-none"
-              placeholder="username"
-            />
-            <p className="text-xs text-gray-400 mt-1">Follow @codespaze for program updates</p>
-          </div>
+          <a
+            href="https://instagram.com/codespaze"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white rounded-lg transition-all duration-200 hover:scale-105"
+          >
+            <Instagram className="w-5 h-5 mr-2" />
+            Follow on Instagram
+          </a>
         </div>
+        
+
+          
+
       </div>
 
       <div className="flex items-start space-x-3">
@@ -710,6 +786,15 @@ const EnrollmentForm: React.FC = () => {
 
         <div className="glass-card p-8 rounded-2xl border border-[#19c973]/30">
           {renderStepIndicator()}
+          
+          {submitSuccess && (
+            <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
+              <div className="flex items-center">
+                <CheckCircle className="w-5 h-5 text-green-400 mr-2" />
+                <p className="text-green-400 text-sm">Enrollment submitted successfully! We'll review your application and get back to you soon.</p>
+              </div>
+            </div>
+          )}
           
           {errors.submit && (
             <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">

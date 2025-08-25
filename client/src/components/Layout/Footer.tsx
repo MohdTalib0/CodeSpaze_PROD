@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Github, Twitter, Linkedin, Mail, Globe, GraduationCap, Award, Users, Zap, Calendar, Brain, Briefcase, Rocket, Workflow, Database, Settings, BookOpen, Eye, Cpu, Network, Building, Code, Target, MapPin, HelpCircle } from 'lucide-react';
+import { MessageCircle, Twitter, Linkedin, Mail, Globe, GraduationCap, Award, Users, Zap, Calendar, Brain, Briefcase, Rocket, Workflow, Database, Settings, BookOpen, Eye, Cpu, Network, Building, Code, Target, MapPin, HelpCircle } from 'lucide-react';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -46,10 +46,10 @@ const Footer: React.FC = () => {
   };
 
   const socialLinks = [
-    { name: 'GitHub', icon: Github, href: 'https://github.com/codespaze' },
+    { name: 'Telegram', icon: MessageCircle, href: 'https://t.me/codespaze_community' },
     { name: 'Twitter', icon: Twitter, href: 'https://twitter.com/codespaze' },
     { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/codespaze' },
-    { name: 'Email', icon: Mail, href: 'mailto:hello@codespaze.com' },
+    { name: 'Email', icon: Mail, href: 'mailto:support@codespaze.org' },
   ];
 
   return (
@@ -63,14 +63,10 @@ const Footer: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               className="flex items-center space-x-3"
             >
-              <div className="w-40 h-18 flex items-center justify-center">
-                <img 
-                  src="/codespaze-logo1.jpg" 
-                  alt="CodeSpaze Logo" 
-                  className="w-full h-full object-contain"
-                />
+              <div className="w-12 h-12 bg-gradient-to-r from-[#19c973] to-[#16a362] rounded-xl flex items-center justify-center">
+                <Code className="w-7 h-7 text-white" />
               </div>
-              
+              <div className="text-2xl font-bold text-white">CodeSpaze</div>
             </motion.div>
           </Link>
             <p className="text-gray-300 mb-6 max-w-md">

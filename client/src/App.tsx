@@ -8,6 +8,9 @@ import Layout from './components/Layout/Layout';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import AdminRoute from './components/Auth/AdminRoute';
 
+// Debug Components (remove in production)
+import RouteRecoveryDebug from './components/UI/RouteRecoveryDebug';
+
 // Pages
 import HomePage from './pages/HomePage';
 import ProgramsPage from './pages/ProgramsPage';
@@ -84,41 +87,109 @@ function App() {
       localStorage.setItem('codespaze_timestamp', Date.now().toString());
     };
 
+    // Handle mobile-specific events
+    const handlePageShow = (event: PageTransitionEvent) => {
+      // This event fires when the page becomes visible again (including after Chrome is cut)
+      if (event.persisted) {
+        // Page was loaded from cache (back/forward navigation)
+        const currentPath = window.location.pathname;
+        if (currentPath !== location.pathname) {
+          navigate(currentPath, { replace: true });
+        }
+      }
+    };
+
+    // Handle mobile app state changes
+    const handleAppStateChange = () => {
+      if (document.visibilityState === 'visible') {
+        const currentPath = window.location.pathname;
+        if (currentPath !== location.pathname) {
+          navigate(currentPath, { replace: true });
+        }
+      }
+    };
+
     // Add event listeners
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('focus', handleFocus);
     window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('pageshow', handlePageShow);
+    document.addEventListener('visibilitychange', handleAppStateChange);
     
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('focus', handleFocus);
       window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('pageshow', handlePageShow);
+      document.removeEventListener('visibilitychange', handleAppStateChange);
     };
   }, [location.pathname, navigate]);
 
-  // Persist current route to localStorage and restore on app initialization
+  // Enhanced route restoration with mobile-specific handling
   useEffect(() => {
     // Save current route to localStorage
     localStorage.setItem('codespaze_current_route', location.pathname);
     
-    // Restore route on app initialization if there's a mismatch
+    // Check if we need to restore a route (only on initial load)
     const savedRoute = localStorage.getItem('codespaze_current_route');
     const timestamp = localStorage.getItem('codespaze_timestamp');
+    const isInitialLoad = !sessionStorage.getItem('codespaze_initialized');
     
-    if (savedRoute && savedRoute !== location.pathname && savedRoute !== '/') {
-      // Check if the saved route is recent (within last 5 minutes)
-      const isRecent = timestamp && (Date.now() - parseInt(timestamp)) < 5 * 60 * 1000;
+    if (isInitialLoad && savedRoute && savedRoute !== location.pathname && savedRoute !== '/') {
+      // Check if the saved route is recent (within last 10 minutes for mobile)
+      const isRecent = timestamp && (Date.now() - parseInt(timestamp)) < 10 * 60 * 1000;
       
       if (isRecent) {
-        // Only restore if it's a valid route and recent
-        navigate(savedRoute, { replace: true });
+        // Mark as initialized to prevent multiple restorations
+        sessionStorage.setItem('codespaze_initialized', 'true');
+        
+        // Small delay to ensure app is fully loaded
+        setTimeout(() => {
+          navigate(savedRoute, { replace: true });
+        }, 100);
       } else {
         // Clear old route data
         localStorage.removeItem('codespaze_current_route');
         localStorage.removeItem('codespaze_timestamp');
       }
     }
+    
+    // Mark as initialized
+    if (!isInitialLoad) {
+      sessionStorage.setItem('codespaze_initialized', 'true');
+    }
   }, [location.pathname, navigate]);
+
+  // Additional mobile-specific route recovery
+  useEffect(() => {
+    const handleRouteRecovery = () => {
+      const currentPath = window.location.pathname;
+      const savedRoute = localStorage.getItem('codespaze_current_route');
+      
+      // If we're on a route that doesn't match our saved route, try to recover
+      if (savedRoute && currentPath !== savedRoute && savedRoute !== '/') {
+        // Check if current path is valid
+        const validRoutes = [
+          '/programs', '/products', '/services', '/contact', '/enroll', '/login', '/register',
+          '/programs/internship', '/programs/fellowship', '/programs/summer', '/programs/winter', '/programs/international',
+          '/products/fundalytics', '/products/investlocal', '/products/ai-builder', '/products/stacksage', '/products/collabxnation', '/products/autoservehub'
+        ];
+        
+        if (validRoutes.includes(currentPath)) {
+          // Current path is valid, update saved route
+          localStorage.setItem('codespaze_current_route', currentPath);
+        } else if (validRoutes.includes(savedRoute)) {
+          // Saved route is valid, navigate to it
+          navigate(savedRoute, { replace: true });
+        }
+      }
+    };
+
+    // Run recovery check after a short delay
+    const timer = setTimeout(handleRouteRecovery, 500);
+    
+    return () => clearTimeout(timer);
+  }, [navigate]);
 
   // Listen for auth logout events from API service
   useEffect(() => {
@@ -386,6 +457,9 @@ function App() {
             } />
           </Routes>
         </div>
+
+        {/* Debug Component - Remove in production */}
+        {process.env.NODE_ENV === 'development' && <RouteRecoveryDebug />}
       </div>
     </>
   );
