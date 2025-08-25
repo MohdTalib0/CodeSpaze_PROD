@@ -134,8 +134,6 @@ export const initializeDatabase = async (): Promise<void> => {
         current_year VARCHAR(50) NOT NULL,
         technologies TEXT[] NOT NULL,
         selected_program VARCHAR(255) NOT NULL,
-        telegram_username VARCHAR(100),
-        instagram_username VARCHAR(100),
         status VARCHAR(50) DEFAULT 'pending',
         reviewed_at TIMESTAMP,
         reviewed_by INTEGER REFERENCES users(id),

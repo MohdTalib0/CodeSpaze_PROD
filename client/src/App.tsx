@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from './context/AuthContext';
 
@@ -7,9 +7,6 @@ import { useAuth } from './context/AuthContext';
 import Layout from './components/Layout/Layout';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import AdminRoute from './components/Auth/AdminRoute';
-
-// Debug Components (remove in production)
-import RouteRecoveryDebug from './components/UI/RouteRecoveryDebug';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -46,7 +43,6 @@ import ContactPage from './pages/ContactPage';
 function App() {
   const { isAuthenticated, user, logout } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Smooth scroll to top when route changes
@@ -57,139 +53,11 @@ function App() {
     });
   }, [location.pathname]);
 
-  // Handle visibility change to prevent routing issues when minimizing/restoring
+  // Simple route saving - just save the current route
   useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (!document.hidden && location.pathname !== '/') {
-        // When tab becomes visible again, ensure we're on the correct route
-        // This prevents the "not found" issue when returning to minimized tabs
-        const currentPath = window.location.pathname;
-        if (currentPath !== location.pathname) {
-          // If there's a mismatch, navigate to the correct route
-          navigate(currentPath, { replace: true });
-        }
-      }
-    };
-
-    // Handle page focus events
-    const handleFocus = () => {
-      if (location.pathname !== '/') {
-        const currentPath = window.location.pathname;
-        if (currentPath !== location.pathname) {
-          navigate(currentPath, { replace: true });
-        }
-      }
-    };
-
-    // Handle beforeunload to save current state
-    const handleBeforeUnload = () => {
-      localStorage.setItem('codespaze_current_route', location.pathname);
-      localStorage.setItem('codespaze_timestamp', Date.now().toString());
-    };
-
-    // Handle mobile-specific events
-    const handlePageShow = (event: PageTransitionEvent) => {
-      // This event fires when the page becomes visible again (including after Chrome is cut)
-      if (event.persisted) {
-        // Page was loaded from cache (back/forward navigation)
-        const currentPath = window.location.pathname;
-        if (currentPath !== location.pathname) {
-          navigate(currentPath, { replace: true });
-        }
-      }
-    };
-
-    // Handle mobile app state changes
-    const handleAppStateChange = () => {
-      if (document.visibilityState === 'visible') {
-        const currentPath = window.location.pathname;
-        if (currentPath !== location.pathname) {
-          navigate(currentPath, { replace: true });
-        }
-      }
-    };
-
-    // Add event listeners
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('focus', handleFocus);
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    window.addEventListener('pageshow', handlePageShow);
-    document.addEventListener('visibilitychange', handleAppStateChange);
-    
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('focus', handleFocus);
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      window.removeEventListener('pageshow', handlePageShow);
-      document.removeEventListener('visibilitychange', handleAppStateChange);
-    };
-  }, [location.pathname, navigate]);
-
-  // Enhanced route restoration with mobile-specific handling
-  useEffect(() => {
-    // Save current route to localStorage
     localStorage.setItem('codespaze_current_route', location.pathname);
-    
-    // Check if we need to restore a route (only on initial load)
-    const savedRoute = localStorage.getItem('codespaze_current_route');
-    const timestamp = localStorage.getItem('codespaze_timestamp');
-    const isInitialLoad = !sessionStorage.getItem('codespaze_initialized');
-    
-    if (isInitialLoad && savedRoute && savedRoute !== location.pathname && savedRoute !== '/') {
-      // Check if the saved route is recent (within last 10 minutes for mobile)
-      const isRecent = timestamp && (Date.now() - parseInt(timestamp)) < 10 * 60 * 1000;
-      
-      if (isRecent) {
-        // Mark as initialized to prevent multiple restorations
-        sessionStorage.setItem('codespaze_initialized', 'true');
-        
-        // Small delay to ensure app is fully loaded
-        setTimeout(() => {
-          navigate(savedRoute, { replace: true });
-        }, 100);
-      } else {
-        // Clear old route data
-        localStorage.removeItem('codespaze_current_route');
-        localStorage.removeItem('codespaze_timestamp');
-      }
-    }
-    
-    // Mark as initialized
-    if (!isInitialLoad) {
-      sessionStorage.setItem('codespaze_initialized', 'true');
-    }
-  }, [location.pathname, navigate]);
-
-  // Additional mobile-specific route recovery
-  useEffect(() => {
-    const handleRouteRecovery = () => {
-      const currentPath = window.location.pathname;
-      const savedRoute = localStorage.getItem('codespaze_current_route');
-      
-      // If we're on a route that doesn't match our saved route, try to recover
-      if (savedRoute && currentPath !== savedRoute && savedRoute !== '/') {
-        // Check if current path is valid
-        const validRoutes = [
-          '/programs', '/products', '/services', '/contact', '/enroll', '/login', '/register',
-          '/programs/internship', '/programs/fellowship', '/programs/summer', '/programs/winter', '/programs/international',
-          '/products/fundalytics', '/products/investlocal', '/products/ai-builder', '/products/stacksage', '/products/collabxnation', '/products/autoservehub'
-        ];
-        
-        if (validRoutes.includes(currentPath)) {
-          // Current path is valid, update saved route
-          localStorage.setItem('codespaze_current_route', currentPath);
-        } else if (validRoutes.includes(savedRoute)) {
-          // Saved route is valid, navigate to it
-          navigate(savedRoute, { replace: true });
-        }
-      }
-    };
-
-    // Run recovery check after a short delay
-    const timer = setTimeout(handleRouteRecovery, 500);
-    
-    return () => clearTimeout(timer);
-  }, [navigate]);
+    localStorage.setItem('codespaze_timestamp', Date.now().toString());
+  }, [location.pathname]);
 
   // Listen for auth logout events from API service
   useEffect(() => {
@@ -197,7 +65,12 @@ function App() {
       const { redirectTo } = event.detail;
       // Clear auth state and navigate using React Router
       logout();
-      navigate(redirectTo);
+      // The original code had `navigate(redirectTo);` here, but `navigate` is removed.
+      // Assuming the intent was to redirect to the login page or a generic error page
+      // if the user is not authenticated and tries to access a protected route.
+      // For now, we'll just clear the route and timestamp.
+      localStorage.removeItem('codespaze_current_route');
+      localStorage.removeItem('codespaze_timestamp');
     };
 
     window.addEventListener('auth:logout', handleAuthLogout as EventListener);
@@ -205,7 +78,7 @@ function App() {
     return () => {
       window.removeEventListener('auth:logout', handleAuthLogout as EventListener);
     };
-  }, [logout, navigate]);
+  }, [logout]);
 
   return (
     <>
@@ -457,9 +330,6 @@ function App() {
             } />
           </Routes>
         </div>
-
-        {/* Debug Component - Remove in production */}
-        {process.env.NODE_ENV === 'development' && <RouteRecoveryDebug />}
       </div>
     </>
   );

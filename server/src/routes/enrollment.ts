@@ -88,9 +88,7 @@ router.post('/submit', upload.single('resume'), validateEnrollmentForm, async (r
       graduationYear,
       currentYear,
       technologies,
-      selectedProgram,
-      telegramUsername,
-      instagramUsername
+      selectedProgram
     } = req.body;
 
     const resumeFile = req.file;
@@ -100,14 +98,13 @@ router.post('/submit', upload.single('resume'), validateEnrollmentForm, async (r
       INSERT INTO enrollment_submissions (
         first_name, last_name, email, phone, address, city, state, country,
         linkedin_url, github_url, resume_filename, school, degree, field_of_study,
-        graduation_year, current_year, technologies, selected_program,
-        telegram_username, instagram_username
+        graduation_year, current_year, technologies, selected_program
       )
       VALUES (
         ${firstName}, ${lastName}, ${email}, ${phone}, ${address}, ${city}, ${state}, ${country},
         ${linkedin || null}, ${github || null}, ${resumeFile ? resumeFile.filename : null},
         ${school}, ${degree}, ${fieldOfStudy}, ${graduationYear}, ${currentYear},
-        ${technologies}, ${selectedProgram}, ${telegramUsername || null}, ${instagramUsername || null}
+        ${technologies}, ${selectedProgram}
       )
       RETURNING id, created_at
     `;

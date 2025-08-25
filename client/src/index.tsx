@@ -7,7 +7,6 @@ import { Toaster } from 'react-hot-toast';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
 import ErrorBoundary from './components/UI/ErrorBoundary';
-import RouteGuard from './components/UI/RouteGuard';
 import './index.css';
 
 const queryClient = new QueryClient({
@@ -27,24 +26,27 @@ root.render(
   <React.StrictMode>
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
+        <BrowserRouter
+          future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true
+          }}
+        >
           <ErrorBoundary>
-            <RouteGuard>
-              <AuthProvider>
-                <App />
-                <Toaster
-                  position="top-right"
-                  toastOptions={{
-                    duration: 4000,
-                    style: {
-                      background: '#1a1a1a',
-                      color: '#c1ff72',
-                      border: '1px solid #c1ff72',
-                    },
-                  }}
-                />
-              </AuthProvider>
-            </RouteGuard>
+            <AuthProvider>
+              <App />
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  duration: 4000,
+                  style: {
+                    background: '#1a1a1a',
+                    color: '#c1ff72',
+                    border: '1px solid #c1ff72',
+                  },
+                }}
+              />
+            </AuthProvider>
           </ErrorBoundary>
         </BrowserRouter>
       </QueryClientProvider>

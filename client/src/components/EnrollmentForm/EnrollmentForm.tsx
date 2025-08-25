@@ -32,10 +32,8 @@ interface FormData {
   currentYear: string;
   technologies: string[];
   
-  // Step 3: Program Selection & Social
+  // Step 3: Program Selection & Terms
   selectedProgram: string;
-  telegramUsername: string;
-  instagramUsername: string;
   agreeToTerms: boolean;
 }
 
@@ -64,8 +62,6 @@ const EnrollmentForm: React.FC = () => {
     currentYear: '',
     technologies: [],
     selectedProgram: '',
-    telegramUsername: '',
-    instagramUsername: '',
     agreeToTerms: false
   });
   const [errors, setErrors] = useState<FormErrors>({});
@@ -231,14 +227,21 @@ const EnrollmentForm: React.FC = () => {
         if (key === 'resume' && value instanceof File) {
           formDataToSend.append('resume', value);
         } else if (key === 'technologies') {
-          formDataToSend.append('technologies', JSON.stringify(value));
+          // Send technologies as individual array items
+          if (Array.isArray(value)) {
+            value.forEach(tech => {
+              formDataToSend.append('technologies[]', tech);
+            });
+          }
+        } else if (key === 'fieldOfStudy') {
+          // Map fieldOfStudy to match backend expectation
+          formDataToSend.append('fieldOfStudy', value.toString());
         } else if (typeof value === 'boolean') {
           formDataToSend.append(key, value.toString());
         } else if (value !== null && value !== undefined) {
           formDataToSend.append(key, value.toString());
         }
       });
-      
       // Make API call to submit enrollment
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/enrollment/submit`, {
         method: 'POST',
@@ -273,8 +276,6 @@ const EnrollmentForm: React.FC = () => {
           currentYear: '',
           technologies: [],
           selectedProgram: '',
-          telegramUsername: '',
-          instagramUsername: '',
           agreeToTerms: false
         });
         
