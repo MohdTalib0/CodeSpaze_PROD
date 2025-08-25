@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from './context/AuthContext';
@@ -43,6 +43,41 @@ import ContactPage from './pages/ContactPage';
 function App() {
   const { isAuthenticated, user, logout } = useAuth();
   const location = useLocation();
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Initialize the app
+  useEffect(() => {
+    // Small delay to ensure React Router is fully initialized
+    const timer = setTimeout(() => {
+      setIsInitialized(true);
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Simple route validation to prevent "not found" issues
+  useEffect(() => {
+    if (isInitialized) {
+      const currentPath = window.location.pathname;
+      const savedRoute = localStorage.getItem('codespaze_current_route');
+      
+      // If we're on a path that doesn't match our saved route, and we have a valid saved route
+      if (savedRoute && savedRoute !== currentPath && savedRoute !== '/') {
+        // Check if current path is valid by looking at our route structure
+        const validPaths = [
+          '/', '/programs', '/products', '/services', '/contact', '/enroll', '/login', '/register',
+          '/programs/internship', '/programs/fellowship', '/programs/summer', '/programs/winter', '/programs/international',
+          '/products/fundalytics', '/products/investlocal', '/products/ai-builder', '/products/stacksage', '/products/collabxnation', '/products/autoservehub'
+        ];
+        
+        // If current path is not valid, but saved route is, restore the saved route
+        if (!validPaths.includes(currentPath) && validPaths.includes(savedRoute)) {
+          // Use window.location to navigate to the saved route
+          window.location.href = savedRoute;
+        }
+      }
+    }
+  }, [isInitialized]);
 
   useEffect(() => {
     // Smooth scroll to top when route changes
@@ -98,7 +133,7 @@ function App() {
         <meta name="geo.region" content="IN" />
         <meta name="geo.placename" content="Lucknow, Uttar Pradesh, India" />
         <meta name="geo.position" content="26.8467;80.9462" />
-        <meta name="ICBM" content="26.8467, 80.9462" />
+        <meta name="ICBM" content="26.8467,80.9462" />
         
         {/* Global SEO */}
         <meta name="country" content="India" />
@@ -115,8 +150,8 @@ function App() {
         <meta property="og:image:height" content="630" />
         <meta property="og:image:alt" content="CodeSpaze - Tech Learning Platform" />
         <meta property="og:site_name" content="CodeSpaze" />
-        <meta property="og:locale" content="en_US" />
-        <meta property="og:locale:alternate" content="hi_IN" />
+        <meta name="og:locale" content="en_US" />
+        <meta name="og:locale:alternate" content="hi_IN" />
         
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
@@ -182,155 +217,165 @@ function App() {
         </script>
       </Helmet>
 
-      <div className="min-h-screen bg-dark-950 relative overflow-hidden">
-        {/* Main Content */}
-        <div className="relative z-10">
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={
-              <Layout>
-                <HomePage />
-              </Layout>
-            } />
-            
-            <Route path="/programs" element={
-              <Layout>
-                <ProgramsPage />
-              </Layout>
-            } />
-            
-            {/* Program Detail Routes */}
-            <Route path="/programs/internship" element={
-              <Layout>
-                <InternshipProgramPage />
-              </Layout>
-            } />
-            
-            <Route path="/programs/fellowship" element={
-              <Layout>
-                <FellowshipProgramPage />
-              </Layout>
-            } />
-            
-            <Route path="/programs/summer" element={
-              <Layout>
-                <SummerTechAcceleratorPage />
-              </Layout>
-            } />
-            
-            <Route path="/programs/winter" element={
-              <Layout>
-                <WinterTechAcceleratorPage />
-              </Layout>
-            } />
-            
-            <Route path="/programs/international" element={
-              <Layout>
-                <InternationalProgramsPage />
-              </Layout>
-            } />
-            
-            <Route path="/products" element={
-              <Layout>
-                <ProductsPage />
-              </Layout>
-            } />
-            
-            {/* Product Detail Routes */}
-            <Route path="/products/fundalytics" element={
-              <Layout>
-                <FundalyticsAIPage />
-              </Layout>
-            } />
-            
-            <Route path="/products/investlocal" element={
-              <Layout>
-                <InvestLocalPage />
-              </Layout>
-            } />
-            
-            <Route path="/products/ai-builder" element={
-              <Layout>
-                <AIAssistantBuilderPage />
-              </Layout>
-            } />
-            
-            <Route path="/products/stacksage" element={
-              <Layout>
-                <StackSagePage />
-              </Layout>
-            } />
-            
-            <Route path="/products/collabxnation" element={
-              <Layout>
-                <CollabXNationPage />
-              </Layout>
-            } />
-            
-            <Route path="/products/autoservehub" element={
-              <Layout>
-                <AutoServeHubPage />
-              </Layout>
-            } />
-            
-            <Route path="/services" element={
-              <Layout>
-                <ServicesPage />
-              </Layout>
-            } />
-            
-            <Route path="/enroll" element={
-              <Layout>
-                <EnrollmentForm />
-              </Layout>
-            } />
-            
-            <Route path="/login" element={
-              <Layout>
-                <LoginPage />
-              </Layout>
-            } />
-            
-            <Route path="/register" element={
-              <Layout>
-                <RegisterPage />
-              </Layout>
-            } />
-
-            {/* Protected Routes */}
-            <Route path="/dashboard/*" element={
-              <ProtectedRoute>
-                <Layout>
-                  <DashboardPage />
-                </Layout>
-              </ProtectedRoute>
-            } />
-
-            {/* Admin Routes */}
-            <Route path="/admin/*" element={
-              <AdminRoute>
-                <Layout>
-                  <AdminDashboardPage />
-                </Layout>
-              </AdminRoute>
-            } />
-
-            {/* Contact Page */}
-            <Route path="/contact" element={
-              <Layout>
-                <ContactPage />
-              </Layout>
-            } />
-
-            {/* 404 Page */}
-            <Route path="*" element={
-              <Layout>
-                <NotFoundPage />
-              </Layout>
-            } />
-          </Routes>
+      {/* Show loading while initializing */}
+      {!isInitialized ? (
+        <div className="min-h-screen bg-dark-950 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-[#19c973] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-white text-lg">Loading...</p>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="min-h-screen bg-dark-950 relative overflow-hidden">
+          {/* Main Content */}
+          <div className="relative z-10">
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={
+                <Layout>
+                  <HomePage />
+                </Layout>
+              } />
+              
+              <Route path="/programs" element={
+                <Layout>
+                  <ProgramsPage />
+                </Layout>
+              } />
+              
+              {/* Program Detail Routes */}
+              <Route path="/programs/internship" element={
+                <Layout>
+                  <InternshipProgramPage />
+                </Layout>
+              } />
+              
+              <Route path="/programs/fellowship" element={
+                <Layout>
+                  <FellowshipProgramPage />
+                </Layout>
+              } />
+              
+              <Route path="/programs/summer" element={
+                <Layout>
+                  <SummerTechAcceleratorPage />
+                </Layout>
+              } />
+              
+              <Route path="/programs/winter" element={
+                <Layout>
+                  <WinterTechAcceleratorPage />
+                </Layout>
+              } />
+              
+              <Route path="/programs/international" element={
+                <Layout>
+                  <InternationalProgramsPage />
+                </Layout>
+              } />
+              
+              <Route path="/products" element={
+                <Layout>
+                  <ProductsPage />
+                </Layout>
+              } />
+              
+              {/* Product Detail Routes */}
+              <Route path="/products/fundalytics" element={
+                <Layout>
+                  <FundalyticsAIPage />
+                </Layout>
+              } />
+              
+              <Route path="/products/investlocal" element={
+                <Layout>
+                  <InvestLocalPage />
+                </Layout>
+              } />
+              
+              <Route path="/products/ai-builder" element={
+                <Layout>
+                  <AIAssistantBuilderPage />
+                </Layout>
+              } />
+              
+              <Route path="/products/stacksage" element={
+                <Layout>
+                  <StackSagePage />
+                </Layout>
+              } />
+              
+              <Route path="/products/collabxnation" element={
+                <Layout>
+                  <CollabXNationPage />
+                </Layout>
+              } />
+              
+              <Route path="/products/autoservehub" element={
+                <Layout>
+                  <AutoServeHubPage />
+                </Layout>
+              } />
+              
+              <Route path="/services" element={
+                <Layout>
+                  <ServicesPage />
+                </Layout>
+              } />
+              
+              <Route path="/enroll" element={
+                <Layout>
+                  <EnrollmentForm />
+                </Layout>
+              } />
+              
+              <Route path="/login" element={
+                <Layout>
+                  <LoginPage />
+                </Layout>
+              } />
+              
+              <Route path="/register" element={
+                <Layout>
+                  <RegisterPage />
+                </Layout>
+              } />
+
+              {/* Protected Routes */}
+              <Route path="/dashboard/*" element={
+                <ProtectedRoute>
+                  <Layout>
+                    <DashboardPage />
+                  </Layout>
+                </ProtectedRoute>
+              } />
+
+              {/* Admin Routes */}
+              <Route path="/admin/*" element={
+                <AdminRoute>
+                  <Layout>
+                    <AdminDashboardPage />
+                  </Layout>
+                </AdminRoute>
+              } />
+
+              {/* Contact Page */}
+              <Route path="/contact" element={
+                <Layout>
+                  <ContactPage />
+                </Layout>
+              } />
+
+              {/* 404 Page */}
+              <Route path="*" element={
+                <Layout>
+                  <NotFoundPage />
+                </Layout>
+              } />
+            </Routes>
+          </div>
+        </div>
+      )}
     </>
   );
 }
