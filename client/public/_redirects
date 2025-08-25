@@ -1,4 +1,4 @@
-# Handle client-side routing
+# Handle client-side routing for Render deployment
 # Redirect all routes to index.html, except for files with extensions
 /*    /index.html   200
 
@@ -12,3 +12,17 @@
 /dashboard/* /index.html   200
 /admin/*     /index.html   200
 /enroll      /index.html   200
+
+# Additional routes for your specific pages
+/products/fundalytics    /index.html   200
+/products/investlocal    /index.html   200
+/products/ai-builder     /index.html   200
+/products/stacksage      /index.html   200
+/products/collabxnation  /index.html   200
+/products/autoservehub   /index.html   200
+
+/programs/internship     /index.html   200
+/programs/fellowship     /index.html   200
+/programs/summer-tech    /index.html   200
+/programs/winter-tech    /index.html   200
+/programs/international  /index.html   200
