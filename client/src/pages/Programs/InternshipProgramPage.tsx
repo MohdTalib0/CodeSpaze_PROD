@@ -27,7 +27,7 @@ const InternshipProgramPage: React.FC = () => {
     {
       name: 'Alex Chen',
       role: 'Full-Stack Developer at Microsoft',
-      content: 'I learned more in 4 months here than in my entire college degree. The real-world projects were game-changing.',
+      content: 'I learned more in 60-90 days here than in my entire college degree. The real-world projects were game-changing.',
       rating: 5
     },
     {
@@ -42,7 +42,7 @@ const InternshipProgramPage: React.FC = () => {
     <>
       <SEOComponent
         title="Best Internship Program in Lucknow, Delhi, Mumbai | CodeSpaze Tech Internships"
-        description="Transform your tech career with CodeSpaze's Internship Program. Best internships in Lucknow, Delhi, Mumbai, Bangalore, Hyderabad, Chennai, Pune, Kolkata. Real-world projects, industry mentorship, and career guidance. Join our 3-4 month program today!"
+        description="Transform your tech career with CodeSpaze's Internship Program. Best internships in Lucknow, Delhi, Mumbai, Bangalore, Hyderabad, Chennai, Pune, Kolkata. Real-world projects, industry mentorship, and career guidance. Join our 60-90 day program today!"
         keywords="best internship in Lucknow, best internship in Delhi, best internship in Mumbai, best internship in Bangalore, best internship in Hyderabad, best internship in Chennai, best internship in Pune, best internship in Kolkata, tech internship, software internship, AI internship, web development internship, app development internship, computer science internship, engineering internship, IT internship, digital marketing internship, data science internship, cloud computing internship, cybersecurity internship, blockchain internship, game development internship, UI/UX design internship, graphic design internship, content writing internship, SEO internship, mobile development internship, DevOps internship, full stack development internship, Python internship, React internship, JavaScript internship, Java internship, C++ internship, Node.js internship, MongoDB internship, SQL internship, AWS internship, Azure internship, Google Cloud internship, startup internship, fintech internship, edtech internship, healthtech internship, ecommerce internship, SaaS internship, B2B internship, B2C internship, product management internship, project management internship, business development internship, sales internship, marketing internship, customer success internship, operations internship, finance internship, HR internship, legal internship, research internship, academic internship, university internship, college internship, student internship, graduate internship, postgraduate internship, PhD internship, master's internship, bachelor's internship, diploma internship, certificate internship, online internship, virtual internship, hybrid internship, part-time internship, full-time internship, paid internship, unpaid internship, stipend internship, competitive internship, selective internship, prestigious internship, top internship, leading internship, innovative internship, cutting-edge internship, future-focused internship, industry-relevant internship, practical internship, hands-on internship, project-based internship, real-world internship, professional internship, career-focused internship, skill-building internship, knowledge-enhancing internship, experience-gaining internship, networking internship, mentorship internship, guidance internship, support internship, community internship, collaborative internship, team internship, individual internship, creative internship, analytical internship, technical internship, business internship, design internship, development internship, engineering internship, science internship, mathematics internship, statistics internship, economics internship, finance internship, accounting internship, management internship, leadership internship, entrepreneurship internship, innovation internship, research internship, analysis internship, strategy internship, planning internship, execution internship, implementation internship, testing internship, quality assurance internship, user experience internship, customer experience internship, product internship, service internship, solution internship, platform internship, application internship, system internship, infrastructure internship, architecture internship, testing internship, deployment internship, maintenance internship, support internship, training internship, education internship, learning internship, teaching internship, coaching internship, mentoring internship, consulting internship, advisory internship, strategic internship, tactical internship, operational internship, administrative internship, executive internship, senior internship, junior internship, entry-level internship, experienced internship, skilled internship, qualified internship, certified internship, accredited internship, recognized internship, established internship, reputable internship, trusted internship, reliable internship"
         canonicalUrl="https://codespaze.org/programs/internship"
         location="Lucknow"
@@ -59,7 +59,7 @@ const InternshipProgramPage: React.FC = () => {
             "url": "https://codespaze.org"
           },
           "programType": "Internship",
-          "duration": "3-4 months",
+          "duration": "60-90 days",
           "educationalLevel": "Undergraduate",
           "teaches": [
             "Software Development",
@@ -106,8 +106,8 @@ const InternshipProgramPage: React.FC = () => {
                 <div className="w-16 h-16 bg-[#19c973]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Clock className="w-8 h-8 text-[#19c973]" />
                 </div>
-                <div className="text-2xl font-bold text-white">3-4 Months</div>
-                <div className="text-gray-400">Duration</div>
+                <div className="text-2xl font-bold text-white">60-90 Days</div>
+                <div className="text-gray-400">Duration (8-12 Weeks)</div>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-[#19c973]/20 rounded-full flex items-center justify-center mx-auto mb-3">

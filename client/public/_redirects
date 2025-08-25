@@ -1,0 +1,14 @@
+# Handle client-side routing
+# Redirect all routes to index.html, except for files with extensions
+/*    /index.html   200
+
+# Handle specific routes that might need special treatment
+/products/*    /index.html   200
+/programs/*    /index.html   200
+/services    /index.html   200
+/contact     /index.html   200
+/login       /index.html   200
+/register    /index.html   200
+/dashboard/* /index.html   200
+/admin/*     /index.html   200
+/enroll      /index.html   200

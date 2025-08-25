@@ -9,7 +9,7 @@ const ProgramsPage: React.FC = () => {
   const programs = [
     {
       name: 'Internship Program',
-      duration: '3-4 months',
+      duration: '60-90 days',
       description: 'Mentored, project-based learning with real-world deliverables.',
       features: ['Real-world project experience', 'Industry mentorship', 'Portfolio building', 'Career guidance & networking'],
       icon: Users,
@@ -64,7 +64,7 @@ const ProgramsPage: React.FC = () => {
     {
       name: 'Alex Chen',
       role: 'Full-Stack Developer at Microsoft',
-      content: 'I learned more in 4 months here than in my entire college degree. Real-world projects were game-changing.',
+      content: 'I learned more in 60-90 days here than in my entire college degree. Real-world projects were game-changing.',
       rating: 5
     },
     {
@@ -99,7 +99,7 @@ const ProgramsPage: React.FC = () => {
             {
               "@type": "EducationalProgram",
               "name": "Internship Program",
-              "description": "3-4 month mentored, project-based learning program"
+              "description": "60-90 day mentored, project-based learning program"
             },
             {
               "@type": "EducationalProgram",

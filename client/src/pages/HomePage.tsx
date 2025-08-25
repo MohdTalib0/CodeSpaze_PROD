@@ -14,7 +14,9 @@ import {
   Star,
   Target,
   Brain,
-  Briefcase
+  Briefcase,
+  Building2,
+  Headphones
 } from 'lucide-react';
 import Button from '../components/UI/Button';
 import SEOComponent from '../components/SEO/SEOComponent';
@@ -56,7 +58,7 @@ const HomePage: React.FC = () => {
   const programs = [
     {
       title: 'Internship Program',
-      duration: '3-4 months',
+      duration: '60-90 days',
       category: 'Internship',
       description: 'Mentored, project-based learning with real-world deliverables',
     },
@@ -108,29 +110,85 @@ const HomePage: React.FC = () => {
     {
       name: 'Priya Sharma',
       role: 'Software Engineer at Google',
-      content: 'CodeSpaze transformed my career. The hands-on experience and mentorship were invaluable.',
+      content: 'CodeSpaze transformed my career. The hands-on experience and mentorship were invaluable. I went from knowing basic programming to building full-stack applications in just 60-90 days.',
       rating: 5
     },
     {
       name: 'Alex Chen',
       role: 'Full-Stack Developer at Microsoft',
-      content: 'I learned more in 4 months here than in my entire college degree. Real-world projects were game-changing.',
+      content: 'I learned more in 60-90 days here than in my entire college degree. Real-world projects were game-changing. The mentors helped me understand industry best practices.',
       rating: 5
     },
     {
       name: 'Maria Rodriguez',
       role: 'Data Scientist at Amazon',
-      content: 'The program structure and mentorship helped me transition into tech successfully.',
+      content: 'The program structure and mentorship helped me transition from a different field into tech successfully. Now I\'m working on cutting-edge AI projects at Amazon.',
+      rating: 5
+    },
+    {
+      name: 'Rahul Patel',
+      role: 'Frontend Developer at Netflix',
+      content: 'CodeSpaze\'s React and modern web development focus gave me the exact skills I needed. I got hired at Netflix within 2 months of completing the program.',
+      rating: 5
+    },
+    {
+      name: 'Sarah Johnson',
+      role: 'DevOps Engineer at Uber',
+      content: 'The cloud computing and DevOps modules were incredibly practical. I learned AWS, Docker, and CI/CD pipelines that I use daily in my current role.',
+      rating: 5
+    },
+    {
+      name: 'David Kim',
+      role: 'AI/ML Engineer at Tesla',
+      content: 'The AI and machine learning projects were industry-relevant and challenging. CodeSpaze helped me build a strong portfolio that impressed Tesla\'s hiring team.',
+      rating: 5
+    },
+    {
+      name: 'Lisa Wang',
+      role: 'Product Manager at Meta',
+      content: 'CodeSpaze taught me both technical skills and product thinking. The real-world projects helped me understand how to build products that users actually want.',
+      rating: 5
+    },
+    {
+      name: 'Arun Kumar',
+      role: 'Backend Developer at Spotify',
+      content: 'The Node.js and database modules were excellent. I learned to build scalable APIs and microservices that I now implement at Spotify.',
       rating: 5
     }
   ];
+
+  // Carousel state and functions
+  const [currentSlide, setCurrentSlide] = React.useState(0);
+
+  const navigateCarousel = (direction: 'prev' | 'next') => {
+    const totalSlides = Math.ceil(testimonials.length / 3);
+    
+    if (direction === 'next') {
+      setCurrentSlide((prev) => (prev + 1) % totalSlides);
+    } else {
+      setCurrentSlide((prev) => prev === 0 ? totalSlides - 1 : prev - 1);
+    }
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
+
+  // Auto-advance carousel
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      const totalSlides = Math.ceil(testimonials.length / 3);
+      setCurrentSlide((prev) => (prev + 1) % totalSlides);
+    }, 5000); // Change slide every 5 seconds
+    
+    return () => clearInterval(interval);
+  }, [testimonials.length]);
 
   return (
     <>
       <SEOComponent
         title="CodeSpaze - Best Tech Learning Platform in Lucknow, Delhi, Mumbai | Global Tech Programs"
-        description="Transform your tech career with CodeSpaze. Best tech learning platform in Lucknow, Delhi, Mumbai, Bangalore, Hyderabad, Chennai, Pune, Kolkata. Join our global community of learners with internships, fellowships, and tech accelerator programs. Start your journey today!"
-        keywords="best tech learning platform in Lucknow, best tech learning platform in Delhi, best tech learning platform in Mumbai, best tech learning platform in Bangalore, best tech learning platform in Hyderabad, best tech learning platform in Chennai, best tech learning platform in Pune, best tech learning platform in Kolkata, tech learning platform, coding bootcamp, software development training, AI/ML programs, web development courses, app development training, data science courses, cybersecurity training, cloud computing courses, blockchain development, game development courses, UI/UX design training, graphic design courses, digital marketing training, content writing courses, SEO training, mobile development courses, DevOps training, full stack development, Python courses, React training, JavaScript courses, Java training, C++ courses, Node.js training, MongoDB courses, SQL training, AWS courses, Azure training, Google Cloud courses, startup programs, fintech courses, edtech programs, healthtech training, ecommerce courses, SaaS training, B2B courses, B2C training, product management courses, project management training, business development courses, sales training, marketing courses, customer success training, operations courses, finance training, HR courses, legal training, research programs, academic courses, university programs, college courses, student programs, graduate courses, postgraduate programs, PhD programs, master's courses, bachelor's courses, diploma programs, certificate courses, online training, virtual programs, hybrid courses, part-time programs, full-time courses, paid programs, unpaid courses, stipend programs, competitive courses, selective programs, prestigious courses, top programs, leading courses, innovative programs, cutting-edge courses, future-focused programs, industry-relevant courses, practical training, hands-on programs, project-based courses, real-world training, professional programs, career-focused courses, skill-building programs, knowledge-enhancing courses, experience-gaining programs, networking courses, mentorship programs, guidance training, support courses, community programs, collaborative courses, team training, individual programs, creative courses, analytical training, technical programs, business courses, design training, development programs, engineering courses, science training, mathematics courses, statistics training, economics courses, finance training, accounting courses, management training, leadership courses, entrepreneurship programs, innovation training, research courses, analysis training, strategy courses, planning training, execution courses, implementation training, testing courses, quality assurance training, user experience courses, customer experience training, product courses, service training, solution courses, platform training, application courses, system training, infrastructure courses, architecture training, testing courses, deployment training, maintenance courses, support training, training courses, education programs, learning courses, teaching training, coaching courses, mentoring training, consulting courses, advisory training, strategic courses, tactical training, operational courses, administrative training, executive courses, senior training, junior courses, entry-level training, experienced courses, skilled training, qualified courses, certified training, accredited courses, recognized training, established courses, reputable training, trusted courses, reliable training"
+        description="Transform your tech career with CodeSpaze. Best tech learning platform in Lucknow, Delhi, Mumbai, Bangalore, Hyderabad, Chennai, Pune, Kolkata, tech learning platform, coding bootcamp, software development training, AI/ML programs, web development courses, app development training, data science courses, cybersecurity training, cloud computing courses, blockchain development, game development courses, UI/UX design training, graphic design courses, digital marketing training, content writing courses, SEO training, mobile development courses, DevOps training, full stack development, Python courses, React training, JavaScript courses, Java training, C++ courses, Node.js training, MongoDB courses, SQL training, AWS courses, Azure training, Google Cloud courses, startup programs, fintech courses, edtech programs, healthtech training, ecommerce courses, SaaS training, B2B courses, B2C training, product management courses, project management training, business development courses, sales training, marketing courses, customer success training, operations courses, finance training, HR courses, legal training, research programs, academic courses, university programs, college courses, student programs, graduate courses, postgraduate programs, PhD programs, master's courses, bachelor's courses, diploma programs, certificate courses, online training, virtual programs, hybrid courses, part-time programs, full-time courses, paid programs, unpaid courses, stipend programs, competitive courses, selective programs, prestigious courses, top programs, leading courses, innovative programs, cutting-edge courses, future-focused programs, industry-relevant courses, practical training, hands-on programs, project-based courses, real-world training, professional programs, career-focused courses, skill-building programs, knowledge-enhancing courses, experience-gaining programs, networking courses, mentorship programs, guidance training, support courses, community programs, collaborative courses, team training, individual programs, creative courses, analytical training, technical programs, business courses, design training, development programs, engineering courses, science training, mathematics courses, statistics training, economics courses, finance training, accounting courses, management training, leadership courses, entrepreneurship programs, innovation training, research courses, analysis training, strategy courses, planning training, execution courses, implementation training, testing courses, quality assurance training, user experience courses, customer experience training, product courses, service training, solution courses, platform training, application courses, system training, infrastructure courses, architecture training, testing courses, deployment training, maintenance courses, support training, training courses, education programs, learning courses, teaching training, coaching courses, mentoring training, consulting courses, advisory training, strategic courses, tactical training, operational courses, administrative training, executive courses, senior training, junior courses, entry-level training, experienced courses, skilled training, qualified courses, certified training, accredited courses, recognized training, established courses, reputable training, trusted courses, reliable training"
         canonicalUrl="https://codespaze.org"
         location="Lucknow"
         programType="Tech Learning Platform"
@@ -567,6 +625,197 @@ const HomePage: React.FC = () => {
             <Link to="/products">
               <Button variant="outline" size="lg">
                 View All Products
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 relative bg-black overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2319c973' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundSize: '60px 60px'
+          }}></div>
+        </div>
+        
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-black to-gray-900 opacity-80"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              What Our <span className="gradient-text">Students Say</span>
+            </h2>
+            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+              Hear from our successful graduates who have transformed their careers through CodeSpaze programs
+            </p>
+          </motion.div>
+
+          {/* Testimonials Carousel */}
+          <div className="relative">
+            {/* Carousel Container */}
+            <div className="overflow-hidden relative">
+              <div 
+                className="flex transition-transform duration-500 ease-in-out" 
+                style={{ 
+                  transform: `translateX(-${currentSlide * 100}%)`,
+                  width: `${Math.ceil(testimonials.length / 3) * 100}%`
+                }}
+              >
+                {(() => {
+                  const totalSlides = Math.ceil(testimonials.length / 3);
+                  const slides = [];
+                  
+                  for (let slideIndex = 0; slideIndex < totalSlides; slideIndex++) {
+                    const startIndex = slideIndex * 3;
+                    const endIndex = Math.min(startIndex + 3, testimonials.length);
+                    const slideTestimonials = testimonials.slice(startIndex, endIndex);
+                    
+                    slides.push(
+                      <div 
+                        key={`slide-${slideIndex}`} 
+                        className="flex w-full flex-shrink-0" 
+                        style={{ width: '100%' }}
+                      >
+                        {slideTestimonials.map((testimonial, index) => (
+                          <div 
+                            key={testimonial.name}
+                            className="w-1/3 flex-shrink-0 px-4"
+                            style={{ minWidth: '33.333%' }}
+                          >
+                            <motion.div
+                              initial={{ opacity: 0, y: 30 }}
+                              whileInView={{ opacity: 1, y: 0 }}
+                              transition={{ delay: index * 0.1, duration: 0.6 }}
+                              viewport={{ once: true }}
+                              className="glass-card p-6 rounded-xl card-hover border border-[#19c973]/30 relative h-full"
+                            >
+                              {/* Rating Stars */}
+                              <div className="flex items-center mb-4">
+                                {[...Array(testimonial.rating)].map((_, i) => (
+                                  <svg key={i} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                  </svg>
+                                ))}
+                              </div>
+
+                              {/* Testimonial Content */}
+                              <blockquote className="text-gray-300 mb-4 italic text-sm leading-relaxed">
+                                "{testimonial.content}"
+                              </blockquote>
+
+                              {/* Author Info */}
+                              <div className="flex items-center mt-auto">
+                                <div className="w-10 h-10 bg-gradient-to-r from-[#19c973] to-[#16a362] rounded-full flex items-center justify-center mr-3">
+                                  <span className="text-white font-semibold text-sm">
+                                    {testimonial.name.split(' ').map(n => n[0]).join('')}
+                                  </span>
+                                </div>
+                                <div>
+                                  <div className="font-semibold text-white text-sm">{testimonial.name}</div>
+                                  <div className="text-xs text-[#19c973]">{testimonial.role}</div>
+                                </div>
+                              </div>
+                            </motion.div>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  }
+                  
+                  return slides;
+                })()}
+              </div>
+            </div>
+
+            {/* Navigation Arrows */}
+            <button 
+              onClick={() => navigateCarousel('prev')}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/70 hover:bg-black/90 text-white p-3 rounded-full border-2 border-[#19c973] transition-all duration-300 hover:scale-110 z-20 shadow-lg hover:shadow-xl"
+              aria-label="Previous testimonials"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            
+            <button 
+              onClick={() => navigateCarousel('next')}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/70 hover:bg-black/90 text-white p-3 rounded-full border-2 border-[#19c973] transition-all duration-300 hover:scale-110 z-20 shadow-lg hover:shadow-xl"
+              aria-label="Next testimonials"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+
+            {/* Dots Indicator */}
+            <div className="flex justify-center mt-8 space-x-2">
+              {Array.from({ length: Math.ceil(testimonials.length / 3) }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentSlide ? 'bg-[#19c973] scale-125' : 'bg-gray-600 hover:bg-gray-400'
+                  }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Additional Success Metrics */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            viewport={{ once: true }}
+            className="mt-16 grid grid-cols-1 md:grid-cols-4 gap-8"
+          >
+            {[
+              { number: '500+', label: 'Students Enrolled', icon: Users },
+              { number: '95%', label: 'Success Rate', icon: CheckCircle },
+              { number: '50+', label: 'Industry Partners', icon: Building2 },
+              { number: '24/7', label: 'Support Available', icon: Headphones }
+            ].map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.1, duration: 0.6 }}
+                viewport={{ once: true }}
+                className="text-center"
+              >
+                <div className="w-16 h-16 bg-[#19c973]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <stat.icon className="w-8 h-8 text-[#19c973]" />
+                </div>
+                <div className="text-3xl font-bold text-white mb-2">{stat.number}</div>
+                <div className="text-gray-400">{stat.label}</div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* CTA for Testimonials */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <Link to="/programs">
+              <Button variant="outline" size="lg">
+                Join Our Success Stories
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>

@@ -46,7 +46,7 @@ const Header: React.FC = () => {
       name: 'Internship Program', 
       href: '/programs/internship', 
       icon: Users,
-      description: '3-4 months mentored learning'
+      description: '60-90 days mentored learning'
     },
     { 
       name: 'Fellowship Program', 
