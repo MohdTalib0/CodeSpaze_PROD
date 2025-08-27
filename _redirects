@@ -10,3 +10,8 @@
 /admin    /admin    200
 /login    /login    200
 /register    /register    200
+
+# Handle static assets
+/static/*    /static/:splat    200
+/favicon.ico    /favicon.ico    200
+/manifest.json    /manifest.json    200
