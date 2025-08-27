@@ -456,7 +456,7 @@ const Header: React.FC = () => {
                 </Link>
                 <Link to="/enroll">
                   <Button variant="primary" size="sm">
-                    Join Now
+                    Apply Now
                   </Button>
                 </Link>
               </>
