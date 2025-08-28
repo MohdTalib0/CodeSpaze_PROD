@@ -9,18 +9,18 @@ const ProgramsPage: React.FC = () => {
   const programs = [
     {
       name: 'Internship Program',
-      duration: '60-90 days',
-      description: 'Mentored, project-based learning with real-world deliverables.',
-      features: ['Real-world project experience', 'Industry mentorship', 'Portfolio building', 'Career guidance & networking'],
+      duration: '3 months',
+      description: 'Land your dream tech job in 3 months. Real client projects, expert mentorship, and 95% job placement rate.',
+      features: ['Real client projects', '1-on-1 mentorship', 'Professional portfolio', 'Career guidance'],
       icon: Users,
       link: '/programs/internship',
       color: 'from-[#19c973] to-[#16a362]'
     },
     {
       name: 'Fellowship Program',
-      duration: '10-12 weeks',
-      description: 'Client projects, evaluations, mentor reviews.',
-      features: ['Client project experience', 'Industry evaluations', 'Mentor reviews', 'Portfolio development'],
+      duration: '8-12 weeks',
+      description: 'Exclusive program for elite learners. Work on Fortune 500 projects in groups of only 20 students.',
+      features: ['Fortune 500 projects', 'Expert masterclasses', 'Intimate groups', 'Prestigious LORs'],
       icon: Award,
       link: '/programs/fellowship',
       color: 'from-[#16a362] to-[#19c973]'

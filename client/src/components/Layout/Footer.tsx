@@ -58,15 +58,20 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
           {/* Brand */}
           <div className="lg:col-span-2">
-          <Link to="/" className="flex items-center space-x-3">
+        {/* Logo */}
+        <Link to="/" className="flex items-center space-x-3">
             <motion.div
               whileHover={{ scale: 1.05 }}
               className="flex items-center space-x-3"
             >
-              <div className="w-12 h-12 bg-gradient-to-r from-[#19c973] to-[#16a362] rounded-xl flex items-center justify-center">
-                <Code className="w-7 h-7 text-white" />
+              <div className="w-40 h-18 flex items-center justify-center">
+                <img 
+                  src="/codespaze-logo1.jpg" 
+                  alt="CodeSpaze Logo" 
+                  className="w-full h-full object-contain"
+                />
               </div>
-              <div className="text-2xl font-bold text-white">CodeSpaze</div>
+              
             </motion.div>
           </Link>
             <p className="text-gray-300 mb-6 max-w-md">

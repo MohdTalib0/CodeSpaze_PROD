@@ -48,7 +48,6 @@ class ApiService {
               localStorage.removeItem('token');
               // Dispatch custom event for React Router navigation
               window.dispatchEvent(new CustomEvent('auth:logout', { detail: { redirectTo: '/login' } }));
-              toast.error('Session expired. Please login again.');
               break;
             case 403:
               toast.error('Access denied. You do not have permission to perform this action.');

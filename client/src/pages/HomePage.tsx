@@ -58,15 +58,15 @@ const HomePage: React.FC = () => {
   const programs = [
     {
       title: 'Internship Program',
-      duration: '60-90 days',
+      duration: '3 months',
       category: 'Internship',
-      description: 'Mentored, project-based learning with real-world deliverables',
+      description: 'Get hired in 3 months with real client projects and personalized mentorship from industry experts.',
     },
     {
       title: 'Fellowship Program',
-      duration: '10-12 weeks',
+      duration: '8-12 weeks',
       category: 'Fellowship',
-      description: 'Client projects, evaluations, and mentor reviews',
+      description: 'Work on Fortune 500 projects in intimate groups. Only 20 spots per batch.',
     },
     {
       title: 'Summer Tech Accelerator',
@@ -110,13 +110,13 @@ const HomePage: React.FC = () => {
     {
       name: 'Priya Sharma',
       role: 'Software Engineer at Google',
-      content: 'CodeSpaze transformed my career. The hands-on experience and mentorship were invaluable. I went from knowing basic programming to building full-stack applications in just 60-90 days.',
+      content: 'I was stuck in a dead-end job with no tech experience. CodeSpaze changed everything. In just 3 months, I went from zero coding knowledge to landing a $120K job at Google. The real client projects and mentorship made all the difference.',
       rating: 5
     },
     {
       name: 'Alex Chen',
       role: 'Full-Stack Developer at Microsoft',
-      content: 'I learned more in 60-90 days here than in my entire college degree. Real-world projects were game-changing. The mentors helped me understand industry best practices.',
+      content: 'My college degree taught me theory. CodeSpaze taught me how to actually build products that companies want. I learned more in 3 months here than in 4 years of college, and landed a job at Microsoft within 2 weeks of completing the program.',
       rating: 5
     },
     {

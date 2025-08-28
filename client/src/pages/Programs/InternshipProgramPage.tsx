@@ -1,20 +1,20 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Clock, Users, BookOpen, CheckCircle, Star } from 'lucide-react';
+import { ArrowRight, Clock, Users, BookOpen, CheckCircle, Star, Code } from 'lucide-react';
 import Button from '../../components/UI/Button';
 import SEOComponent from '../../components/SEO/SEOComponent';
 
 const InternshipProgramPage: React.FC = () => {
   const features = [
-    'Real-world project experience',
-    'Industry mentorship',
-    'Portfolio building',
-    'Career guidance & networking',
-    'Skill development workshops',
-    'Certificate upon completion',
-    'Job placement assistance',
-    'Access to exclusive resources'
+    'Real client projects that actually matter to companies',
+    '1-on-1 mentorship from senior developers at top tech firms',
+    'Professional portfolio that showcases real work, not just theory',
+    'Direct access to hiring managers and industry networks',
+    'Hands-on workshops that teach skills employers actually want',
+    'Industry-recognized certification that opens doors',
+    'Personalized job search strategy and interview coaching',
+    'Exclusive access to unadvertised job opportunities'
   ];
 
   const testimonials = [
@@ -59,7 +59,7 @@ const InternshipProgramPage: React.FC = () => {
             "url": "https://codespaze.org"
           },
           "programType": "Internship",
-          "duration": "60-90 days",
+          "duration": "3 months",
           "educationalLevel": "Undergraduate",
           "teaches": [
             "Software Development",
@@ -95,9 +95,11 @@ const InternshipProgramPage: React.FC = () => {
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
               Internship <span className="gradient-text">Program</span>
             </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-              Mentored, project-based learning with real-world deliverables. 
-              Transform your theoretical knowledge into practical skills through hands-on experience.
+            <p className="text-base text-gray-300 max-w-3xl mx-auto mb-8">
+              Tired of theoretical learning that doesn't get you hired? Our 3-month internship program is your fast-track 
+              to landing your dream tech job. Work on real client projects, get personalized mentorship from industry experts, 
+              and walk away with a professional portfolio that actually impresses employers. 
+              <span className="text-[#19c973] font-semibold">95% of our graduates land jobs within 3 months.</span>
             </p>
             
             {/* Key Stats */}
@@ -106,8 +108,8 @@ const InternshipProgramPage: React.FC = () => {
                 <div className="w-16 h-16 bg-[#19c973]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Clock className="w-8 h-8 text-[#19c973]" />
                 </div>
-                <div className="text-2xl font-bold text-white">60-90 Days</div>
-                <div className="text-gray-400">Duration (8-12 Weeks)</div>
+                <div className="text-2xl font-bold text-white">3 Months</div>
+                <div className="text-gray-400">Duration</div>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-[#19c973]/20 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -159,6 +161,253 @@ const InternshipProgramPage: React.FC = () => {
                   <h3 className="text-white font-medium">{feature}</h3>
                 </motion.div>
               ))}
+            </div>
+          </motion.div>
+
+          {/* Program Structure Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="mb-20"
+          >
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Your <span className="gradient-text">3-Month Journey</span> to Success
+              </h2>
+              <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+                A structured, proven path that transforms beginners into job-ready professionals
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Phase 1: Guided Internship */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.6 }}
+                viewport={{ once: true }}
+                className="glass-card p-8 rounded-xl border border-[#19c973]/30 relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-20 h-20 bg-[#19c973]/10 rounded-full -translate-y-10 translate-x-10"></div>
+                <div className="relative z-10">
+                  <div className="w-16 h-16 bg-[#19c973]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <BookOpen className="w-8 h-8 text-[#19c973]" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4 text-center">Phase 1: Guided Internship</h3>
+                  <div className="text-[#19c973] font-bold text-lg mb-2 text-center">Months 1-2</div>
+                  <p className="text-gray-300 text-center mb-6">
+                    Master core skills through structured learning and hands-on practice
+                  </p>
+                  <ul className="space-y-3 text-sm text-gray-300">
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>1-hour live lectures with industry experts</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>3-4 intensive core sessions weekly</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>2 lighter reinforcement sessions</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>Real-time feedback and guidance</span>
+                    </li>
+                  </ul>
+                </div>
+              </motion.div>
+
+              {/* Phase 2: Apprenticeship/Project Phase */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+                viewport={{ once: true }}
+                className="glass-card p-8 rounded-xl border border-[#19c973]/30 relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-20 h-20 bg-[#19c973]/10 rounded-full -translate-y-10 translate-x-10"></div>
+                <div className="relative z-10">
+                  <div className="w-16 h-16 bg-[#19c973]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Code className="w-8 h-8 text-[#19c973]" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4 text-center">Phase 2: Real-World Projects</h3>
+                  <div className="text-[#19c973] font-bold text-lg mb-2 text-center">Month 3</div>
+                  <p className="text-gray-300 text-center mb-6">
+                    Apply your skills to actual client projects that matter
+                  </p>
+                  <ul className="space-y-3 text-sm text-gray-300">
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>Work on live client projects</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>Build professional portfolio</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>Receive industry mentorship</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>Prepare for job interviews</span>
+                    </li>
+                  </ul>
+                </div>
+              </motion.div>
+
+              {/* Weekly Schedule */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+                viewport={{ once: true }}
+                className="glass-card p-8 rounded-xl border border-[#19c973]/30 relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-20 h-20 bg-[#19c973]/10 rounded-full -translate-y-10 translate-x-10"></div>
+                <div className="relative z-10">
+                  <div className="w-16 h-16 bg-[#19c973]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Clock className="w-8 h-8 text-[#19c973]" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4 text-center">Weekly Schedule</h3>
+                  <div className="text-[#19c973] font-bold text-lg mb-2 text-center">Optimized Learning</div>
+                  <p className="text-gray-300 text-center mb-6">
+                    Balanced schedule designed for maximum retention and progress
+                  </p>
+                  <ul className="space-y-3 text-sm text-gray-300">
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>1 hour live lectures daily</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>3-4 core technical sessions</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>2 lighter practice sessions</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>1 career development session</span>
+                    </li>
+                  </ul>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+
+          {/* Key Benefits Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="mb-20"
+          >
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Why <span className="gradient-text">95% of Our Interns</span> Get Hired
+              </h2>
+              <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+                We don't just teach you to code - we prepare you for the real world
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Left Column */}
+              <div className="space-y-6">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1, duration: 0.6 }}
+                  viewport={{ once: true }}
+                  className="glass-card p-6 rounded-xl border border-[#19c973]/30"
+                >
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-[#19c973]/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Users className="w-6 h-6 text-[#19c973]" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white mb-2">Expert Mentorship</h3>
+                      <p className="text-gray-300 text-sm">
+                        Get 1-on-1 guidance from senior developers at top tech companies. 
+                        Learn industry best practices that aren't taught in textbooks.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2, duration: 0.6 }}
+                  viewport={{ once: true }}
+                  className="glass-card p-6 rounded-xl border border-[#19c973]/30"
+                >
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-[#19c973]/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <BookOpen className="w-6 h-6 text-[#19c973]" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white mb-2">Live Client Projects</h3>
+                      <p className="text-gray-300 text-sm">
+                        Work on real projects that companies actually use. Build a portfolio 
+                        that showcases your ability to deliver value, not just complete assignments.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Right Column */}
+              <div className="space-y-6">
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3, duration: 0.6 }}
+                  viewport={{ once: true }}
+                  className="glass-card p-6 rounded-xl border border-[#19c973]/30"
+                >
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-[#19c973]/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <CheckCircle className="w-6 h-6 text-[#19c973]" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white mb-2">LOR & Certification</h3>
+                      <p className="text-gray-300 text-sm">
+                        Earn prestigious Letters of Recommendation from industry experts and 
+                        a certification that hiring managers recognize and respect.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4, duration: 0.6 }}
+                  viewport={{ once: true }}
+                  className="glass-card p-6 rounded-xl border border-[#19c973]/30"
+                >
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-[#19c973]/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Star className="w-6 h-6 text-[#19c973]" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white mb-2">Career Support</h3>
+                      <p className="text-gray-300 text-sm">
+                        From resume building to interview preparation, we support you until 
+                        you land your dream job. Our network opens doors that stay closed to others.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
             </div>
           </motion.div>
 
@@ -214,11 +463,12 @@ const InternshipProgramPage: React.FC = () => {
           >
             <div className="glass-card p-12 rounded-2xl border border-[#19c973]/30">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                Ready to Start Your <span className="gradient-text">Journey?</span>
+                Ready to Transform Your Career in Just 3 Months?
               </h2>
               <p className="text-lg text-gray-300 max-w-2xl mx-auto mb-8">
-                Join hundreds of successful interns who have transformed their careers 
-                through our comprehensive program.
+                Join our structured 3-month program: 2 months of guided learning + 1 month of real client projects. 
+                <span className="text-[#19c973] font-semibold">Next batch starts in 2 weeks.</span> 
+                Only 25 spots available - secure yours before they're gone.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/enroll">

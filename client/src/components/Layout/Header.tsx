@@ -15,7 +15,10 @@ import {
   Globe,
   Brain,
   Calendar,
-  Zap
+  Zap,
+  Plane,
+  BookOpen,
+  Trophy
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../UI/Button';
@@ -24,8 +27,10 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isProgramsDropdownOpen, setIsProgramsDropdownOpen] = useState(false);
+  const [isInternationalProgramsDropdownOpen, setIsInternationalProgramsDropdownOpen] = useState(false);
   const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
   const [isMobileProgramsOpen, setIsMobileProgramsOpen] = useState(false);
+  const [isMobileInternationalProgramsOpen, setIsMobileInternationalProgramsOpen] = useState(false);
   const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const location = useLocation();
@@ -46,13 +51,13 @@ const Header: React.FC = () => {
       name: 'Internship Program', 
       href: '/programs/internship', 
       icon: Users,
-      description: '60-90 days mentored learning'
+      description: '3 months to your dream job'
     },
     { 
       name: 'Fellowship Program', 
       href: '/programs/fellowship', 
       icon: Award,
-      description: '10-12 weeks selective program'
+      description: 'Elite Fortune 500 projects'
     },
     { 
       name: 'Summer Tech Accelerator', 
@@ -66,11 +71,38 @@ const Header: React.FC = () => {
       icon: Calendar,
       description: '4-6 weeks seasonal program'
     },
+  ];
+
+  const internationalProgramsDropdownItems = [
     { 
-      name: 'International Programs', 
+      name: 'All International Programs', 
       href: '/programs/international', 
       icon: Globe,
-      description: 'Remote, cross-border opportunities'
+      description: 'Browse all global opportunities'
+    },
+    { 
+      name: 'International Internships', 
+      href: '/programs/international-internships', 
+      icon: Plane,
+      description: 'Remote work with global companies'
+    },
+    { 
+      name: 'Remote Apprenticeship Residency', 
+      href: '/programs/remote-apprenticeship-residency', 
+      icon: BookOpen,
+      description: 'Intensive learning with mentors'
+    },
+    { 
+      name: 'Global Career Accelerator', 
+      href: '/programs/global-career-accelerator', 
+      icon: Globe,
+      description: 'Multilingual global career program'
+    },
+        { 
+      name: 'International Hackathon Series', 
+      href: '/programs/international-hackathon-series', 
+      icon: Trophy,
+      description: 'Monthly global hackathons'
     },
   ];
 
@@ -135,7 +167,18 @@ const Header: React.FC = () => {
       setIsProgramsDropdownOpen(false);
     } else {
       setIsProductsDropdownOpen(false); // Close products dropdown first
+      setIsInternationalProgramsDropdownOpen(false); // Close international programs dropdown first
       setIsProgramsDropdownOpen(true);
+    }
+  };
+
+  const handleInternationalProgramsDropdownToggle = () => {
+    if (isInternationalProgramsDropdownOpen) {
+      setIsInternationalProgramsDropdownOpen(false);
+    } else {
+      setIsProductsDropdownOpen(false); // Close products dropdown first
+      setIsProgramsDropdownOpen(false); // Close programs dropdown first
+      setIsInternationalProgramsDropdownOpen(true);
     }
   };
 
@@ -144,17 +187,26 @@ const Header: React.FC = () => {
       setIsProductsDropdownOpen(false);
     } else {
       setIsProgramsDropdownOpen(false); // Close programs dropdown first
+      setIsInternationalProgramsDropdownOpen(false); // Close international programs dropdown first
       setIsProductsDropdownOpen(true);
     }
   };
 
   const handleProgramsMouseEnter = () => {
     setIsProductsDropdownOpen(false); // Close products dropdown
+    setIsInternationalProgramsDropdownOpen(false); // Close international programs dropdown
     setIsProgramsDropdownOpen(true);
+  };
+
+  const handleInternationalProgramsMouseEnter = () => {
+    setIsProductsDropdownOpen(false); // Close products dropdown
+    setIsProgramsDropdownOpen(false); // Close programs dropdown
+    setIsInternationalProgramsDropdownOpen(true);
   };
 
   const handleProductsMouseEnter = () => {
     setIsProgramsDropdownOpen(false); // Close programs dropdown
+    setIsInternationalProgramsDropdownOpen(false); // Close international programs dropdown
     setIsProductsDropdownOpen(true);
   };
 
@@ -219,7 +271,7 @@ const Header: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     onMouseLeave={() => setIsProgramsDropdownOpen(false)}
-                    className="absolute left-0 mt-2 w-[700px] max-w-[90vw] bg-black rounded-xl shadow-2xl py-6 border border-[#19c973]/20 z-50 lg:left-auto lg:right-0 ml-4"
+                    className="absolute right-0 mt-2 w-[550px] max-w-[90vw] bg-black rounded-xl shadow-2xl py-6 border border-[#19c973]/20 z-50"
                   >
                     <div className="grid grid-cols-2 gap-8 px-8">
                       <div>
@@ -284,6 +336,60 @@ const Header: React.FC = () => {
                             </div>
                           </Link>
                         </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* International Programs Dropdown */}
+            <div className="relative">
+              <button
+                onClick={handleInternationalProgramsDropdownToggle}
+                onMouseEnter={handleInternationalProgramsMouseEnter}
+                className={`flex items-center space-x-1 text-sm font-medium transition-colors duration-200 ${
+                  location.pathname.startsWith('/programs/international') || location.pathname.startsWith('/programs/remote-apprenticeship')
+                    ? 'text-[#19c973]'
+                    : 'text-gray-300 hover:text-[#19c973]'
+                }`}
+              >
+                <span>International Programs</span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${
+                  isInternationalProgramsDropdownOpen ? 'rotate-180' : ''
+                }`} />
+              </button>
+
+              <AnimatePresence>
+                {isInternationalProgramsDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    onMouseLeave={() => setIsInternationalProgramsDropdownOpen(false)}
+                                         className="absolute left-0 mt-2 w-[350px] max-w-[90vw] bg-black rounded-xl shadow-2xl py-6 border border-[#19c973]/20 z-50 lg:left-auto lg:right-0 ml-4"
+                  >
+                    <div className="px-6">
+                      <h3 className="text-xs font-semibold text-[#19c973] uppercase tracking-wider mb-4">Global Opportunities</h3>
+                      <div className="space-y-3">
+                        {internationalProgramsDropdownItems.map((item, index) => (
+                          <Link
+                            key={index}
+                            to={item.href}
+                            onClick={() => setIsInternationalProgramsDropdownOpen(false)}
+                            className="flex items-start space-x-3 p-2 rounded-lg hover:bg-[#19c973]/10 transition-colors duration-200 group"
+                          >
+                            {item.icon && (
+                              <div className="w-8 h-8 bg-gradient-to-r from-[#19c973] to-[#16a362] rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-200">
+                                <item.icon className="w-4 h-4 text-white" />
+                              </div>
+                            )}
+                            <div className="flex-1">
+                              <div className="font-medium text-white group-hover:text-[#19c973] transition-colors duration-200 text-sm">{item.name}</div>
+                              <div className="text-xs text-gray-400 mt-1">{item.description}</div>
+                            </div>
+                          </Link>
+                        ))}
                       </div>
                     </div>
                   </motion.div>
@@ -520,6 +626,48 @@ const Header: React.FC = () => {
                       className="space-y-2 overflow-hidden"
                     >
                       {programsDropdownItems.map((item, index) => (
+                        <Link
+                          key={index}
+                          to={item.href}
+                          className="flex items-center space-x-3 py-2 text-sm text-gray-300 hover:text-[#19c973] transition-colors duration-200 pl-4"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {item.icon && (
+                            <div className="w-6 h-6 bg-gradient-to-r from-[#19c973] to-[#16a362] rounded-lg flex items-center justify-center flex-shrink-0">
+                              <item.icon className="w-3 h-3 text-white" />
+                            </div>
+                          )}
+                          <div>
+                            <div className="font-medium">{item.name}</div>
+                            <div className="text-xs text-gray-500">{item.description}</div>
+                          </div>
+                        </Link>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* International Programs Section */}
+              <div className="border-t border-[#19c973]/20 pt-4">
+                <button
+                  onClick={() => setIsMobileInternationalProgramsOpen(!isMobileInternationalProgramsOpen)}
+                  className="flex items-center justify-between w-full text-xs font-semibold text-[#19c973] uppercase tracking-wider mb-3 hover:text-[#1edb7f] transition-colors duration-200"
+                >
+                  <span>International Programs</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${
+                    isMobileInternationalProgramsOpen ? 'rotate-180' : ''
+                  }`} />
+                </button>
+                <AnimatePresence>
+                  {isMobileInternationalProgramsOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="space-y-2 overflow-hidden"
+                    >
+                      {internationalProgramsDropdownItems.map((item, index) => (
                         <Link
                           key={index}
                           to={item.href}

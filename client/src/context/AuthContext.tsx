@@ -101,14 +101,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
       toast.success('Welcome back!');
     } catch (error: any) {
       console.error('❌ Login failed:', error);
-      const message = error.response?.data?.error || 'Login failed';
+      
+      // Don't show toast here - let the login page handle the error display
       setState({
         user: null,
         token: null,
         isAuthenticated: false,
         loading: false,
       });
-      toast.error(message);
+      
+      // Re-throw the error so the login page can handle it
       throw error;
     }
   };
@@ -148,7 +150,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       isAuthenticated: false,
       loading: false,
     });
-    toast.success('Logged out successfully');
   };
 
   const updateUser = async (userData: Partial<User>) => {

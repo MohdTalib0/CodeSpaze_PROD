@@ -33,6 +33,10 @@ import FellowshipProgramPage from './pages/Programs/FellowshipProgramPage';
 import SummerTechAcceleratorPage from './pages/Programs/SummerTechAcceleratorPage';
 import WinterTechAcceleratorPage from './pages/Programs/WinterTechAcceleratorPage';
 import InternationalProgramsPage from './pages/Programs/InternationalProgramsPage';
+import InternationalInternshipsPage from './pages/Programs/InternationalInternshipsPage';
+import RemoteApprenticeshipResidencyPage from './pages/Programs/RemoteApprenticeshipResidencyPage';
+import GlobalCareerAcceleratorPage from './pages/Programs/GlobalCareerAcceleratorPage';
+import InternationalHackathonSeriesPage from './pages/Programs/InternationalHackathonSeriesPage';
 
 // Enrollment Form
 import EnrollmentForm from './components/EnrollmentForm';
@@ -226,6 +230,30 @@ function App() {
               <Route path="/programs/international" element={
                 <Layout>
                   <InternationalProgramsPage />
+                </Layout>
+              } />
+              
+              <Route path="/programs/international-internships" element={
+                <Layout>
+                  <InternationalInternshipsPage />
+                </Layout>
+              } />
+              
+              <Route path="/programs/remote-apprenticeship-residency" element={
+                <Layout>
+                  <RemoteApprenticeshipResidencyPage />
+                </Layout>
+              } />
+              
+              <Route path="/programs/global-career-accelerator" element={
+                <Layout>
+                  <GlobalCareerAcceleratorPage />
+                </Layout>
+              } />
+              
+              <Route path="/programs/international-hackathon-series" element={
+                <Layout>
+                  <InternationalHackathonSeriesPage />
                 </Layout>
               } />
               

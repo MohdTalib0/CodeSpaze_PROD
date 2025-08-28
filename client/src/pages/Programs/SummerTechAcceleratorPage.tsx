@@ -1,20 +1,20 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Clock, Users, BookOpen, CheckCircle, Star, Zap, Sun } from 'lucide-react';
+import { ArrowRight, Clock, Users, BookOpen, CheckCircle, Star, Zap, Sun, Code } from 'lucide-react';
 import Button from '../../components/UI/Button';
 import SEOComponent from '../../components/SEO/SEOComponent';
 
 const SummerTechAcceleratorPage: React.FC = () => {
   const features = [
-    'Fast-paced learning',
-    'Project-based curriculum',
-    'Industry mentorship',
-    'Portfolio building',
-    'Skill development',
-    'Certificate upon completion',
-    'Career guidance',
-    'Networking opportunities'
+    'Intensive daily learning sessions (6-8 hours)',
+    'Real-world projects that showcase your skills',
+    '1-on-1 mentorship from industry professionals',
+    'Professional portfolio that impresses employers',
+    'Hands-on skill development with modern tools',
+    'Industry-recognized certification upon completion',
+    'Personalized career guidance and job prep',
+    'Access to our network of tech professionals'
   ];
 
   const testimonials = [
@@ -95,9 +95,10 @@ const SummerTechAcceleratorPage: React.FC = () => {
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
               Summer Tech <span className="gradient-text">Accelerator</span>
             </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-              Fast-paced, project-based summer learning program. Make the most of your summer 
-              break with intensive skill development and real-world project experience.
+            <p className="text-base text-gray-300 max-w-3xl mx-auto mb-8">
+              Don't waste your summer break! Our intensive 4-6 week accelerator transforms you from beginner to 
+              job-ready developer. Work on real projects, learn from industry experts, and build a portfolio 
+              that gets you hired. <span className="text-[#19c973] font-semibold">Perfect for students and career changers.</span>
             </p>
             
             {/* Key Stats */}
@@ -162,6 +163,143 @@ const SummerTechAcceleratorPage: React.FC = () => {
             </div>
           </motion.div>
 
+          {/* Program Structure Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="mb-20"
+          >
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Your <span className="gradient-text">4-6 Week Journey</span> to Tech Mastery
+              </h2>
+              <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+                An intensive, structured program that maximizes your summer break for career transformation
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Week 1-2: Foundation */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.6 }}
+                viewport={{ once: true }}
+                className="glass-card p-8 rounded-xl border border-[#19c973]/30 relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-20 h-20 bg-[#19c973]/10 rounded-full -translate-y-10 translate-x-10"></div>
+                <div className="relative z-10">
+                  <div className="w-16 h-16 bg-[#19c973]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <BookOpen className="w-8 h-8 text-[#19c973]" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4 text-center">Weeks 1-2: Foundation</h3>
+                  <div className="text-[#19c973] font-bold text-lg mb-2 text-center">Core Skills</div>
+                  <p className="text-gray-300 text-center mb-6">
+                    Master fundamental technologies and development principles
+                  </p>
+                  <ul className="space-y-3 text-sm text-gray-300">
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>6-8 hours daily intensive learning</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>Core technology fundamentals</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>Hands-on coding exercises</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>1-on-1 mentorship sessions</span>
+                    </li>
+                  </ul>
+                </div>
+              </motion.div>
+
+              {/* Week 3-4: Projects */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+                viewport={{ once: true }}
+                className="glass-card p-8 rounded-xl border border-[#19c973]/30 relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-20 h-20 bg-[#19c973]/10 rounded-full -translate-y-10 translate-x-10"></div>
+                <div className="relative z-10">
+                  <div className="w-16 h-16 bg-[#19c973]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Code className="w-8 h-8 text-[#19c973]" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4 text-center">Weeks 3-4: Projects</h3>
+                  <div className="text-[#19c973] font-bold text-lg mb-2 text-center">Real Applications</div>
+                  <p className="text-gray-300 text-center mb-6">
+                    Build real-world projects that showcase your skills
+                  </p>
+                  <ul className="space-y-3 text-sm text-gray-300">
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>Real client project work</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>Portfolio development</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>Industry best practices</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>Code review & optimization</span>
+                    </li>
+                  </ul>
+                </div>
+              </motion.div>
+
+              {/* Week 5-6: Mastery */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+                viewport={{ once: true }}
+                className="glass-card p-8 rounded-xl border border-[#19c973]/30 relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-20 h-20 bg-[#19c973]/10 rounded-full -translate-y-10 translate-x-10"></div>
+                <div className="relative z-10">
+                  <div className="w-16 h-16 bg-[#19c973]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Zap className="w-8 h-8 text-[#19c973]" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4 text-center">Weeks 5-6: Mastery</h3>
+                  <div className="text-[#19c973] font-bold text-lg mb-2 text-center">Advanced Skills</div>
+                  <p className="text-gray-300 text-center mb-6">
+                    Advanced concepts and career preparation
+                  </p>
+                  <ul className="space-y-3 text-sm text-gray-300">
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>Advanced technology concepts</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>Portfolio presentation</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>Career guidance & prep</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#19c973] mt-0.5 mr-3 flex-shrink-0" />
+                      <span>Job search strategies</span>
+                    </li>
+                  </ul>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+
           {/* Testimonials Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -214,11 +352,12 @@ const SummerTechAcceleratorPage: React.FC = () => {
           >
             <div className="glass-card p-12 rounded-2xl border border-[#19c973]/30">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                Ready for a <span className="gradient-text">Summer of Growth?</span>
+                Ready to Transform Your Summer Break?
               </h2>
               <p className="text-lg text-gray-300 max-w-2xl mx-auto mb-8">
-                Make your summer count with our intensive tech accelerator program. 
-                Build skills, create projects, and accelerate your career in just 4-6 weeks.
+                While others waste their summer, you'll be building real projects and learning from industry experts. 
+                <span className="text-[#19c973] font-semibold">Next batch starts in 2 weeks.</span> 
+                Only 30 spots available - secure yours before summer begins!
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/enroll">
