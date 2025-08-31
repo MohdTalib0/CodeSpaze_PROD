@@ -298,3 +298,22 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Dashboard Layout Styles */
+@media (min-width: 1024px) {
+  .lg\:translate-x-0 {
+    transform: translateX(0) !important;
+  }
+  
+  .lg\:relative {
+    position: relative !important;
+  }
+}
+
+/* Force sidebar visibility on desktop */
+@media (min-width: 1024px) {
+  .sidebar-desktop {
+    transform: translateX(0) !important;
+    position: relative !important;
+  }
+}

@@ -17,6 +17,7 @@ import projectRoutes from './routes/projects';
 import adminRoutes from './routes/admin';
 import contactRoutes from './routes/contact';
 import enrollmentRoutes from './routes/enrollment';
+import aiResumeRoutes from './routes/ai-resume';
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler';
@@ -108,6 +109,7 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/enrollment', enrollmentRoutes);
+app.use('/api/ai-resume', aiResumeRoutes);
 
 // 404 handler
 app.use(notFound);

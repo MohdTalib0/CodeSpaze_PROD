@@ -5,6 +5,7 @@ import { useAuth } from './context/AuthContext';
 
 // Layout Components
 import Layout from './components/Layout/Layout';
+import DashboardLayout from './components/Layout/DashboardLayout';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import AdminRoute from './components/Auth/AdminRoute';
 
@@ -18,6 +19,12 @@ import RegisterPage from './pages/Auth/RegisterPage';
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import AdminDashboardPage from './pages/Admin/AdminDashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
+
+// AI Resume & Portfolio Builder Components (now local)
+import { DynamicFormBuilder, ResumeViewer } from './components/AIResumeBuilder';
+import { PortfolioBuilder } from './components/PortfolioBuilder';
+import { GitHubPagesGenerator } from './components/GitHubPagesGenerator';
+import AIResumeBuilderPage from './pages/AIResumeBuilder/AIResumeBuilderPage';
 
 // Product Pages
 import FundalyticsAIPage from './pages/Products/FundalyticsAIPage';
@@ -327,18 +334,27 @@ function App() {
               {/* Protected Routes */}
               <Route path="/dashboard/*" element={
                 <ProtectedRoute>
-                  <Layout>
+                  <DashboardLayout>
                     <DashboardPage />
-                  </Layout>
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+
+              {/* AI Resume & Portfolio Builder - Local Components */}
+              <Route path="/ai-resume-builder" element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <AIResumeBuilderPage />
+                  </DashboardLayout>
                 </ProtectedRoute>
               } />
 
               {/* Admin Routes */}
               <Route path="/admin/*" element={
                 <AdminRoute>
-                  <Layout>
+                  <DashboardLayout>
                     <AdminDashboardPage />
-                  </Layout>
+                  </DashboardLayout>
                 </AdminRoute>
               } />
 

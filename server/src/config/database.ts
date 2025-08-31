@@ -13,6 +13,10 @@ export interface DatabaseTables {
   user_programs: any[];
   contact_submissions: any[];
   enrollment_submissions: any[];
+  resume_files: any[];
+  resume_details: any[];
+  resume_history: any[];
+  resume_templates: any[];
 }
 
 export const initializeDatabase = async (): Promise<void> => {
@@ -137,6 +141,132 @@ export const initializeDatabase = async (): Promise<void> => {
         status VARCHAR(50) DEFAULT 'pending',
         reviewed_at TIMESTAMP,
         reviewed_by INTEGER REFERENCES users(id),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+
+    // Create resume_files table for storing uploaded resume files
+    await sql`
+      CREATE TABLE IF NOT EXISTS resume_files (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        original_filename VARCHAR(255) NOT NULL,
+        stored_filename VARCHAR(255) NOT NULL,
+        file_path TEXT NOT NULL,
+        file_size INTEGER NOT NULL,
+        mime_type VARCHAR(100) NOT NULL,
+        upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        extraction_status VARCHAR(50) DEFAULT 'pending',
+        extracted_text TEXT,
+        ai_processing_status VARCHAR(50) DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+
+    // Create resume_details table for storing structured resume data
+    await sql`
+      CREATE TABLE IF NOT EXISTS resume_details (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        resume_file_id INTEGER REFERENCES resume_files(id) ON DELETE SET NULL,
+        template_id VARCHAR(100) NOT NULL,
+        template_name VARCHAR(255) NOT NULL,
+        status VARCHAR(50) DEFAULT 'draft',
+        version INTEGER DEFAULT 1,
+        is_current BOOLEAN DEFAULT true,
+        
+        -- Personal Information
+        first_name VARCHAR(255),
+        last_name VARCHAR(255),
+        email VARCHAR(255),
+        phone VARCHAR(50),
+        title VARCHAR(255),
+        location VARCHAR(255),
+        linkedin_url TEXT,
+        github_url TEXT,
+        website_url TEXT,
+        
+        -- Professional Summary
+        summary TEXT,
+        
+        -- Work Experience (JSON array)
+        experiences JSONB,
+        
+        -- Education (JSON array)
+        education JSONB,
+        
+        -- Skills (JSON object)
+        skills JSONB,
+        
+        -- Projects (JSON array)
+        projects JSONB,
+        
+        -- Certifications (JSON array)
+        certifications JSONB,
+        
+        -- Languages (JSON array)
+        languages JSONB,
+        
+        -- References (JSON array)
+        resume_references JSONB,
+        
+        -- Custom Sections (JSON array)
+        custom_sections JSONB,
+        
+        -- AI Enhancement Data
+        ai_enhanced BOOLEAN DEFAULT false,
+        ai_suggestions JSONB,
+        ai_enhancement_date TIMESTAMP,
+        
+        -- Metadata
+        last_edited TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        completion_percentage INTEGER DEFAULT 0,
+        tags TEXT[],
+        notes TEXT,
+        
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+
+    // Create resume_history table for tracking all resume versions and changes
+    await sql`
+      CREATE TABLE IF NOT EXISTS resume_history (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        resume_detail_id INTEGER REFERENCES resume_details(id) ON DELETE CASCADE,
+        action VARCHAR(50) NOT NULL,
+        action_details JSONB,
+        previous_data JSONB,
+        new_data JSONB,
+        changed_fields TEXT[],
+        version_before INTEGER,
+        version_after INTEGER,
+        status_before VARCHAR(50),
+        status_after VARCHAR(50),
+        template_id_before VARCHAR(100),
+        template_id_after VARCHAR(100),
+        ai_enhancement_applied BOOLEAN DEFAULT false,
+        processing_time_ms INTEGER,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+
+    // Create resume_templates table for storing custom templates
+    await sql`
+      CREATE TABLE IF NOT EXISTS resume_templates (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        description TEXT,
+        category VARCHAR(100) NOT NULL,
+        template_data JSONB NOT NULL,
+        is_default BOOLEAN DEFAULT false,
+        is_active BOOLEAN DEFAULT true,
+        created_by INTEGER REFERENCES users(id),
+        usage_count INTEGER DEFAULT 0,
+        rating DECIMAL(3,2),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )

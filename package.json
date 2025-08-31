@@ -13,10 +13,22 @@
     "client": "cd client && npm start",
     "install-all": "npm install && cd server && npm install && cd ../client && npm install"
   },
-  "keywords": ["tech-learning", "career-platform", "full-stack", "react", "node"],
+  "keywords": [
+    "tech-learning",
+    "career-platform",
+    "full-stack",
+    "react",
+    "node"
+  ],
   "author": "CodeSpaze Team",
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "@types/uuid": "^10.0.0",
+    "mammoth": "^1.10.0",
+    "pdf-parse": "^1.1.1",
+    "uuid": "^11.1.0"
   }
 }
