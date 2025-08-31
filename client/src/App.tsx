@@ -25,6 +25,8 @@ import { DynamicFormBuilder, ResumeViewer } from './components/AIResumeBuilder';
 import { PortfolioBuilder } from './components/PortfolioBuilder';
 import { GitHubPagesGenerator } from './components/GitHubPagesGenerator';
 import AIResumeBuilderPage from './pages/AIResumeBuilder/AIResumeBuilderPage';
+import StackSimulatorPage from './pages/StackSimulator';
+import ProfilePage from './pages/Profile';
 
 // Product Pages
 import FundalyticsAIPage from './pages/Products/FundalyticsAIPage';
@@ -345,6 +347,24 @@ function App() {
                 <ProtectedRoute>
                   <DashboardLayout>
                     <AIResumeBuilderPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+
+              {/* Stack Simulator */}
+              <Route path="/stack-simulator" element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <StackSimulatorPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+
+              {/* Profile Page */}
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <ProfilePage />
                   </DashboardLayout>
                 </ProtectedRoute>
               } />

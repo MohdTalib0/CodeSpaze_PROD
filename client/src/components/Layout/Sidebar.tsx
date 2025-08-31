@@ -18,7 +18,8 @@ import {
   Bell,
   Search,
   Menu,
-  X
+  X,
+  GitBranch
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -47,36 +48,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
       description: 'Build AI-powered resumes & portfolios'
     },
     {
-      name: 'My Courses',
-      href: '/courses',
-      icon: BookOpen,
-      description: 'Enrolled programs'
+      name: 'Stack Simulator',
+      href: '/stack-simulator',
+      icon: GitBranch,
+      description: 'Virtual tech company experience'
     },
     {
-      name: 'Community',
-      href: '/community',
-      icon: Users,
-      description: 'Connect with peers'
-    },
-    {
-      name: 'Certificates',
-      href: '/certificates',
-      icon: Award,
-      description: 'Your achievements'
-    },
-    {
-      name: 'Schedule',
-      href: '/schedule',
-      icon: Calendar,
-      description: 'Upcoming sessions'
-    },
-    {
-      name: 'Assignments',
-      href: '/assignments',
-      icon: FileText,
-      description: 'Tasks and projects'
-    },
-    {
+   
       name: 'Messages',
       href: '/messages',
       icon: MessageCircle,
