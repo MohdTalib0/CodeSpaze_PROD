@@ -64,9 +64,9 @@ const Footer: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               className="flex items-center space-x-3"
             >
-              <div className="w-40 h-18 flex items-center justify-center">
+              <div className="w-48 h-24 flex items-center justify-center">
                 <img 
-                  src="/codespaze-logo1.jpg" 
+                  src="/new_logo.png" 
                   alt="CodeSpaze Logo" 
                   className="w-full h-full object-contain"
                 />

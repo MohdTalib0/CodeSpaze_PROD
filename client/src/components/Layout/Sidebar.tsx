@@ -77,7 +77,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
     },
     {
       name: 'Settings',
-      href: '/settings',
+      href: '/dashboard/settings',
       icon: Settings,
       description: 'Preferences'
     }
@@ -131,10 +131,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
               animate={{ opacity: 1 }}
               className="flex items-center space-x-3"
             >
-              <div className="w-8 h-8 bg-gradient-to-r from-[#19c973] to-[#16a362] rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">C</span>
-              </div>
-              <span className="text-white font-bold text-lg">CodeSpaze</span>
+              <img src="/new_logo.png" alt="CodeSpaze Logo" className="h-8 w-auto object-contain" />
             </motion.div>
           )}
           

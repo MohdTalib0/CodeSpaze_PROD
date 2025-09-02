@@ -17,6 +17,7 @@ import ServicesPage from './pages/ServicesPage';
 import LoginPage from './pages/Auth/LoginPage';
 import RegisterPage from './pages/Auth/RegisterPage';
 import DashboardPage from './pages/Dashboard/DashboardPage';
+import SettingsPage from './pages/Dashboard/SettingsPage';
 import AdminDashboardPage from './pages/Admin/AdminDashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -338,6 +339,15 @@ function App() {
                 <ProtectedRoute>
                   <DashboardLayout>
                     <DashboardPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+
+              {/* Settings Page */}
+              <Route path="/dashboard/settings" element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <SettingsPage />
                   </DashboardLayout>
                 </ProtectedRoute>
               } />
