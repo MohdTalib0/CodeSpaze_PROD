@@ -70,7 +70,7 @@ services:
       - key: NEON_AUTH_URL
         sync: false
       - key: CORS_ORIGIN
-        value: https://codespaze-prod-2.onrender.com
+        value: https://www.codespaze.org,https://codespaze.org
       - key: LOG_LEVEL
         value: info
       - key: RATE_LIMIT_WINDOW_MS
