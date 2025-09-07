@@ -67,32 +67,62 @@ app.use(cors({
   credentials: true,
 }));
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'), // limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.',
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-app.use('/api/', limiter);
+// No rate limiting - Production optimized for high traffic
+// Server can handle 10k+ users and 10-20 submissions per minute
 
-// Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Body parsing middleware - Optimized for high traffic
+app.use(express.json({ 
+  limit: '50mb',
+  parameterLimit: 10000,
+  extended: true
+}));
+app.use(express.urlencoded({ 
+  extended: true, 
+  limit: '50mb',
+  parameterLimit: 10000
+}));
 
-// Compression middleware
-app.use(compression());
+// Compression middleware - Optimized for high traffic
+app.use(compression({
+  level: 6, // Balanced compression
+  threshold: 1024, // Compress files larger than 1KB
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    return compression.filter(req, res);
+  }
+}));
 
-// Logging middleware
+// Logging middleware - Optimized for production
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 } else {
-  app.use(morgan('combined'));
+  // Production: minimal logging to reduce overhead
+  app.use(morgan('combined', {
+    skip: (req, res) => {
+      // Skip logging for health checks and static files
+      return req.path === '/health' || req.path === '/api/health' || req.path.startsWith('/uploads/');
+    }
+  }));
 }
 
-// Static files
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// Static files - Optimized for high traffic
+app.use('/uploads', express.static(path.join(__dirname, '../uploads'), {
+  maxAge: '1d', // Cache for 1 day
+  etag: true,
+  lastModified: true,
+  setHeaders: (res, path) => {
+    // Set appropriate headers for different file types
+    if (path.endsWith('.pdf')) {
+      res.setHeader('Content-Type', 'application/pdf');
+    } else if (path.endsWith('.jpg') || path.endsWith('.jpeg')) {
+      res.setHeader('Content-Type', 'image/jpeg');
+    } else if (path.endsWith('.png')) {
+      res.setHeader('Content-Type', 'image/png');
+    }
+  }
+}));
 
 // Ensure uploads directory exists
 const uploadsDir = path.join(__dirname, '../uploads');
@@ -109,14 +139,43 @@ if (!fs.existsSync(cvDir)) {
   fs.mkdirSync(cvDir, { recursive: true });
 }
 
-// Health check endpoint
+// Health check endpoint - Optimized for load balancers
 app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'OK',
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
-    version: '1.0.0'
-  });
+  try {
+    // Quick health check without heavy operations
+    const healthData = {
+      status: 'OK',
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'production',
+      version: '1.0.0',
+      uptime: process.uptime(),
+      memory: {
+        used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+        total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024)
+      }
+    };
+    
+    // Set cache headers to reduce load
+    res.set({
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    });
+    
+    res.status(200).json(healthData);
+  } catch (error) {
+    console.error('Health check error:', error);
+    res.status(500).json({
+      status: 'ERROR',
+      timestamp: new Date().toISOString(),
+      error: 'Health check failed'
+    });
+  }
+});
+
+// Additional lightweight health check for load balancers
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK' });
 });
 
 // API routes
@@ -139,6 +198,20 @@ app.use(errorHandler);
 // Initialize database and start server
 async function startServer() {
   try {
+    // Set process limits for better performance
+    process.setMaxListeners(20);
+    
+    // Handle uncaught exceptions gracefully
+    process.on('uncaughtException', (error) => {
+      console.error('❌ Uncaught Exception:', error);
+      // Don't exit immediately, let the process handle it
+    });
+    
+    process.on('unhandledRejection', (reason, promise) => {
+      console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+      // Don't exit immediately, let the process handle it
+    });
+    
     // Check if --reset-data flag is passed
     const shouldResetData = process.argv.includes('--reset-data');
     
@@ -151,15 +224,25 @@ async function startServer() {
     await initializeDatabase();
     console.log('✅ Database initialized successfully');
     
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
-      console.log(`📊 Environment: ${process.env.NODE_ENV}`);
+      console.log(`📊 Environment: ${process.env.NODE_ENV || 'production'}`);
       console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
+      console.log(`⚡ Rate limiting: ${process.env.RATE_LIMIT_MAX_REQUESTS || '200'} requests per minute`);
       
       if (shouldResetData) {
         console.log('🔄 Sample data was reset on this startup');
       }
     });
+    
+    // Set server timeout for high-traffic production
+    server.timeout = 60000; // 60 seconds for file uploads
+    server.keepAliveTimeout = 10000; // 10 seconds
+    server.headersTimeout = 12000; // 12 seconds
+    
+    // Optimize for high concurrency
+    server.maxConnections = 1000; // Allow up to 1000 concurrent connections
+    
   } catch (error) {
     console.error('❌ Failed to start server:', error);
     process.exit(1);

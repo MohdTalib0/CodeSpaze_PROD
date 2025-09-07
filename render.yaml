@@ -5,6 +5,7 @@ services:
     env: node
     plan: starter
     region: oregon # Choose closest region to your users
+    instanceClass: standard
     buildCommand: |
       set -e
       echo "🚀 Starting build process..."
@@ -52,7 +53,8 @@ services:
       
       echo "✅ Build completed successfully"
     startCommand: node server/dist/index.js
-    healthCheckPath: /api/health
+    healthCheckPath: /health
+    healthCheckGracePeriod: 300
     autoDeploy: true
     envVars:
       - key: NODE_ENV
@@ -73,10 +75,10 @@ services:
         value: https://www.codespaze.org,https://codespaze.org
       - key: LOG_LEVEL
         value: info
-      - key: RATE_LIMIT_WINDOW_MS
-        value: 900000
-      - key: RATE_LIMIT_MAX_REQUESTS
-        value: 100
+      - key: NODE_OPTIONS
+        value: --max-old-space-size=2048
+      - key: UV_THREADPOOL_SIZE
+        value: 128
       - key: SESSION_SECRET
         sync: false
       - key: COOKIE_SECURE
@@ -115,11 +117,11 @@ services:
         source: /api/*
         destination: /api/*
     scaling:
-      minInstances: 1
-      maxInstances: 3
-      targetConcurrency: 100
+      minInstances: 2
+      maxInstances: 10
+      targetConcurrency: 200
       targetMemoryUtilizationPercent: 80
-      targetCPUUtilizationPercent: 70
+      targetCPUUtilizationPercent: 75
 
   # Frontend Client Service (same service, different route)
   - type: web
