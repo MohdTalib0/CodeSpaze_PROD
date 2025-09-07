@@ -221,13 +221,13 @@ const CICDPipelineModal: React.FC<CICDPipelineModalProps> = ({ onClose, onDeploy
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
-      <div className="bg-black border border-gray-800 rounded-xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+    <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-2 md:p-4">
+      <div className="bg-black border border-gray-800 rounded-xl max-w-6xl w-full max-h-[95vh] md:max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-800">
-          <div className="flex items-center gap-3">
-            <Zap className="w-6 h-6 text-blue-500" />
-            <h3 className="text-xl font-semibold text-white">CI/CD Pipeline Simulator</h3>
+        <div className="flex items-center justify-between p-4 md:p-6 border-b border-gray-800">
+          <div className="flex items-center gap-2 md:gap-3">
+            <Zap className="w-5 h-5 md:w-6 md:h-6 text-blue-500" />
+            <h3 className="text-lg md:text-xl font-semibold text-white">CI/CD Pipeline Simulator</h3>
           </div>
           <div className="flex items-center gap-3">
             <button
@@ -245,9 +245,9 @@ const CICDPipelineModal: React.FC<CICDPipelineModalProps> = ({ onClose, onDeploy
           </div>
         </div>
 
-        <div className="flex h-[calc(90vh-120px)]">
+        <div className="flex flex-col md:flex-row h-[calc(95vh-120px)] md:h-[calc(90vh-120px)]">
           {/* Left Panel - Pipeline Stages */}
-          <div className="w-2/3 p-6 border-r border-gray-800 overflow-y-auto">
+          <div className="w-full md:w-2/3 p-4 md:p-6 md:border-r border-gray-800 overflow-y-auto">
             <div className="space-y-4">
               {/* Pipeline Controls */}
               <div className="flex items-center gap-3 mb-6">
@@ -300,7 +300,7 @@ const CICDPipelineModal: React.FC<CICDPipelineModalProps> = ({ onClose, onDeploy
           </div>
 
           {/* Right Panel - Deployment Info */}
-          <div className="w-1/3 p-6 bg-gray-900">
+          <div className="w-full md:w-1/3 p-4 md:p-6 bg-gray-900 md:border-t border-gray-800">
             <h4 className="font-semibold text-white mb-4">Deployment Environments</h4>
             <div className="space-y-3">
               {deploymentEnvironments.map((env) => (

@@ -220,12 +220,12 @@ const JiraBoardModal: React.FC<JiraBoardModalProps> = ({ onClose, onTaskComplete
           </div>
         </div>
 
-        <div className="flex h-[calc(90vh-120px)]">
+        <div className="flex flex-col md:flex-row h-[calc(95vh-120px)] md:h-[calc(90vh-120px)]">
           {/* Main Board */}
-          <div className="flex-1 p-6 overflow-x-auto">
-            <div className="flex gap-4 min-w-max">
+          <div className="flex-1 p-4 md:p-6 overflow-x-auto">
+            <div className="flex gap-3 md:gap-4 min-w-max">
               {columns.map((column) => (
-                <div key={column.id} className="w-80">
+                <div key={column.id} className="w-72 md:w-80">
                   <div className="bg-gray-900 p-3 rounded-t-lg border border-gray-700">
                     <h4 className="font-semibold text-white">{column.title}</h4>
                     <span className="text-sm text-gray-300">

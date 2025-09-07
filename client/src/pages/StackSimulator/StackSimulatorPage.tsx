@@ -392,35 +392,37 @@ const StackSimulatorPage: React.FC = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-3 md:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center space-x-4">
+        <div className="text-center mb-6 md:mb-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between mb-4 md:mb-6 gap-4">
+            <div className="flex items-center space-x-2 md:space-x-4">
               <button
                 onClick={() => setShowAchievements(true)}
-                className="flex items-center space-x-2 bg-primary-500/20 text-primary-500 px-4 py-2 rounded-lg hover:bg-primary-500/30 transition-colors"
+                className="flex items-center space-x-1 md:space-x-2 bg-primary-500/20 text-primary-500 px-2 md:px-4 py-2 rounded-lg hover:bg-primary-500/30 transition-colors text-sm md:text-base"
               >
-                <Trophy className="w-5 h-5" />
-                <span>Achievements ({simulatorState.achievements.length})</span>
+                <Trophy className="w-4 h-4 md:w-5 md:h-5" />
+                <span className="hidden sm:inline">Achievements ({simulatorState.achievements.length})</span>
+                <span className="sm:hidden">Awards ({simulatorState.achievements.length})</span>
               </button>
               <button
                 onClick={() => setShowSettings(true)}
-                className="flex items-center space-x-2 bg-gray-500/20 text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-500/30 transition-colors"
+                className="flex items-center space-x-1 md:space-x-2 bg-gray-500/20 text-gray-300 px-2 md:px-4 py-2 rounded-lg hover:bg-gray-500/30 transition-colors text-sm md:text-base"
               >
-                <Settings className="w-5 h-5" />
-                <span>Settings</span>
+                <Settings className="w-4 h-4 md:w-5 md:h-5" />
+                <span className="hidden sm:inline">Settings</span>
+                <span className="sm:hidden">Config</span>
               </button>
             </div>
             
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-3 md:space-x-6">
               <div className="text-center">
-                <div className="flex items-center space-x-2">
-                  <Crown className="w-5 h-5 text-yellow-500" />
-                  <span className="text-white font-bold">Level {simulatorState.level}</span>
+                <div className="flex items-center space-x-1 md:space-x-2">
+                  <Crown className="w-4 h-4 md:w-5 md:h-5 text-yellow-500" />
+                  <span className="text-white font-bold text-sm md:text-base">Level {simulatorState.level}</span>
                 </div>
-                <div className="w-32 bg-gray-700 rounded-full h-2 mt-1">
+                <div className="w-24 md:w-32 bg-gray-700 rounded-full h-2 mt-1">
                   <div 
                     className="bg-gradient-to-r from-primary-500 to-primary-600 h-2 rounded-full transition-all duration-300"
                     style={{ width: `${(simulatorState.experience % 100)}%` }}
@@ -430,36 +432,36 @@ const StackSimulatorPage: React.FC = () => {
               </div>
               
               <div className="text-center">
-                <div className="flex items-center space-x-2">
-                  <Flame className="w-5 h-5 text-orange-500" />
-                  <span className="text-white font-bold">{simulatorState.streak}</span>
+                <div className="flex items-center space-x-1 md:space-x-2">
+                  <Flame className="w-4 h-4 md:w-5 md:h-5 text-orange-500" />
+                  <span className="text-white font-bold text-sm md:text-base">{simulatorState.streak}</span>
                 </div>
                 <span className="text-xs text-gray-400">Day Streak</span>
               </div>
               
               <div className="text-center">
-                <div className="flex items-center space-x-2">
-                  <Star className="w-5 h-5 text-yellow-500" />
-                  <span className="text-white font-bold">{simulatorState.totalScore}</span>
+                <div className="flex items-center space-x-1 md:space-x-2">
+                  <Star className="w-4 h-4 md:w-5 md:h-5 text-yellow-500" />
+                  <span className="text-white font-bold text-sm md:text-base">{simulatorState.totalScore}</span>
                 </div>
                 <span className="text-xs text-gray-400">Total Score</span>
               </div>
             </div>
           </div>
           
-          <h1 className="text-4xl font-bold text-white mb-4">
+          <h1 className="text-2xl md:text-4xl font-bold text-white mb-4">
             🚀 CodeSpaze <span className="gradient-text">Stack Simulator</span>
           </h1>
-          <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+          <p className="text-sm md:text-lg text-gray-300 max-w-3xl mx-auto px-4">
             Experience real-world tech company workflows! Practice Git operations, CI/CD pipelines, 
             Jira boards, and team collaboration in a safe, interactive environment.
           </p>
         </div>
 
         {/* Role Selection */}
-        <div className="glass-card p-6 rounded-xl mb-8">
-          <h2 className="text-xl font-semibold text-white mb-4">Choose Your Role</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="glass-card p-4 md:p-6 rounded-xl mb-6 md:mb-8">
+          <h2 className="text-lg md:text-xl font-semibold text-white mb-4">Choose Your Role</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             {roles.map((role) => (
               <button
                 key={role.id}
@@ -470,24 +472,24 @@ const StackSimulatorPage: React.FC = () => {
                     : 'border-white/10 hover:border-white/20 bg-black/20'
                 }`}
               >
-                <div className={`${role.color} w-12 h-12 rounded-lg flex items-center justify-center text-white mx-auto mb-3`}>
+                <div className={`${role.color} w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center text-white mx-auto mb-2 md:mb-3`}>
                   {role.icon}
                 </div>
-                <h3 className="font-semibold text-white mb-2">{role.name}</h3>
-                <p className="text-sm text-gray-400">{role.description}</p>
+                <h3 className="font-semibold text-white mb-1 md:mb-2 text-sm md:text-base">{role.name}</h3>
+                <p className="text-xs md:text-sm text-gray-400">{role.description}</p>
               </button>
             ))}
           </div>
         </div>
 
         {/* Task Selection */}
-        <div className="glass-card p-6 rounded-xl mb-8">
-          <h2 className="text-xl font-semibold text-white mb-4">Available Tasks</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="glass-card p-4 md:p-6 rounded-xl mb-6 md:mb-8">
+          <h2 className="text-lg md:text-xl font-semibold text-white mb-4">Available Tasks</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
             {availableTasks.map((task) => (
-              <div key={task.id} className="p-4 bg-black/20 rounded-lg border border-white/10 hover:border-primary-500/50 transition-colors">
+              <div key={task.id} className="p-3 md:p-4 bg-black/20 rounded-lg border border-white/10 hover:border-primary-500/50 transition-colors">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-semibold text-white">{task.title}</h3>
+                  <h3 className="font-semibold text-white text-sm md:text-base">{task.title}</h3>
                   <span className={`px-2 py-1 rounded text-xs font-medium ${
                     task.difficulty === 'easy' ? 'bg-green-500/20 text-green-400' :
                     task.difficulty === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
@@ -496,7 +498,7 @@ const StackSimulatorPage: React.FC = () => {
                     {task.difficulty}
                   </span>
                 </div>
-                <p className="text-sm text-gray-300 mb-3">{task.description}</p>
+                <p className="text-xs md:text-sm text-gray-300 mb-3">{task.description}</p>
                 <div className="flex items-center justify-between text-xs text-gray-400 mb-3">
                   <span>⏱️ {task.estimatedTime} min</span>
                   <span>⭐ {task.xpReward} XP</span>
@@ -522,8 +524,8 @@ const StackSimulatorPage: React.FC = () => {
 
         {/* Current Task Progress */}
         {currentTask && (
-          <div className="glass-card p-6 rounded-xl mb-8">
-            <h2 className="text-xl font-semibold text-white mb-4">Current Task Progress</h2>
+          <div className="glass-card p-4 md:p-6 rounded-xl mb-6 md:mb-8">
+            <h2 className="text-lg md:text-xl font-semibold text-white mb-4">Current Task Progress</h2>
             <div className="bg-black/20 p-4 rounded-lg border border-white/10">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="font-semibold text-primary-500">{currentTask.title}</h3>
@@ -560,16 +562,16 @@ const StackSimulatorPage: React.FC = () => {
         )}
 
         {/* Tech Stack Overview */}
-        <div className="glass-card p-6 rounded-xl mb-8">
-          <h2 className="text-xl font-semibold text-white mb-4">Company Tech Stack</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="glass-card p-4 md:p-6 rounded-xl mb-6 md:mb-8">
+          <h2 className="text-lg md:text-xl font-semibold text-white mb-4">Company Tech Stack</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
             {techStack.map((stack) => (
-              <div key={stack.name} className="text-center p-4 bg-black/20 rounded-lg border border-white/10">
+              <div key={stack.name} className="text-center p-3 md:p-4 bg-black/20 rounded-lg border border-white/10">
                 <div className="text-primary-500 mb-2 flex justify-center">{stack.icon}</div>
-                <h3 className="font-semibold text-white mb-2">{stack.name}</h3>
+                <h3 className="font-semibold text-white mb-2 text-sm md:text-base">{stack.name}</h3>
                 <div className="space-y-1">
                   {stack.tech.map((tech) => (
-                    <span key={tech} className="block text-sm text-gray-300 bg-dark-800 px-2 py-1 rounded border border-white/10">
+                    <span key={tech} className="block text-xs md:text-sm text-gray-300 bg-dark-800 px-2 py-1 rounded border border-white/10">
                       {tech}
                     </span>
                   ))}
@@ -580,87 +582,90 @@ const StackSimulatorPage: React.FC = () => {
         </div>
 
         {/* Main Simulator Dashboard */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
           {/* Left Column - Current Task & Actions */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="xl:col-span-2 space-y-4 md:space-y-6">
             {/* Current Task */}
-            <div className="glass-card p-6 rounded-xl">
-              <h2 className="text-xl font-semibold text-white mb-4">Current Task</h2>
-              <div className="bg-black/20 p-4 rounded-lg border border-white/10">
-                <h3 className="font-semibold text-primary-500 mb-2">{simulatorState.currentTask}</h3>
-                <p className="text-gray-300 text-sm">
+            <div className="glass-card p-4 md:p-6 rounded-xl">
+              <h2 className="text-lg md:text-xl font-semibold text-white mb-4">Current Task</h2>
+              <div className="bg-black/20 p-3 md:p-4 rounded-lg border border-white/10">
+                <h3 className="font-semibold text-primary-500 mb-2 text-sm md:text-base">{simulatorState.currentTask}</h3>
+                <p className="text-gray-300 text-xs md:text-sm">
                   As a {roles.find(r => r.id === simulatorState.currentRole)?.name}, 
                   you need to complete this feature for the upcoming sprint.
                 </p>
               </div>
               
-              <div className="mt-4 flex flex-wrap gap-3">
+              <div className="mt-4 flex flex-col sm:flex-row gap-2 md:gap-3">
                 <button
                   onClick={() => setShowGitWorkflow(true)}
-                  className="flex items-center gap-2 bg-primary-500 text-dark-950 px-4 py-2 rounded-lg hover:bg-primary-400 transition-colors"
+                  className="flex items-center justify-center gap-2 bg-primary-500 text-dark-950 px-3 md:px-4 py-2 rounded-lg hover:bg-primary-400 transition-colors text-sm md:text-base"
                 >
                   <GitBranch className="w-4 h-4" />
-                  Git Workflow
+                  <span className="hidden sm:inline">Git Workflow</span>
+                  <span className="sm:hidden">Git</span>
                 </button>
                 <button
                   onClick={() => setShowCICD(true)}
-                  className="flex items-center gap-2 bg-primary-500 text-dark-950 px-4 py-2 rounded-lg hover:bg-primary-400 transition-colors"
+                  className="flex items-center justify-center gap-2 bg-primary-500 text-dark-950 px-3 md:px-4 py-2 rounded-lg hover:bg-primary-400 transition-colors text-sm md:text-base"
                 >
                   <Zap className="w-4 h-4" />
-                  CI/CD Pipeline
+                  <span className="hidden sm:inline">CI/CD Pipeline</span>
+                  <span className="sm:hidden">CI/CD</span>
                 </button>
                 <button
                   onClick={() => setShowJiraBoard(true)}
-                  className="flex items-center gap-2 bg-primary-500 text-dark-950 px-4 py-2 rounded-lg hover:bg-primary-400 transition-colors"
+                  className="flex items-center justify-center gap-2 bg-primary-500 text-dark-950 px-3 md:px-4 py-2 rounded-lg hover:bg-primary-400 transition-colors text-sm md:text-base"
                 >
                   <BarChart3 className="w-4 h-4" />
-                  Jira Board
+                  <span className="hidden sm:inline">Jira Board</span>
+                  <span className="sm:hidden">Jira</span>
                 </button>
               </div>
             </div>
 
             {/* Quick Actions */}
-            <div className="glass-card p-6 rounded-xl">
-              <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="glass-card p-4 md:p-6 rounded-xl">
+              <h2 className="text-lg md:text-xl font-semibold text-white mb-4">Quick Actions</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
                 <button
                   onClick={() => handleGitAction('commit')}
-                  className="flex flex-col items-center gap-2 p-4 bg-black/20 rounded-lg hover:bg-white/5 transition-colors border border-white/10"
+                  className="flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 bg-black/20 rounded-lg hover:bg-white/5 transition-colors border border-white/10"
                 >
-                  <GitCommit className="w-6 h-6 text-primary-500" />
-                  <span className="text-sm font-medium text-white">Commit</span>
+                  <GitCommit className="w-5 h-5 md:w-6 md:h-6 text-primary-500" />
+                  <span className="text-xs md:text-sm font-medium text-white">Commit</span>
                 </button>
                 <button
                   onClick={() => handleDeploy()}
-                  className="flex flex-col items-center gap-2 p-4 bg-black/20 rounded-lg hover:bg-white/5 transition-colors border border-white/10"
+                  className="flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 bg-black/20 rounded-lg hover:bg-white/5 transition-colors border border-white/10"
                 >
-                  <Server className="w-6 h-6 text-primary-500" />
-                  <span className="text-sm font-medium text-white">Deploy</span>
+                  <Server className="w-5 h-5 md:w-6 md:h-6 text-primary-500" />
+                  <span className="text-xs md:text-sm font-medium text-white">Deploy</span>
                 </button>
                 <button
                   onClick={() => handleBugFix()}
-                  className="flex flex-col items-center gap-2 p-4 bg-black/20 rounded-lg hover:bg-white/5 transition-colors border border-white/10"
+                  className="flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 bg-black/20 rounded-lg hover:bg-white/5 transition-colors border border-white/10"
                 >
-                  <Bug className="w-6 h-6 text-primary-500" />
-                  <span className="text-sm font-medium text-white">Fix Bug</span>
+                  <Bug className="w-5 h-5 md:w-6 md:h-6 text-primary-500" />
+                  <span className="text-xs md:text-sm font-medium text-white">Fix Bug</span>
                 </button>
                 <button
                   onClick={() => handleTestRun()}
-                  className="flex flex-col items-center gap-2 p-4 bg-black/20 rounded-lg hover:bg-white/5 transition-colors border border-white/10"
+                  className="flex flex-col items-center gap-1 md:gap-2 p-2 md:p-4 bg-black/20 rounded-lg hover:bg-white/5 transition-colors border border-white/10"
                 >
-                  <CheckCircle className="w-6 h-6 text-primary-500" />
-                  <span className="text-sm font-medium text-white">Run Tests</span>
+                  <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-primary-500" />
+                  <span className="text-xs md:text-sm font-medium text-white">Run Tests</span>
                 </button>
               </div>
             </div>
           </div>
 
           {/* Right Column - Stats & Progress */}
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             {/* Notifications */}
-            <div className="glass-card p-6 rounded-xl">
-              <h2 className="text-xl font-semibold text-white mb-4 flex items-center">
-                <Bell className="w-5 h-5 mr-2" />
+            <div className="glass-card p-4 md:p-6 rounded-xl">
+              <h2 className="text-lg md:text-xl font-semibold text-white mb-4 flex items-center">
+                <Bell className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                 Notifications
               </h2>
               <div className="space-y-2 max-h-48 overflow-y-auto">
@@ -688,8 +693,8 @@ const StackSimulatorPage: React.FC = () => {
             </div>
 
             {/* Role Stats */}
-            <div className="glass-card p-6 rounded-xl">
-              <h2 className="text-xl font-semibold text-white mb-4">Your Stats</h2>
+            <div className="glass-card p-4 md:p-6 rounded-xl">
+              <h2 className="text-lg md:text-xl font-semibold text-white mb-4">Your Stats</h2>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400">Git Commits</span>
@@ -715,8 +720,8 @@ const StackSimulatorPage: React.FC = () => {
             </div>
 
             {/* Sprint Progress */}
-            <div className="glass-card p-6 rounded-xl">
-              <h2 className="text-xl font-semibold text-white mb-4">Sprint Progress</h2>
+            <div className="glass-card p-4 md:p-6 rounded-xl">
+              <h2 className="text-lg md:text-xl font-semibold text-white mb-4">Sprint Progress</h2>
               <div className="space-y-4">
                 <div>
                   <div className="flex justify-between items-center mb-2">
@@ -793,11 +798,11 @@ const StackSimulatorPage: React.FC = () => {
 
         {/* Achievements Modal */}
         {showAchievements && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-gray-900 rounded-xl p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-white flex items-center">
-                  <Trophy className="w-6 h-6 mr-2 text-yellow-500" />
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 md:p-4">
+            <div className="bg-gray-900 rounded-xl p-4 md:p-6 max-w-2xl w-full mx-2 md:mx-4 max-h-[90vh] md:max-h-[80vh] overflow-y-auto">
+              <div className="flex items-center justify-between mb-4 md:mb-6">
+                <h2 className="text-xl md:text-2xl font-bold text-white flex items-center">
+                  <Trophy className="w-5 h-5 md:w-6 md:h-6 mr-2 text-yellow-500" />
                   Achievements
                 </h2>
                 <button
@@ -845,11 +850,11 @@ const StackSimulatorPage: React.FC = () => {
 
         {/* Settings Modal */}
         {showSettings && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-gray-900 rounded-xl p-6 max-w-md w-full mx-4">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-white flex items-center">
-                  <Settings className="w-6 h-6 mr-2" />
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 md:p-4">
+            <div className="bg-gray-900 rounded-xl p-4 md:p-6 max-w-md w-full mx-2 md:mx-4">
+              <div className="flex items-center justify-between mb-4 md:mb-6">
+                <h2 className="text-xl md:text-2xl font-bold text-white flex items-center">
+                  <Settings className="w-5 h-5 md:w-6 md:h-6 mr-2" />
                   Settings
                 </h2>
                 <button
