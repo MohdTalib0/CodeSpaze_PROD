@@ -220,6 +220,19 @@ const EnrollmentForm: React.FC = () => {
       case 'fieldOfStudy':
         return !value.trim() ? 'Field of study is required' : '';
       
+      case 'graduationYear':
+        if (!value.trim()) {
+          return 'Graduation year is required';
+        } else if (value === 'custom') {
+          return 'Please enter a custom graduation year';
+        } else {
+          const year = parseInt(value);
+          if (year < 1950 || year > 2050) {
+            return 'Please enter a valid year between 1950 and 2050';
+          }
+        }
+        return '';
+      
       default:
         return '';
     }
@@ -266,6 +279,12 @@ const EnrollmentForm: React.FC = () => {
     if (isStepValid) {
       if (currentStep < 3) {
         setCurrentStep(currentStep + 1);
+        // Scroll to top when moving to next step
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth'
+        });
       }
     } else {
       validateStep(currentStep);
@@ -275,6 +294,12 @@ const EnrollmentForm: React.FC = () => {
   const prevStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
+      // Scroll to top when moving to previous step
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
     }
   };
 
@@ -743,14 +768,47 @@ const EnrollmentForm: React.FC = () => {
         <select
           value={formData.graduationYear}
           onChange={(e) => handleInputChange('graduationYear', e.target.value)}
-          className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-[#19c973] focus:outline-none"
+          className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white focus:outline-none ${
+            errors.graduationYear ? 'border-red-500 focus:border-red-500' : 'border-gray-600 focus:border-[#19c973]'
+          }`}
         >
           <option value="">Select graduation year</option>
           {Array.from({ length: 15 }, (_, i) => new Date().getFullYear() - 5 + i).map(year => (
             <option key={year} value={year.toString()}>{year}</option>
           ))}
+          <option value="custom">Custom Year</option>
         </select>
+        
+        {/* Custom year input - only show when "Custom Year" is selected */}
+        {formData.graduationYear === 'custom' && (
+          <div className="mt-3">
+            <input
+              type="number"
+              min="1950"
+              max="2050"
+              placeholder="Enter custom graduation year"
+              onChange={(e) => {
+                const customYear = e.target.value;
+                if (customYear && parseInt(customYear) >= 1950 && parseInt(customYear) <= 2050) {
+                  handleInputChange('graduationYear', customYear);
+                } else if (customYear === '') {
+                  handleInputChange('graduationYear', 'custom');
+                }
+              }}
+              className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-400 focus:outline-none ${
+                errors.graduationYear ? 'border-red-500 focus:border-red-500' : 'border-gray-600 focus:border-[#19c973]'
+              }`}
+            />
+            <p className="text-xs text-gray-400 mt-1">
+              Enter a year between 1950 and 2050
+            </p>
+          </div>
+        )}
+        
         {errors.graduationYear && <p className="text-red-500 text-xs mt-1">{errors.graduationYear}</p>}
+        {!errors.graduationYear && formData.graduationYear && formData.graduationYear !== 'custom' && (
+          <p className="text-green-400 text-xs mt-1">✓ Graduation year is valid</p>
+        )}
       </div>
 
       <div>
@@ -951,6 +1009,15 @@ const EnrollmentForm: React.FC = () => {
     });
   }, []);
 
+  // Scroll to top when step changes
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }, [currentStep]);
+
   return (
     <div className="min-h-screen py-20 bg-black relative">
       {/* Loading Overlay */}
@@ -999,13 +1066,13 @@ const EnrollmentForm: React.FC = () => {
               {currentStep === 3 && renderStep3()}
             </AnimatePresence>
 
-            <div className="flex justify-between items-center mt-8 pt-6 border-t border-gray-600">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8 pt-6 border-t border-gray-600">
               <Button
                 type="button"
                 variant="outline"
                 onClick={prevStep}
                 disabled={currentStep === 1}
-                className="flex items-center"
+                className="flex items-center w-full sm:w-auto"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Previous
@@ -1016,7 +1083,7 @@ const EnrollmentForm: React.FC = () => {
                   type="button"
                   onClick={nextStep}
                   disabled={!isStepValid}
-                  className="flex items-center"
+                  className="flex items-center w-full sm:w-auto"
                 >
                   Next
                   <ArrowRight className="w-4 h-4 ml-2" />
@@ -1025,7 +1092,7 @@ const EnrollmentForm: React.FC = () => {
                 <Button
                   type="submit"
                   disabled={!isStepValid || isSubmitting}
-                  className="flex items-center min-w-[180px] justify-center"
+                  className="flex items-center justify-center w-full sm:w-auto sm:min-w-[180px]"
                 >
                   {isSubmitting ? (
                     <>
@@ -1034,7 +1101,8 @@ const EnrollmentForm: React.FC = () => {
                     </>
                   ) : (
                     <>
-                      Submit Application
+                      <span className="hidden sm:inline">Submit Application</span>
+                      <span className="sm:hidden">Submit</span>
                       <CheckCircle className="w-4 h-4 ml-2" />
                     </>
                   )}

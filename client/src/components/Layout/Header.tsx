@@ -781,7 +781,7 @@ const Header: React.FC = () => {
                   </Link>
                   <Link to="/enroll" onClick={() => setIsMenuOpen(false)}>
                     <Button variant="primary" size="sm" className="w-full mt-4">
-                      Join Now
+                      Apply Now
                     </Button>
                   </Link>
                 </div>
