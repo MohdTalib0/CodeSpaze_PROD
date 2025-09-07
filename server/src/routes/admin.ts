@@ -300,48 +300,27 @@ router.get('/resumes', async (req: AuthRequest, res: Response) => {
         e.last_name,
         e.email,
         e.phone,
-        e.resume_filename,
+        e.resume_url,
         e.created_at,
         p.title as program_title
       FROM enrollments e
       LEFT JOIN programs p ON e.program_id = p.id
-      WHERE e.resume_filename IS NOT NULL
+      WHERE e.resume_url IS NOT NULL
       ORDER BY e.created_at DESC
     `;
 
-    // Get file system information for each resume
-    const resumesWithFileInfo = await Promise.all(
-      enrollments.map(async (enrollment) => {
-        const resumePath = path.join(process.cwd(), 'uploads', 'resumes', enrollment.resume_filename);
-        let fileExists = false;
-        let fileSize = 0;
-        let lastModified = null;
-
-        try {
-          if (fs.existsSync(resumePath)) {
-            const stats = fs.statSync(resumePath);
-            fileExists = true;
-            fileSize = stats.size;
-            lastModified = stats.mtime;
-          }
-        } catch (error) {
-          console.error(`Error checking file ${enrollment.resume_filename}:`, error);
-        }
-
-        return {
-          ...enrollment,
-          file_exists: fileExists,
-          file_size: fileSize,
-          last_modified: lastModified,
-          download_url: `/uploads/resumes/${enrollment.resume_filename}`
-        };
-      })
-    );
+    // Return enrollment data with resume URLs
+    const resumesWithInfo = enrollments.map((enrollment) => ({
+      ...enrollment,
+      resume_url: enrollment.resume_url,
+      resume_type: enrollment.resume_url.includes('linkedin.com') ? 'LinkedIn' : 
+                   enrollment.resume_url.includes('github.com') ? 'GitHub' : 'External URL'
+    }));
 
     res.json({
       success: true,
-      count: resumesWithFileInfo.length,
-      resumes: resumesWithFileInfo
+      count: resumesWithInfo.length,
+      resumes: resumesWithInfo
     });
   } catch (error) {
     console.error('Error fetching resumes:', error);
@@ -352,58 +331,214 @@ router.get('/resumes', async (req: AuthRequest, res: Response) => {
   }
 });
 
-// @desc    Download a specific resume
-// @route   GET /api/admin/resumes/:filename
+// @desc    Get resume URL for a specific enrollment
+// @route   GET /api/admin/resumes/:enrollmentId
 // @access  Private/Admin
-router.get('/resumes/:filename', async (req: AuthRequest, res: Response) => {
+router.get('/resumes/:enrollmentId', async (req: AuthRequest, res: Response) => {
   try {
-    const { filename } = req.params;
+    const { enrollmentId } = req.params;
     
-    // Security check - prevent directory traversal
-    if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid filename'
-      });
-    }
-
-    const resumePath = path.join(process.cwd(), 'uploads', 'resumes', filename);
-    
-    if (!fs.existsSync(resumePath)) {
-      return res.status(404).json({
-        success: false,
-        error: 'Resume file not found'
-      });
-    }
-
-    // Get enrollment info for this resume
+    // Get enrollment info with resume URL
     const enrollment = await sql`
-      SELECT first_name, last_name, email, program_id
-      FROM enrollments
-      WHERE resume_filename = ${filename}
+      SELECT 
+        e.id,
+        e.first_name,
+        e.last_name,
+        e.email,
+        e.resume_url,
+        e.created_at,
+        p.title as program_title
+      FROM enrollments e
+      LEFT JOIN programs p ON e.program_id = p.id
+      WHERE e.id = ${enrollmentId}
       LIMIT 1
     `;
 
-    const program = enrollment.length > 0 ? await sql`
-      SELECT title FROM programs WHERE id = ${enrollment[0].program_id}
-    ` : null;
+    if (enrollment.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Enrollment not found'
+      });
+    }
 
-    // Set appropriate headers for file download
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-    
-    // Stream the file
-    const fileStream = fs.createReadStream(resumePath);
-    fileStream.pipe(res);
+    const enrollmentData = enrollment[0];
 
-    // Log the download
-    console.log(`Admin ${req.user?.email} downloaded resume: ${filename}`);
+    if (!enrollmentData.resume_url) {
+      return res.status(404).json({
+        success: false,
+        error: 'No resume URL found for this enrollment'
+      });
+    }
+
+    // Log the access
+    console.log(`Admin ${req.user?.email} accessed resume URL for enrollment ${enrollmentId}: ${enrollmentData.resume_url}`);
+
+    res.json({
+      success: true,
+      enrollment: enrollmentData,
+      resume_url: enrollmentData.resume_url,
+      resume_type: enrollmentData.resume_url.includes('linkedin.com') ? 'LinkedIn' : 
+                  enrollmentData.resume_url.includes('github.com') ? 'GitHub' : 'External URL'
+    });
     
   } catch (error) {
-    console.error('Error downloading resume:', error);
+    console.error('Error accessing resume:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to download resume'
+      error: 'Failed to access resume'
+    });
+  }
+});
+
+// @desc    Get all enrollment submissions
+// @route   GET /api/admin/enrollments
+// @access  Private/Admin
+router.get('/enrollments', async (req: AuthRequest, res: Response) => {
+  try {
+    console.log('🔍 Admin enrollments endpoint called by:', req.user?.email);
+    console.log('📊 Query params:', req.query);
+    
+    const { page = 1, limit = 50, program, status, search } = req.query;
+    const offset = (Number(page) - 1) * Number(limit);
+
+    // For now, let's get all enrollments without complex filtering
+    // We can add filtering later once the basic functionality works
+    
+    // Get total count
+    const totalCount = await sql`
+      SELECT COUNT(*) as count
+      FROM enrollment_submissions
+    `;
+
+    // Get enrollment data with pagination
+    const enrollments = await sql`
+      SELECT 
+        e.id,
+        e.first_name,
+        e.last_name,
+        e.email,
+        e.phone,
+        e.address,
+        e.city,
+        e.state,
+        e.country,
+        e.linkedin_url,
+        e.github_url,
+        e.resume_url,
+        e.school,
+        e.degree,
+        e.field_of_study,
+        e.graduation_year,
+        e.current_year,
+        e.technologies,
+        e.selected_program,
+        e.created_at,
+        p.title as program_title,
+        p.id as program_id
+      FROM enrollment_submissions e
+      LEFT JOIN programs p ON e.selected_program = p.title
+      ORDER BY e.created_at DESC
+      LIMIT ${Number(limit)} OFFSET ${offset}
+    `;
+
+    // Get enrollment statistics
+    const stats = await sql`
+      SELECT 
+        COUNT(*) as total_enrollments,
+        COUNT(CASE WHEN created_at >= NOW() - INTERVAL '7 days' THEN 1 END) as recent_enrollments,
+        COUNT(CASE WHEN created_at >= NOW() - INTERVAL '30 days' THEN 1 END) as monthly_enrollments
+      FROM enrollment_submissions
+    `;
+
+    // Get enrollments by program
+    const enrollmentsByProgram = await sql`
+      SELECT 
+        selected_program as program_name,
+        COUNT(*) as count
+      FROM enrollment_submissions
+      GROUP BY selected_program
+      ORDER BY count DESC
+    `;
+
+    // Get enrollments by graduation year
+    const enrollmentsByYear = await sql`
+      SELECT 
+        graduation_year,
+        COUNT(*) as count
+      FROM enrollment_submissions
+      WHERE graduation_year IS NOT NULL
+      GROUP BY graduation_year
+      ORDER BY graduation_year DESC
+    `;
+
+    console.log(`Admin ${req.user?.email} accessed enrollment data: ${enrollments.length} records`);
+
+    res.json({
+      success: true,
+      data: {
+        enrollments,
+        pagination: {
+          page: Number(page),
+          limit: Number(limit),
+          total: totalCount[0].count,
+          pages: Math.ceil(totalCount[0].count / Number(limit))
+        },
+        stats: {
+          total_enrollments: stats[0].total_enrollments,
+          recent_enrollments: stats[0].recent_enrollments,
+          monthly_enrollments: stats[0].monthly_enrollments
+        },
+        enrollments_by_program: enrollmentsByProgram,
+        enrollments_by_year: enrollmentsByYear
+      }
+    });
+
+  } catch (error) {
+    console.error('Error fetching enrollments:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch enrollment data'
+    });
+  }
+});
+
+// @desc    Get enrollment details by ID
+// @route   GET /api/admin/enrollments/:id
+// @access  Private/Admin
+router.get('/enrollments/:id', async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const enrollment = await sql`
+      SELECT 
+        e.*,
+        p.title as program_title,
+        p.id as program_id
+      FROM enrollment_submissions e
+      LEFT JOIN programs p ON e.selected_program = p.title
+      WHERE e.id = ${id}
+      LIMIT 1
+    `;
+
+    if (enrollment.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Enrollment not found'
+      });
+    }
+
+    console.log(`Admin ${req.user?.email} accessed enrollment details for ID: ${id}`);
+
+    res.json({
+      success: true,
+      data: enrollment[0]
+    });
+
+  } catch (error) {
+    console.error('Error fetching enrollment details:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch enrollment details'
     });
   }
 });
@@ -425,7 +560,7 @@ router.get('/resume-stats', async (req: AuthRequest, res: Response) => {
         COUNT(e.id) as resume_count
       FROM enrollments e
       JOIN programs p ON e.program_id = p.id
-      WHERE e.resume_filename IS NOT NULL
+      WHERE e.resume_url IS NOT NULL
       GROUP BY p.id, p.title
       ORDER BY resume_count DESC
     `;
@@ -438,25 +573,24 @@ router.get('/resume-stats', async (req: AuthRequest, res: Response) => {
       AND created_at >= NOW() - INTERVAL '30 days'
     `;
 
-    // Get file system stats
-    const uploadsDir = path.join(process.cwd(), 'uploads', 'resumes');
-    let totalFileSize = 0;
-    let fileCount = 0;
-
-    try {
-      if (fs.existsSync(uploadsDir)) {
-        const files = fs.readdirSync(uploadsDir);
-        fileCount = files.length;
-        
-        for (const file of files) {
-          const filePath = path.join(uploadsDir, file);
-          const stats = fs.statSync(filePath);
-          totalFileSize += stats.size;
-        }
-      }
-    } catch (error) {
-      console.error('Error reading uploads directory:', error);
-    }
+    // Get resume URL types
+    const resumeTypes = await sql`
+      SELECT 
+        CASE 
+          WHEN resume_url LIKE '%linkedin.com%' THEN 'LinkedIn'
+          WHEN resume_url LIKE '%github.com%' THEN 'GitHub'
+          ELSE 'External URL'
+        END as resume_type,
+        COUNT(*) as count
+      FROM enrollments
+      WHERE resume_url IS NOT NULL
+      GROUP BY 
+        CASE 
+          WHEN resume_url LIKE '%linkedin.com%' THEN 'LinkedIn'
+          WHEN resume_url LIKE '%github.com%' THEN 'GitHub'
+          ELSE 'External URL'
+        END
+    `;
 
     res.json({
       success: true,
@@ -464,11 +598,7 @@ router.get('/resume-stats', async (req: AuthRequest, res: Response) => {
         total_resumes: totalResumes[0].count,
         recent_resumes: recentResumes[0].count,
         resumes_by_program: resumesByProgram,
-        file_system: {
-          total_files: fileCount,
-          total_size_bytes: totalFileSize,
-          total_size_mb: Math.round(totalFileSize / (1024 * 1024) * 100) / 100
-        }
+        resume_types: resumeTypes
       }
     });
   } catch (error) {

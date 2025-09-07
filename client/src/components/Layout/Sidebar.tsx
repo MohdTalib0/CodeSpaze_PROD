@@ -19,7 +19,8 @@ import {
   Search,
   Menu,
   X,
-  GitBranch
+  GitBranch,
+  Shield
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -80,6 +81,16 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
       href: '/dashboard/settings',
       icon: Settings,
       description: 'Preferences'
+    }
+  ];
+
+  // Admin navigation items (only show for admin users)
+  const adminNavigationItems = [
+    {
+      name: 'Admin Dashboard',
+      href: '/admin',
+      icon: Shield,
+      description: 'Admin panel and management'
     }
   ];
 
@@ -226,6 +237,35 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             ))}
           </nav>
         </div>
+
+        {/* Admin Navigation - Only show for admin users */}
+        {user?.role === 'admin' && (
+          <div className="border-t border-[#19c973]/20 p-3">
+            <div className="px-3 mb-2">
+              <h3 className="text-xs font-semibold text-[#19c973] uppercase tracking-wider">
+                Admin
+              </h3>
+            </div>
+            <nav className="space-y-1">
+              {adminNavigationItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`group flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
+                    isActive(item.href)
+                      ? 'bg-[#19c973]/20 text-[#19c973] border border-[#19c973]/30'
+                      : 'text-gray-300 hover:bg-[#19c973]/10 hover:text-white'
+                  }`}
+                >
+                  <item.icon className={`w-5 h-5 mr-3 flex-shrink-0 ${
+                    isActive(item.href) ? 'text-[#19c973]' : 'text-gray-400 group-hover:text-white'
+                  }`} />
+                  <span className="truncate">{item.name}</span>
+                </Link>
+              ))}
+            </nav>
+          </div>
+        )}
 
         {/* Bottom Navigation */}
         <div className="border-t border-[#19c973]/20 p-3">

@@ -150,6 +150,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       isAuthenticated: false,
       loading: false,
     });
+
   };
 
   const updateUser = async (userData: Partial<User>) => {

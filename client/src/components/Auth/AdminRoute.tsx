@@ -10,6 +10,7 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
   const { user, isAuthenticated, loading } = useAuth();
   const location = useLocation();
 
+
   // Show loading state
   if (loading) {
     return (

@@ -22,7 +22,7 @@ interface FormData {
   country: string;
   linkedin: string;
   github: string;
-  resume: File | null;
+  resume: string;
   
   // Step 2: Educational & Technical Details
   school: string;
@@ -54,7 +54,7 @@ const EnrollmentForm: React.FC = () => {
     country: '',
     linkedin: '',
     github: '',
-    resume: null,
+    resume: '',
     school: '',
     degree: '',
     fieldOfStudy: '',
@@ -127,7 +127,7 @@ const EnrollmentForm: React.FC = () => {
         if (!formData.city.trim()) newErrors.city = 'City is required';
         if (!formData.state.trim()) newErrors.state = 'State/Province is required';
         if (!formData.country.trim()) newErrors.country = 'Country is required';
-        if (!formData.resume) newErrors.resume = 'Resume/CV is required';
+        if (!formData.resume.trim()) newErrors.resume = 'Resume URL is required';
         break;
         
       case 2:
@@ -233,6 +233,14 @@ const EnrollmentForm: React.FC = () => {
         }
         return '';
       
+      case 'resume':
+        if (!value.trim()) {
+          return 'Resume URL is required';
+        } else if (!/^https?:\/\/.+/.test(value)) {
+          return 'Please enter a valid URL (starting with http:// or https://)';
+        }
+        return '';
+      
       default:
         return '';
     }
@@ -270,10 +278,6 @@ const EnrollmentForm: React.FC = () => {
     });
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
-    setFormData(prev => ({ ...prev, resume: file }));
-  };
 
   const nextStep = () => {
     if (isStepValid) {
@@ -314,14 +318,12 @@ const EnrollmentForm: React.FC = () => {
     setErrors({}); // Clear any previous errors
     
     try {
-      // Create FormData for file upload
+      // Create FormData for form submission
       const formDataToSend = new FormData();
       
       // Add all form fields
       Object.entries(formData).forEach(([key, value]) => {
-        if (key === 'resume' && value instanceof File) {
-          formDataToSend.append('resume', value);
-        } else if (key === 'technologies') {
+        if (key === 'technologies') {
           // Send technologies as individual array items
           if (Array.isArray(value)) {
             value.forEach(tech => {
@@ -346,7 +348,7 @@ const EnrollmentForm: React.FC = () => {
         phone: formData.phone,
         selectedProgram: formData.selectedProgram,
         technologies: formData.technologies,
-        hasResume: !!formData.resume
+        resumeUrl: formData.resume
       });
 
       // Create AbortController for timeout
@@ -400,7 +402,7 @@ const EnrollmentForm: React.FC = () => {
           country: '',
           linkedin: '',
           github: '',
-          resume: null,
+          resume: '',
           school: '',
           degree: '',
           fieldOfStudy: '',
@@ -657,16 +659,24 @@ const EnrollmentForm: React.FC = () => {
 
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">
-          Resume/CV *
+          Resume/CV URL *
         </label>
         <input
-          type="file"
-          onChange={handleFileChange}
-          accept=".pdf,.doc,.docx"
-          className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#19c973] file:text-white hover:file:bg-[#16a362]"
+          type="url"
+          value={formData.resume}
+          onChange={(e) => handleInputChange('resume', e.target.value)}
+          placeholder="https://linkedin.com/in/yourprofile or https://yourwebsite.com/resume"
+          className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#19c973] transition-colors ${
+            errors.resume ? 'border-red-500' : formData.resume && !errors.resume ? 'border-[#19c973]' : 'border-gray-600'
+          }`}
         />
         {errors.resume && <p className="text-red-500 text-xs mt-1">{errors.resume}</p>}
-        <p className="text-xs text-gray-400 mt-1">Accepted formats: PDF, DOC, DOCX (Max 5MB)</p>
+        {formData.resume && !errors.resume && (
+          <p className="text-green-500 text-xs mt-1">✓ Valid resume URL</p>
+        )}
+        <p className="text-xs text-gray-400 mt-1">
+          Share your LinkedIn profile, personal website, or hosted resume (PDF, DOC, etc.)
+        </p>
       </div>
     </motion.div>
   );

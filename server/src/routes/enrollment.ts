@@ -82,10 +82,11 @@ const validateEnrollmentForm = [
   body('currentYear').trim().isLength({ min: 1 }).withMessage('Current year is required'),
   body('technologies').isArray({ min: 1 }).withMessage('At least one technology must be selected'),
   body('selectedProgram').trim().isLength({ min: 1 }).withMessage('Program selection is required'),
+  body('resume').isURL().withMessage('Valid resume URL is required'),
 ];
 
 // Submit enrollment form
-router.post('/submit', upload.single('resume'), validateEnrollmentForm, async (req: Request, res: Response) => {
+router.post('/submit', validateEnrollmentForm, async (req: Request, res: Response) => {
   // Set timeout for the request
   const timeout = setTimeout(() => {
     if (!res.headersSent) {
@@ -108,13 +109,6 @@ router.post('/submit', upload.single('resume'), validateEnrollmentForm, async (r
       technologies: req.body.technologies
     });
 
-    // Check for multer errors first
-    if (req.file === undefined && req.body.resume) {
-      return res.status(400).json({
-        success: false,
-        error: 'File upload failed. Please ensure the file is a valid PDF, DOC, or DOCX format and under 5MB.'
-      });
-    }
 
     // Check for validation errors
     const errors = validationResult(req);
@@ -147,18 +141,18 @@ router.post('/submit', upload.single('resume'), validateEnrollmentForm, async (r
       selectedProgram
     } = req.body;
 
-    const resumeFile = req.file;
+    const resumeUrl = req.body.resume;
 
     // Insert enrollment submission into database
     const result = await sql`
       INSERT INTO enrollment_submissions (
         first_name, last_name, email, phone, address, city, state, country,
-        linkedin_url, github_url, resume_filename, school, degree, field_of_study,
+        linkedin_url, github_url, resume_url, school, degree, field_of_study,
         graduation_year, current_year, technologies, selected_program
       )
       VALUES (
         ${firstName}, ${lastName}, ${email}, ${phone}, ${address}, ${city}, ${state}, ${country},
-        ${linkedin || null}, ${github || null}, ${resumeFile ? resumeFile.filename : null},
+        ${linkedin || null}, ${github || null}, ${resumeUrl},
         ${school}, ${degree}, ${fieldOfStudy}, ${graduationYear}, ${currentYear},
         ${technologies}, ${selectedProgram}
       )
