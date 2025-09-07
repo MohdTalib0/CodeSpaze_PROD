@@ -4,15 +4,31 @@ import { neon } from '@neondatabase/serverless';
 import dotenv from 'dotenv';
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs';
 
 dotenv.config();
 
 const router = express.Router();
 const sql = neon(process.env.NEON_DATABASE_URL!);
 
+// Ensure uploads directory exists
+const ensureUploadsDir = () => {
+  const uploadsDir = path.join(process.cwd(), 'uploads');
+  const resumesDir = path.join(uploadsDir, 'resumes');
+  
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+  
+  if (!fs.existsSync(resumesDir)) {
+    fs.mkdirSync(resumesDir, { recursive: true });
+  }
+};
+
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    ensureUploadsDir();
     cb(null, 'uploads/resumes/');
   },
   filename: (req, file, cb) => {
@@ -61,6 +77,14 @@ const validateEnrollmentForm = [
 // Submit enrollment form
 router.post('/submit', upload.single('resume'), validateEnrollmentForm, async (req: Request, res: Response) => {
   try {
+    // Check for multer errors first
+    if (req.file === undefined && req.body.resume) {
+      return res.status(400).json({
+        success: false,
+        error: 'File upload failed. Please ensure the file is a valid PDF, DOC, or DOCX format and under 5MB.'
+      });
+    }
+
     // Check for validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
