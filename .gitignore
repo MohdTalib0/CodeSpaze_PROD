@@ -95,9 +95,9 @@ jspm_packages/
 tmp/
 temp/
 
-# Uploads
-uploads/
-public/uploads/
+# Uploads - Now tracked in private repo
+# uploads/
+# public/uploads/
 
 # Database
 *.sqlite

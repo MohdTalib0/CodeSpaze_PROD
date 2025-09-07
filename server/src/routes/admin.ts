@@ -1,6 +1,8 @@
 import express, { Response } from 'express';
 import { sql } from '../config/database';
 import { protect, authorize, AuthRequest } from '../middleware/auth';
+import fs from 'fs';
+import path from 'path';
 
 const router = express.Router();
 
@@ -281,6 +283,199 @@ router.get('/export/:type', async (req: AuthRequest, res: Response) => {
     return res.status(500).json({
       success: false,
       error: 'Server error',
+    });
+  }
+});
+
+// @desc    Get all uploaded resumes
+// @route   GET /api/admin/resumes
+// @access  Private/Admin
+router.get('/resumes', async (req: AuthRequest, res: Response) => {
+  try {
+    // Get enrollment data with resume information
+    const enrollments = await sql`
+      SELECT 
+        e.id,
+        e.first_name,
+        e.last_name,
+        e.email,
+        e.phone,
+        e.resume_filename,
+        e.created_at,
+        p.title as program_title
+      FROM enrollments e
+      LEFT JOIN programs p ON e.program_id = p.id
+      WHERE e.resume_filename IS NOT NULL
+      ORDER BY e.created_at DESC
+    `;
+
+    // Get file system information for each resume
+    const resumesWithFileInfo = await Promise.all(
+      enrollments.map(async (enrollment) => {
+        const resumePath = path.join(process.cwd(), 'uploads', 'resumes', enrollment.resume_filename);
+        let fileExists = false;
+        let fileSize = 0;
+        let lastModified = null;
+
+        try {
+          if (fs.existsSync(resumePath)) {
+            const stats = fs.statSync(resumePath);
+            fileExists = true;
+            fileSize = stats.size;
+            lastModified = stats.mtime;
+          }
+        } catch (error) {
+          console.error(`Error checking file ${enrollment.resume_filename}:`, error);
+        }
+
+        return {
+          ...enrollment,
+          file_exists: fileExists,
+          file_size: fileSize,
+          last_modified: lastModified,
+          download_url: `/uploads/resumes/${enrollment.resume_filename}`
+        };
+      })
+    );
+
+    res.json({
+      success: true,
+      count: resumesWithFileInfo.length,
+      resumes: resumesWithFileInfo
+    });
+  } catch (error) {
+    console.error('Error fetching resumes:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch resumes'
+    });
+  }
+});
+
+// @desc    Download a specific resume
+// @route   GET /api/admin/resumes/:filename
+// @access  Private/Admin
+router.get('/resumes/:filename', async (req: AuthRequest, res: Response) => {
+  try {
+    const { filename } = req.params;
+    
+    // Security check - prevent directory traversal
+    if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid filename'
+      });
+    }
+
+    const resumePath = path.join(process.cwd(), 'uploads', 'resumes', filename);
+    
+    if (!fs.existsSync(resumePath)) {
+      return res.status(404).json({
+        success: false,
+        error: 'Resume file not found'
+      });
+    }
+
+    // Get enrollment info for this resume
+    const enrollment = await sql`
+      SELECT first_name, last_name, email, program_id
+      FROM enrollments
+      WHERE resume_filename = ${filename}
+      LIMIT 1
+    `;
+
+    const program = enrollment.length > 0 ? await sql`
+      SELECT title FROM programs WHERE id = ${enrollment[0].program_id}
+    ` : null;
+
+    // Set appropriate headers for file download
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    
+    // Stream the file
+    const fileStream = fs.createReadStream(resumePath);
+    fileStream.pipe(res);
+
+    // Log the download
+    console.log(`Admin ${req.user?.email} downloaded resume: ${filename}`);
+    
+  } catch (error) {
+    console.error('Error downloading resume:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to download resume'
+    });
+  }
+});
+
+// @desc    Get resume statistics
+// @route   GET /api/admin/resume-stats
+// @access  Private/Admin
+router.get('/resume-stats', async (req: AuthRequest, res: Response) => {
+  try {
+    // Get total resumes count
+    const totalResumes = await sql`
+      SELECT COUNT(*) as count FROM enrollments WHERE resume_filename IS NOT NULL
+    `;
+
+    // Get resumes by program
+    const resumesByProgram = await sql`
+      SELECT 
+        p.title as program_title,
+        COUNT(e.id) as resume_count
+      FROM enrollments e
+      JOIN programs p ON e.program_id = p.id
+      WHERE e.resume_filename IS NOT NULL
+      GROUP BY p.id, p.title
+      ORDER BY resume_count DESC
+    `;
+
+    // Get recent resumes (last 30 days)
+    const recentResumes = await sql`
+      SELECT COUNT(*) as count
+      FROM enrollments
+      WHERE resume_filename IS NOT NULL 
+      AND created_at >= NOW() - INTERVAL '30 days'
+    `;
+
+    // Get file system stats
+    const uploadsDir = path.join(process.cwd(), 'uploads', 'resumes');
+    let totalFileSize = 0;
+    let fileCount = 0;
+
+    try {
+      if (fs.existsSync(uploadsDir)) {
+        const files = fs.readdirSync(uploadsDir);
+        fileCount = files.length;
+        
+        for (const file of files) {
+          const filePath = path.join(uploadsDir, file);
+          const stats = fs.statSync(filePath);
+          totalFileSize += stats.size;
+        }
+      }
+    } catch (error) {
+      console.error('Error reading uploads directory:', error);
+    }
+
+    res.json({
+      success: true,
+      stats: {
+        total_resumes: totalResumes[0].count,
+        recent_resumes: recentResumes[0].count,
+        resumes_by_program: resumesByProgram,
+        file_system: {
+          total_files: fileCount,
+          total_size_bytes: totalFileSize,
+          total_size_mb: Math.round(totalFileSize / (1024 * 1024) * 100) / 100
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching resume stats:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch resume statistics'
     });
   }
 });
