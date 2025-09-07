@@ -114,8 +114,14 @@ const EnrollmentForm: React.FC = () => {
         }
         if (!formData.phone.trim()) {
           newErrors.phone = 'Phone number is required';
-        } else if (!/^[\+]?[1-9][\d]{0,15}$/.test(formData.phone.replace(/\s/g, ''))) {
-          newErrors.phone = 'Please enter a valid phone number';
+        } else {
+          // Remove all non-digit characters to check actual digit count
+          const digitsOnly = formData.phone.replace(/\D/g, '');
+          if (digitsOnly.length < 10) {
+            newErrors.phone = 'Phone number must contain at least 10 digits';
+          } else if (digitsOnly.length > 15) {
+            newErrors.phone = 'Phone number cannot exceed 15 digits';
+          }
         }
         if (!formData.address.trim()) newErrors.address = 'Address is required';
         if (!formData.city.trim()) newErrors.city = 'City is required';
@@ -163,11 +169,74 @@ const EnrollmentForm: React.FC = () => {
     }
   }, [currentStep, formData]);
 
+  const validateField = (field: keyof FormData, value: string): string => {
+    switch (field) {
+      case 'firstName':
+        return !value.trim() ? 'First name is required' : '';
+      
+      case 'lastName':
+        return !value.trim() ? 'Last name is required' : '';
+      
+      case 'email':
+        if (!value.trim()) {
+          return 'Email is required';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          return 'Please enter a valid email address';
+        }
+        return '';
+      
+      case 'phone':
+        if (!value.trim()) {
+          return 'Phone number is required';
+        } else {
+          // Remove all non-digit characters to check actual digit count
+          const digitsOnly = value.replace(/\D/g, '');
+          if (digitsOnly.length < 10) {
+            return 'Phone number must contain at least 10 digits';
+          } else if (digitsOnly.length > 15) {
+            return 'Phone number cannot exceed 15 digits';
+          }
+        }
+        return '';
+      
+      case 'address':
+        return !value.trim() ? 'Address is required' : '';
+      
+      case 'city':
+        return !value.trim() ? 'City is required' : '';
+      
+      case 'state':
+        return !value.trim() ? 'State/Province is required' : '';
+      
+      case 'country':
+        return !value.trim() ? 'Country is required' : '';
+      
+      case 'school':
+        return !value.trim() ? 'School/University is required' : '';
+      
+      case 'degree':
+        return !value.trim() ? 'Degree/Program is required' : '';
+      
+      case 'fieldOfStudy':
+        return !value.trim() ? 'Field of study is required' : '';
+      
+      default:
+        return '';
+    }
+  };
+
   const handleInputChange = (field: keyof FormData, value: string | boolean | File | null) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
+    
+    // Real-time validation for text fields
+    if (typeof value === 'string') {
+      const fieldError = validateField(field, value);
+      setErrors(prev => ({ ...prev, [field]: fieldError }));
+    } else {
+      // Clear error when user starts typing for non-text fields
+      if (errors[field]) {
+        setErrors(prev => ({ ...prev, [field]: '' }));
+      }
     }
   };
 
@@ -330,10 +399,15 @@ const EnrollmentForm: React.FC = () => {
             type="text"
             value={formData.firstName}
             onChange={(e) => handleInputChange('firstName', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#19c973] focus:outline-none"
+            className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-400 focus:outline-none ${
+              errors.firstName ? 'border-red-500 focus:border-red-500' : 'border-gray-600 focus:border-[#19c973]'
+            }`}
             placeholder="Enter your first name"
           />
           {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>}
+          {!errors.firstName && formData.firstName && (
+            <p className="text-green-400 text-xs mt-1">✓ First name is valid</p>
+          )}
         </div>
         
         <div>
@@ -344,10 +418,15 @@ const EnrollmentForm: React.FC = () => {
             type="text"
             value={formData.lastName}
             onChange={(e) => handleInputChange('lastName', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#19c973] focus:outline-none"
+            className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-400 focus:outline-none ${
+              errors.lastName ? 'border-red-500 focus:border-red-500' : 'border-gray-600 focus:border-[#19c973]'
+            }`}
             placeholder="Enter your last name"
           />
           {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
+          {!errors.lastName && formData.lastName && (
+            <p className="text-green-400 text-xs mt-1">✓ Last name is valid</p>
+          )}
         </div>
       </div>
 
@@ -360,10 +439,15 @@ const EnrollmentForm: React.FC = () => {
             type="email"
             value={formData.email}
             onChange={(e) => handleInputChange('email', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#19c973] focus:outline-none"
+            className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-400 focus:outline-none ${
+              errors.email ? 'border-red-500 focus:border-red-500' : 'border-gray-600 focus:border-[#19c973]'
+            }`}
             placeholder="Enter your email"
           />
           {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+          {!errors.email && formData.email && (
+            <p className="text-green-400 text-xs mt-1">✓ Email format is valid</p>
+          )}
         </div>
         
         <div>
@@ -374,10 +458,18 @@ const EnrollmentForm: React.FC = () => {
             type="tel"
             value={formData.phone}
             onChange={(e) => handleInputChange('phone', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#19c973] focus:outline-none"
+            className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-400 focus:outline-none ${
+              errors.phone ? 'border-red-500 focus:border-red-500' : 'border-gray-600 focus:border-[#19c973]'
+            }`}
             placeholder="Enter your phone number"
           />
           {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
+          {!errors.phone && formData.phone && (
+            <p className="text-green-400 text-xs mt-1">✓ Phone number format is valid</p>
+          )}
+          <p className="text-xs text-gray-400 mt-1">
+            Enter your phone number with country code (e.g., +1-555-123-4567 or 5551234567)
+          </p>
         </div>
       </div>
 
@@ -389,10 +481,15 @@ const EnrollmentForm: React.FC = () => {
           type="text"
           value={formData.address}
           onChange={(e) => handleInputChange('address', e.target.value)}
-          className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#19c973] focus:outline-none"
+          className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-400 focus:outline-none ${
+            errors.address ? 'border-red-500 focus:border-red-500' : 'border-gray-600 focus:border-[#19c973]'
+          }`}
           placeholder="Enter your address"
         />
         {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
+        {!errors.address && formData.address && (
+          <p className="text-green-400 text-xs mt-1">✓ Address is valid</p>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -404,10 +501,15 @@ const EnrollmentForm: React.FC = () => {
             type="text"
             value={formData.city}
             onChange={(e) => handleInputChange('city', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#19c973] focus:outline-none"
+            className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-400 focus:outline-none ${
+              errors.city ? 'border-red-500 focus:border-red-500' : 'border-gray-600 focus:border-[#19c973]'
+            }`}
             placeholder="Enter your city"
           />
           {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
+          {!errors.city && formData.city && (
+            <p className="text-green-400 text-xs mt-1">✓ City is valid</p>
+          )}
         </div>
         
         <div>
@@ -418,10 +520,15 @@ const EnrollmentForm: React.FC = () => {
             type="text"
             value={formData.state}
             onChange={(e) => handleInputChange('state', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#19c973] focus:outline-none"
+            className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-400 focus:outline-none ${
+              errors.state ? 'border-red-500 focus:border-red-500' : 'border-gray-600 focus:border-[#19c973]'
+            }`}
             placeholder="Enter your state"
           />
           {errors.state && <p className="text-red-500 text-xs mt-1">{errors.state}</p>}
+          {!errors.state && formData.state && (
+            <p className="text-green-400 text-xs mt-1">✓ State/Province is valid</p>
+          )}
         </div>
         
         <div>
@@ -432,10 +539,15 @@ const EnrollmentForm: React.FC = () => {
             type="text"
             value={formData.country}
             onChange={(e) => handleInputChange('country', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#19c973] focus:outline-none"
+            className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-400 focus:outline-none ${
+              errors.country ? 'border-red-500 focus:border-red-500' : 'border-gray-600 focus:border-[#19c973]'
+            }`}
             placeholder="Enter your country"
           />
           {errors.country && <p className="text-red-500 text-xs mt-1">{errors.country}</p>}
+          {!errors.country && formData.country && (
+            <p className="text-green-400 text-xs mt-1">✓ Country is valid</p>
+          )}
         </div>
       </div>
 
@@ -501,10 +613,15 @@ const EnrollmentForm: React.FC = () => {
             type="text"
             value={formData.school}
             onChange={(e) => handleInputChange('school', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#19c973] focus:outline-none"
+            className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-400 focus:outline-none ${
+              errors.school ? 'border-red-500 focus:border-red-500' : 'border-gray-600 focus:border-[#19c973]'
+            }`}
             placeholder="Enter your school/university name"
           />
           {errors.school && <p className="text-red-500 text-xs mt-1">{errors.school}</p>}
+          {!errors.school && formData.school && (
+            <p className="text-green-400 text-xs mt-1">✓ School/University is valid</p>
+          )}
         </div>
         
         <div>
@@ -515,10 +632,15 @@ const EnrollmentForm: React.FC = () => {
             type="text"
             value={formData.degree}
             onChange={(e) => handleInputChange('degree', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#19c973] focus:outline-none"
+            className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-400 focus:outline-none ${
+              errors.degree ? 'border-red-500 focus:border-red-500' : 'border-gray-600 focus:border-[#19c973]'
+            }`}
             placeholder="e.g., Bachelor's, Master's, Diploma"
           />
           {errors.degree && <p className="text-red-500 text-xs mt-1">{errors.degree}</p>}
+          {!errors.degree && formData.degree && (
+            <p className="text-green-400 text-xs mt-1">✓ Degree/Program is valid</p>
+          )}
         </div>
       </div>
 
@@ -531,10 +653,15 @@ const EnrollmentForm: React.FC = () => {
             type="text"
             value={formData.fieldOfStudy}
             onChange={(e) => handleInputChange('fieldOfStudy', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#19c973] focus:outline-none"
+            className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-400 focus:outline-none ${
+              errors.fieldOfStudy ? 'border-red-500 focus:border-red-500' : 'border-gray-600 focus:border-[#19c973]'
+            }`}
             placeholder="e.g., Computer Science, Engineering"
           />
           {errors.fieldOfStudy && <p className="text-red-500 text-xs mt-1">{errors.fieldOfStudy}</p>}
+          {!errors.fieldOfStudy && formData.fieldOfStudy && (
+            <p className="text-green-400 text-xs mt-1">✓ Field of study is valid</p>
+          )}
         </div>
         
         <div>

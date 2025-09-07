@@ -60,7 +60,17 @@ const validateEnrollmentForm = [
   body('firstName').trim().isLength({ min: 1 }).withMessage('First name is required'),
   body('lastName').trim().isLength({ min: 1 }).withMessage('Last name is required'),
   body('email').isEmail().withMessage('Valid email is required'),
-  body('phone').trim().isLength({ min: 10 }).withMessage('Phone number is required'),
+  body('phone').trim().custom((value) => {
+    // Remove all non-digit characters to check actual digit count
+    const digitsOnly = value.replace(/\D/g, '');
+    if (digitsOnly.length < 10) {
+      throw new Error('Phone number must contain at least 10 digits');
+    }
+    if (digitsOnly.length > 15) {
+      throw new Error('Phone number cannot exceed 15 digits');
+    }
+    return true;
+  }).withMessage('Please enter a valid phone number'),
   body('address').trim().isLength({ min: 1 }).withMessage('Address is required'),
   body('city').trim().isLength({ min: 1 }).withMessage('City is required'),
   body('state').trim().isLength({ min: 1 }).withMessage('State is required'),
@@ -77,6 +87,14 @@ const validateEnrollmentForm = [
 // Submit enrollment form
 router.post('/submit', upload.single('resume'), validateEnrollmentForm, async (req: Request, res: Response) => {
   try {
+    // Debug: Log the received data
+    console.log('📝 Enrollment form data received:', {
+      phone: req.body.phone,
+      email: req.body.email,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName
+    });
+
     // Check for multer errors first
     if (req.file === undefined && req.body.resume) {
       return res.status(400).json({
@@ -88,6 +106,7 @@ router.post('/submit', upload.single('resume'), validateEnrollmentForm, async (r
     // Check for validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('❌ Validation errors:', errors.array());
       return res.status(400).json({
         success: false,
         error: 'Validation failed',
