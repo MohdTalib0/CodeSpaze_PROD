@@ -286,6 +286,7 @@ const EnrollmentForm: React.FC = () => {
     }
     
     setIsSubmitting(true);
+    setErrors({}); // Clear any previous errors
     
     try {
       // Create FormData for file upload
@@ -311,18 +312,55 @@ const EnrollmentForm: React.FC = () => {
           formDataToSend.append(key, value.toString());
         }
       });
+
+      // Debug: Log the form data being sent
+      console.log('📤 Submitting enrollment form:', {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        selectedProgram: formData.selectedProgram,
+        technologies: formData.technologies,
+        hasResume: !!formData.resume
+      });
+
+      // Create AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
       // Make API call to submit enrollment
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/enrollment/submit`, {
+      const apiUrl = `${process.env.REACT_APP_API_URL || 'https://codespaze-prod-1.onrender.com/api'}/enrollment/submit`;
+      console.log('🌐 Making API call to:', apiUrl);
+      
+      const response = await fetch(apiUrl, {
         method: 'POST',
         body: formDataToSend,
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+      
+      console.log('📥 Response received:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok
       });
       
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to submit enrollment');
+        let errorMessage = 'Failed to submit enrollment';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorData.message || errorMessage;
+          console.error('❌ API Error Response:', errorData);
+        } catch (parseError) {
+          console.error('❌ Failed to parse error response:', parseError);
+          errorMessage = `Server error (${response.status}): ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
       }
       
       const result = await response.json();
+      console.log('✅ Success response:', result);
       
       if (result.success) {
         setSubmitSuccess(true);
@@ -350,11 +388,24 @@ const EnrollmentForm: React.FC = () => {
         
         // Reset success message after 5 seconds
         setTimeout(() => setSubmitSuccess(false), 5000);
+      } else {
+        throw new Error(result.message || 'Submission was not successful');
       }
       
     } catch (error) {
-      console.error('Submission error:', error);
-      setErrors({ submit: error instanceof Error ? error.message : 'Failed to send enrollment. Please try again.' });
+      console.error('❌ Submission error:', error);
+      
+      let errorMessage = 'Failed to send enrollment. Please try again.';
+      
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          errorMessage = 'Request timed out. Please check your internet connection and try again.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      setErrors({ submit: errorMessage });
     } finally {
       setIsSubmitting(false);
     }
@@ -901,7 +952,18 @@ const EnrollmentForm: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen py-20 bg-black">
+    <div className="min-h-screen py-20 bg-black relative">
+      {/* Loading Overlay */}
+      {isSubmitting && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-gray-800 p-8 rounded-xl border border-gray-600 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#19c973] mx-auto mb-4"></div>
+            <h3 className="text-white text-lg font-semibold mb-2">Submitting Application</h3>
+            <p className="text-gray-300 text-sm">Please wait while we process your enrollment...</p>
+          </div>
+        </div>
+      )}
+      
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
@@ -963,7 +1025,7 @@ const EnrollmentForm: React.FC = () => {
                 <Button
                   type="submit"
                   disabled={!isStepValid || isSubmitting}
-                  className="flex items-center"
+                  className="flex items-center min-w-[180px] justify-center"
                 >
                   {isSubmitting ? (
                     <>

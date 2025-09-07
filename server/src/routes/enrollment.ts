@@ -86,13 +86,26 @@ const validateEnrollmentForm = [
 
 // Submit enrollment form
 router.post('/submit', upload.single('resume'), validateEnrollmentForm, async (req: Request, res: Response) => {
+  // Set timeout for the request
+  const timeout = setTimeout(() => {
+    if (!res.headersSent) {
+      console.error('❌ Request timeout for enrollment submission');
+      res.status(408).json({
+        success: false,
+        error: 'Request timeout. Please try again.'
+      });
+    }
+  }, 25000); // 25 second timeout
+
   try {
     // Debug: Log the received data
     console.log('📝 Enrollment form data received:', {
       phone: req.body.phone,
       email: req.body.email,
       firstName: req.body.firstName,
-      lastName: req.body.lastName
+      lastName: req.body.lastName,
+      selectedProgram: req.body.selectedProgram,
+      technologies: req.body.technologies
     });
 
     // Check for multer errors first
@@ -155,6 +168,7 @@ router.post('/submit', upload.single('resume'), validateEnrollmentForm, async (r
     if (result && result.length > 0) {
       console.log(`✅ Enrollment form submitted: ${email} - ${selectedProgram}`);
       
+      clearTimeout(timeout); // Clear timeout on success
       return res.status(201).json({
         success: true,
         message: 'Enrollment form submitted successfully',
@@ -169,10 +183,14 @@ router.post('/submit', upload.single('resume'), validateEnrollmentForm, async (r
 
   } catch (error) {
     console.error('❌ Enrollment form submission error:', error);
-    return res.status(500).json({
-      success: false,
-      error: 'Failed to submit enrollment form. Please try again.'
-    });
+    clearTimeout(timeout); // Clear timeout on error
+    
+    if (!res.headersSent) {
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to submit enrollment form. Please try again.'
+      });
+    }
   }
 });
 
