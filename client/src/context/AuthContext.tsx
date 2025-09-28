@@ -14,7 +14,7 @@ interface AdditionalUserData {
   phone?: string;
   github?: string;
   linkedin?: string;
-  cv?: File;
+  resumeUrl?: string;
 }
 
 interface AuthContextType extends AuthState {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, Github, Mail, User, Lock, Phone, Linkedin, FileText, Upload, X } from 'lucide-react';
+import { Eye, EyeOff, Github, Mail, User, Lock, Phone, Linkedin, FileText } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../../components/UI/Button';
 
@@ -14,7 +14,7 @@ interface RegisterFormData {
   confirmPassword: string;
   github: string;
   linkedin: string;
-  cv: File | null;
+  resumeUrl: string;
   agreeToTerms: boolean;
 }
 
@@ -32,7 +32,7 @@ const RegisterPage: React.FC = () => {
     confirmPassword: '',
     github: '',
     linkedin: '',
-    cv: null,
+    resumeUrl: '',
     agreeToTerms: false,
   });
 
@@ -40,12 +40,10 @@ const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked, files } = e.target;
+    const { name, value, type, checked } = e.target;
     
     if (type === 'checkbox') {
       setFormData(prev => ({ ...prev, [name]: checked }));
-    } else if (type === 'file' && files) {
-      setFormData(prev => ({ ...prev, [name]: files[0] }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
@@ -69,22 +67,16 @@ const RegisterPage: React.FC = () => {
         return;
       }
 
-      // Validate CV file
-      if (!formData.cv) {
-        setError('Please upload your CV');
+      // Validate resume URL
+      if (!formData.resumeUrl.trim()) {
+        setError('Please provide your resume URL');
         return;
       }
 
-      // Validate file type (PDF, DOC, DOCX)
-      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-      if (!allowedTypes.includes(formData.cv.type)) {
-        setError('CV must be a PDF, DOC, or DOCX file');
-        return;
-      }
-
-      // Validate file size (max 5MB)
-      if (formData.cv.size > 5 * 1024 * 1024) {
-        setError('CV file size must be less than 5MB');
+      // Validate URL format
+      const urlPattern = /^https?:\/\/.+/;
+      if (!urlPattern.test(formData.resumeUrl)) {
+        setError('Please enter a valid URL (starting with http:// or https://)');
         return;
       }
       
@@ -97,7 +89,7 @@ const RegisterPage: React.FC = () => {
           phone: formData.phone,
           github: formData.github,
           linkedin: formData.linkedin,
-          cv: formData.cv
+          resumeUrl: formData.resumeUrl
         }
       );
       
@@ -111,17 +103,6 @@ const RegisterPage: React.FC = () => {
     }
   };
 
-  const removeCV = () => {
-    setFormData(prev => ({ ...prev, cv: null }));
-  };
-
-  const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -271,57 +252,27 @@ const RegisterPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* CV Upload */}
+              {/* Resume URL */}
               <div>
-                <label htmlFor="cv" className="block text-sm font-medium text-gray-300 mb-2">
-                  CV/Resume *
+                <label htmlFor="resumeUrl" className="block text-sm font-medium text-gray-300 mb-2">
+                  Resume/CV URL *
                 </label>
-                <div className="space-y-3">
-                  {!formData.cv ? (
-                    <div className="relative">
-                      <input
-                        type="file"
-                        id="cv"
-                        name="cv"
-                        onChange={handleInputChange}
-                        accept=".pdf,.doc,.docx"
-                        required
-                        className="hidden"
-                      />
-                      <label
-                        htmlFor="cv"
-                        className="flex items-center justify-center w-full h-32 border-2 border-dashed border-[#19c973]/30 rounded-lg cursor-pointer hover:border-[#19c973]/50 transition-colors"
-                      >
-                        <div className="text-center">
-                          <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
-                          <p className="text-sm text-gray-400">
-                            <span className="font-medium text-[#19c973]">Click to upload</span> or drag and drop
-                          </p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            PDF, DOC, or DOCX (max 5MB)
-                          </p>
-                        </div>
-                      </label>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-between p-4 bg-gray-800/50 border border-[#19c973]/30 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <FileText className="h-6 w-6 text-[#19c973]" />
-                        <div>
-                          <p className="text-sm font-medium text-white">{formData.cv.name}</p>
-                          <p className="text-xs text-gray-400">{formatFileSize(formData.cv.size)}</p>
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={removeCV}
-                        className="p-1 hover:bg-red-500/20 rounded-full transition-colors"
-                      >
-                        <X className="h-4 w-4 text-red-400" />
-                      </button>
-                    </div>
-                  )}
+                <div className="relative">
+                  <input
+                    type="url"
+                    id="resumeUrl"
+                    name="resumeUrl"
+                    value={formData.resumeUrl}
+                    onChange={handleInputChange}
+                    required
+                    className="input-neon w-full pl-10"
+                    placeholder="https://linkedin.com/in/yourprofile or https://yourwebsite.com/resume"
+                  />
+                  <FileText className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 </div>
+                <p className="mt-1 text-xs text-gray-500">
+                  Share your LinkedIn profile, personal website, or hosted resume (PDF, DOC, etc.)
+                </p>
               </div>
 
               {/* Password Fields */}

@@ -55,13 +55,13 @@ const generateToken = (id: number): string => {
 // @access  Public
 router.post(
   '/register',
-  upload.single('cv'),
   [
     body('name').notEmpty().withMessage('Name is required'),
     body('email').isEmail().withMessage('Please include a valid email'),
     body('password')
       .isLength({ min: 6 })
       .withMessage('Password must be at least 6 characters'),
+    body('resumeUrl').optional().isURL().withMessage('Please provide a valid resume URL'),
   ],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -72,8 +72,7 @@ router.post(
       });
     }
 
-    const { name, email, password, phone, github, linkedin } = req.body;
-    const cvFile = req.file;
+    const { name, email, password, phone, github, linkedin, resumeUrl } = req.body;
 
     try {
       // Check if user exists
@@ -95,7 +94,7 @@ router.post(
       // Create user with additional fields
       const newUsers = await sql`
         INSERT INTO users (name, email, password_hash, phone, github_id, linkedin_id, avatar_url)
-        VALUES (${name}, ${email}, ${hashedPassword}, ${phone || null}, ${github || null}, ${linkedin || null}, ${cvFile ? cvFile.filename : null})
+        VALUES (${name}, ${email}, ${hashedPassword}, ${phone || null}, ${github || null}, ${linkedin || null}, ${resumeUrl || null})
         RETURNING id, name, email, role, phone, github_id, linkedin_id, avatar_url
       ` as DatabaseUser[];
 
@@ -112,7 +111,7 @@ router.post(
             phone: user.phone,
             github: user.github_id,
             linkedin: user.linkedin_id,
-            cv: user.avatar_url, // Using avatar_url field for CV filename
+            resumeUrl: user.avatar_url, // Using avatar_url field for resume URL
           },
           token: generateToken(user.id),
         },

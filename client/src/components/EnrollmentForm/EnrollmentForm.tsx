@@ -169,6 +169,21 @@ const EnrollmentForm: React.FC = () => {
     }
   }, [currentStep, formData]);
 
+  const isAllStepsValid = useMemo(() => {
+    const step1Valid = !!(formData.firstName.trim() && formData.lastName.trim() && 
+                         formData.email.trim() && formData.phone.trim() && 
+                         formData.address.trim() && formData.city.trim() && 
+                         formData.state.trim() && formData.country.trim() && formData.resume);
+    
+    const step2Valid = !!(formData.school.trim() && formData.degree.trim() && 
+                         formData.fieldOfStudy.trim() && formData.graduationYear && 
+                         formData.currentYear && formData.technologies.length > 0);
+    
+    const step3Valid = !!(formData.selectedProgram && formData.agreeToTerms);
+    
+    return step1Valid && step2Valid && step3Valid;
+  }, [formData]);
+
   const validateField = (field: keyof FormData, value: string): string => {
     switch (field) {
       case 'firstName':
@@ -310,7 +325,42 @@ const EnrollmentForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateStep(3)) {
+    // Validate all steps before submission
+    const step1Valid = validateStep(1);
+    const step2Valid = validateStep(2);
+    const step3Valid = validateStep(3);
+    
+    if (!step1Valid || !step2Valid || !step3Valid) {
+      console.log('❌ Form validation failed:', {
+        step1Valid,
+        step2Valid,
+        step3Valid,
+        currentStep,
+        formData: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address,
+          city: formData.city,
+          state: formData.state,
+          country: formData.country,
+          resume: formData.resume,
+          school: formData.school,
+          degree: formData.degree,
+          fieldOfStudy: formData.fieldOfStudy,
+          graduationYear: formData.graduationYear,
+          currentYear: formData.currentYear,
+          technologies: formData.technologies,
+          selectedProgram: formData.selectedProgram,
+          agreeToTerms: formData.agreeToTerms
+        }
+      });
+      
+      // Set error message to guide user
+      setErrors({ 
+        submit: 'Please complete all required fields in all steps before submitting. Use the Previous button to go back and fill missing information.' 
+      });
       return;
     }
     
@@ -318,37 +368,38 @@ const EnrollmentForm: React.FC = () => {
     setErrors({}); // Clear any previous errors
     
     try {
-      // Create FormData for form submission
-      const formDataToSend = new FormData();
-      
-      // Add all form fields
-      Object.entries(formData).forEach(([key, value]) => {
-        if (key === 'technologies') {
-          // Send technologies as individual array items
-          if (Array.isArray(value)) {
-            value.forEach(tech => {
-              formDataToSend.append('technologies[]', tech);
-            });
-          }
-        } else if (key === 'fieldOfStudy') {
-          // Map fieldOfStudy to match backend expectation
-          formDataToSend.append('fieldOfStudy', value.toString());
-        } else if (typeof value === 'boolean') {
-          formDataToSend.append(key, value.toString());
-        } else if (value !== null && value !== undefined) {
-          formDataToSend.append(key, value.toString());
-        }
-      });
+      // Create JSON payload instead of FormData
+      const payload = {
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        address: formData.address.trim(),
+        city: formData.city.trim(),
+        state: formData.state.trim(),
+        country: formData.country.trim(),
+        linkedin: formData.linkedin.trim(),
+        github: formData.github.trim(),
+        resume: formData.resume.trim(),
+        school: formData.school.trim(),
+        degree: formData.degree.trim(),
+        fieldOfStudy: formData.fieldOfStudy.trim(),
+        graduationYear: formData.graduationYear,
+        currentYear: formData.currentYear,
+        technologies: formData.technologies,
+        selectedProgram: formData.selectedProgram,
+        agreeToTerms: formData.agreeToTerms
+      };
 
       // Debug: Log the form data being sent
-      console.log('📤 Submitting enrollment form:', {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        selectedProgram: formData.selectedProgram,
-        technologies: formData.technologies,
-        resumeUrl: formData.resume
+      console.log('📤 Submitting enrollment form:', payload);
+      console.log('📋 Current formData state:', formData);
+      console.log('📊 Form validation status:', {
+        step1Valid: validateStep(1),
+        step2Valid: validateStep(2),
+        step3Valid: validateStep(3),
+        currentStep,
+        isStepValid
       });
 
       // Create AbortController for timeout
@@ -361,7 +412,10 @@ const EnrollmentForm: React.FC = () => {
       
       const response = await fetch(apiUrl, {
         method: 'POST',
-        body: formDataToSend,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
         signal: controller.signal,
       });
 
@@ -438,26 +492,53 @@ const EnrollmentForm: React.FC = () => {
     }
   };
 
-  const renderStepIndicator = () => (
-    <div className="flex items-center justify-center mb-8">
-      {[1, 2, 3].map((step) => (
-        <div key={step} className="flex items-center">
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${
-            step <= currentStep 
-              ? 'bg-[#19c973] text-white' 
-              : 'bg-gray-600 text-gray-300'
-          }`}>
-            {step < currentStep ? <CheckCircle className="w-5 h-5" /> : step}
-          </div>
-          {step < 3 && (
-            <div className={`w-16 h-1 mx-2 ${
-              step < currentStep ? 'bg-[#19c973]' : 'bg-gray-600'
-            }`} />
-          )}
-        </div>
-      ))}
-    </div>
-  );
+  const renderStepIndicator = () => {
+    const getStepStatus = (step: number) => {
+      switch (step) {
+        case 1:
+          return !!(formData.firstName.trim() && formData.lastName.trim() && 
+                   formData.email.trim() && formData.phone.trim() && 
+                   formData.address.trim() && formData.city.trim() && 
+                   formData.state.trim() && formData.country.trim() && formData.resume);
+        case 2:
+          return !!(formData.school.trim() && formData.degree.trim() && 
+                   formData.fieldOfStudy.trim() && formData.graduationYear && 
+                   formData.currentYear && formData.technologies.length > 0);
+        case 3:
+          return !!(formData.selectedProgram && formData.agreeToTerms);
+        default:
+          return false;
+      }
+    };
+
+    return (
+      <div className="flex items-center justify-center mb-8">
+        {[1, 2, 3].map((step) => {
+          const isComplete = getStepStatus(step);
+          const isCurrent = step === currentStep;
+          
+          return (
+            <div key={step} className="flex items-center">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${
+                isComplete 
+                  ? 'bg-[#19c973] text-white' 
+                  : isCurrent
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-600 text-gray-300'
+              }`}>
+                {isComplete ? <CheckCircle className="w-5 h-5" /> : step}
+              </div>
+              {step < 3 && (
+                <div className={`w-16 h-1 mx-2 ${
+                  isComplete ? 'bg-[#19c973]' : 'bg-gray-600'
+                }`} />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
 
   const renderStep1 = () => (
     <motion.div
@@ -1101,7 +1182,7 @@ const EnrollmentForm: React.FC = () => {
               ) : (
                 <Button
                   type="submit"
-                  disabled={!isStepValid || isSubmitting}
+                  disabled={!isAllStepsValid || isSubmitting}
                   className="flex items-center justify-center w-full sm:w-auto sm:min-w-[180px]"
                 >
                   {isSubmitting ? (

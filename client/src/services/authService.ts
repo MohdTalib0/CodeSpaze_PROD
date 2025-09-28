@@ -5,7 +5,7 @@ interface AdditionalUserData {
   phone?: string;
   github?: string;
   linkedin?: string;
-  cv?: File;
+  resumeUrl?: string;
 }
 
 class AuthService {
@@ -16,24 +16,15 @@ class AuthService {
 
   // Register user
   async register(name: string, email: string, password: string, additionalData?: AdditionalUserData): Promise<AuthResponse> {
-    // Create FormData for file upload
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('email', email);
-    formData.append('password', password);
-    
-    if (additionalData) {
-      if (additionalData.phone) formData.append('phone', additionalData.phone);
-      if (additionalData.github) formData.append('github', additionalData.github);
-      if (additionalData.linkedin) formData.append('linkedin', additionalData.linkedin);
-      if (additionalData.cv) formData.append('cv', additionalData.cv);
-    }
+    // Create regular JSON payload since we're not uploading files anymore
+    const payload = {
+      name,
+      email,
+      password,
+      ...additionalData
+    };
 
-    return apiService.post<AuthResponse>('/auth/register', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    return apiService.post<AuthResponse>('/auth/register', payload);
   }
 
   // Get current user
