@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../../components/UI/Button';
+import { getApiUrl, getAuthHeaders } from '../../config/api';
 
 interface UserProfile {
   id: number;
@@ -90,10 +91,8 @@ const ProfilePage: React.FC = () => {
   const fetchProfile = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/users/profile', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+      const response = await fetch(getApiUrl('/users/profile'), {
+        headers: getAuthHeaders()
       });
 
       if (!response.ok) {
@@ -118,12 +117,9 @@ const ProfilePage: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      const response = await fetch('/api/users/profile', {
+      const response = await fetch(getApiUrl('/users/profile'), {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(editForm)
       });
 
@@ -184,7 +180,7 @@ const ProfilePage: React.FC = () => {
       const formData = new FormData();
       formData.append('avatar', file);
 
-      const response = await fetch('/api/users/upload-avatar', {
+      const response = await fetch(getApiUrl('/users/upload-avatar'), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -221,12 +217,9 @@ const ProfilePage: React.FC = () => {
     }
 
     try {
-      const response = await fetch('/api/users/change-email', {
+      const response = await fetch(getApiUrl('/users/change-email'), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           newEmail: changeEmailForm.newEmail,
           password: changeEmailForm.password
@@ -252,12 +245,9 @@ const ProfilePage: React.FC = () => {
   // Privacy settings functions
   const handlePrivacySave = async () => {
     try {
-      const response = await fetch('/api/users/privacy-settings', {
+      const response = await fetch(getApiUrl('/users/privacy-settings'), {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(privacyForm)
       });
 
@@ -289,12 +279,9 @@ const ProfilePage: React.FC = () => {
     }
 
     try {
-      const response = await fetch('/api/users/security-settings', {
+      const response = await fetch(getApiUrl('/users/security-settings'), {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           currentPassword: securityForm.currentPassword,
           newPassword: securityForm.newPassword,
